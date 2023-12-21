@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@discordjs/voice": "^0.14.0",
+    "discord-player": "^6.6.5",
+    "discord.js": "^14.14.1",
+    "mediaplex": "^0.0.8",
+    "opusscript": "^0.0.8",
+    "play-dl": "^1.9.7"
+  }
+}
