@@ -2,6 +2,7 @@ const { Util } = require("discord-player")
 const { sendEmbed } = require('../utils.js')
 
 module.exports = {
+    aliases: ['seek'],
     name: "seek",
 
     async execute(msg, args, embed, bot) {

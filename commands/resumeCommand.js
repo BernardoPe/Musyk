@@ -2,6 +2,7 @@ const { Util } = require("discord-player")
 const { sendEmbed } = require('../utils.js')
 
 module.exports = {
+    aliases: ['resume'],
     name: 'resume',
     execute: async (msg, args, embed, bot) => {
 

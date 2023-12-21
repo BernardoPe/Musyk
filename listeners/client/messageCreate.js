@@ -1,5 +1,5 @@
 const { Events, EmbedBuilder } = require('discord.js');
-const commandHandler  = require('../../commandHandler.js')
+const commandHandler = require('../../handlers/commandHandler.js')
 const { getServerPrefixFromJson } = require('../../utils.js')
 
 module.exports = {

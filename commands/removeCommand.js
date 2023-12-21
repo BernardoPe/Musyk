@@ -3,6 +3,7 @@ const { updatePlayer } = require('../utils.js')
 const { sendEmbed } = require('../utils.js')
 
 module.exports = {
+    aliases: ['remove'],
     name: 'remove',
     execute: async (msg, args, embed, bot) => {
         embed.setColor(0xfd0033).setDescription(`There is no song playing`);

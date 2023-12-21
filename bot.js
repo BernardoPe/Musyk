@@ -2,9 +2,8 @@
 const { Player } = require('discord-player');
 const { YouTubeExtractor, SpotifyExtractor, SoundCloudExtractor } = require("@discord-player/extractor");
 const { Client, GatewayIntentBits} = require('discord.js');
-const { addEventListeners } = require('./eventHandler.js')
+const { addEventListeners } = require('./handlers/eventHandler.js')
 const config = require('./config.json')
-const fs = require('fs');
 
 const access = fs.createWriteStream(`${__dirname}/LOG.log`)
 process.stdout.write = process.stderr.write = access.write.bind(access)

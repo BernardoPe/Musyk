@@ -2,6 +2,7 @@ const { updatePlayer } = require('../utils.js')
 const { sendEmbed } = require('../utils.js')
 
 module.exports = {
+    aliases: ['shuffle'],
     name: 'shuffle',
     execute: async (msg, args, embed, bot) => {
       

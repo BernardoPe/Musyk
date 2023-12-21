@@ -2,6 +2,7 @@ const { QueueRepeatMode, Util } = require("discord-player");
 const { sendEmbed } = require("../utils");
 
 module.exports = {
+    aliases: ['cycle'],
     name: "cycle",
       async execute(msg, args, embed, bot) {
     

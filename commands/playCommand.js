@@ -1,8 +1,7 @@
-const { EmbedBuilder } = require('discord.js');
-const { Util } = require("discord-player")
 const { sendEmbed } = require('../utils.js')
 
 module.exports = {
+    aliases: ['p', 'play'],
     name: 'play',
     execute: async (msg, args, embed, bot) => {
         if (args.length == 1) { 

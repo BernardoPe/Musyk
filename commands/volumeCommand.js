@@ -1,6 +1,7 @@
 const { sendEmbed } = require('../utils.js')
 
 module.exports = {
+    aliases: ['volume'],
     name: 'volume',
     execute: async (msg, args, embed, bot) => {
 

@@ -1,9 +1,9 @@
 const { createQueueEmbed } = require('../utils.js')
 const paginate  = require('../paginator');
-const { Util } = require("discord-player")
 const { sendEmbed } = require('../utils.js')
 
 module.exports = {
+    aliases: ['queue'],
     name: 'queue',
     execute: async (msg, args, embed, bot) => {
 

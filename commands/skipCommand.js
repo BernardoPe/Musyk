@@ -2,6 +2,7 @@ const { Util } = require('discord-player')
 const { sendEmbed } = require('../utils.js')
 
 module.exports = {
+    aliases: ['skip'],
     name: 'skip',
     execute: async (msg, args, embed, bot) => {
         embed.setColor(0xfd0033).setDescription(`Not currently playing any songs`);

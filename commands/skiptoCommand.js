@@ -1,6 +1,7 @@
 const { sendEmbed } = require('../utils.js')
 
 module.exports = {
+    aliases: ['skipto'],
     name: 'skipto',
     execute: async (msg, args, embed, bot) => {
 

@@ -1,6 +1,10 @@
 const {ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder} = require('discord.js');
 const fs = require('fs')
 const { Util } = require('discord-player')
+const path = require('node:path')
+
+
+
 function createLink() {
   const link = new ButtonBuilder()
                 .setLabel('Invite Link')
@@ -286,8 +290,7 @@ function getServerPrefixFromJson(serverID) {
    for(let i in serverConfigs) {
       if(serverID == serverConfigs[i].id) return serverConfigs[i].prefix
    }
-   const defaultpref = require("./config.json").prefix
-   return defaultpref
+   return require("./config.json").prefix
 }
 
 function saveJsonToFile(filename, json) {
@@ -318,4 +321,24 @@ function setNewPrefix(serverID, prefix) {
     saveJsonToFile("./servers.json", JSON.stringify(serverConfigs))
 }
 
-module.exports =  { sendEmbed, setNewPrefix, saveJsonToFile, getServerPrefixFromJson, updatePlayer, createButtons, getEmoji, queuePlaylistEmbed, nowPlayingEmbed, songQueuedEmbed, helpEmbeds, createLink, createQueueEmbed, };
+function getAllFiles(folderPath) {
+
+  let files = [];
+  const items = fs.readdirSync(folderPath);
+
+  for (const item of items) {
+      const filePath = path.join(folderPath, item);
+      const stat = fs.statSync(filePath);
+
+      if (stat.isDirectory()) {
+          files = files.concat(getAllFiles(filePath));
+      } else {
+          files.push(filePath);
+      }
+  }
+
+  return files;
+
+}
+
+module.exports =  { getAllFiles, sendEmbed, setNewPrefix, saveJsonToFile, getServerPrefixFromJson, updatePlayer, createButtons, getEmoji, queuePlaylistEmbed, nowPlayingEmbed, songQueuedEmbed, helpEmbeds, createLink, createQueueEmbed, };

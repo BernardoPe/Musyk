@@ -1,6 +1,7 @@
 const { sendEmbed } = require('../utils.js')
 
 module.exports = {
+    aliases: ['stop'],
     name: 'stop',
     execute: async (msg, args, embed, bot) => {
         const serverQueue = bot.player.nodes.get(msg.guild.id)
