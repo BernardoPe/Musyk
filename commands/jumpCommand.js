@@ -11,25 +11,24 @@ module.exports = {
         embed.setColor(0xfd0033).setDescription(`Not currently playing any songs`);
 
         if (!serverQueue) return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
-        else {
-          while(serverQueue.dispatcher.isBuffering()) {
-              Util.wait(5)
-          } 
-        }
 
+        while (serverQueue.dispatcher.isBuffering()) {
+            await Util.wait(5)
+        }
+        
         if (args[1] < 1 || args[1] > serverQueue.tracks.toArray().length) {
             embed.setDescription(`Invalid queue position`);
             return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
         }
         else {
             let index = parseInt(args[1])
-            if(isNaN(index)) {
-               embed.setDescription(`Value must be a number`);
-               return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+            if (isNaN(index)) {
+                embed.setDescription(`Value must be a number`);
+                return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
             }
 
             serverQueue.node.jump(index - 1);
 
         }
     }
-  };
+};

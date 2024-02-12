@@ -3,20 +3,16 @@ const commandHandler = require('../../handlers/commandHandler.js')
 const { getServerPrefixFromJson } = require('../../utils.js')
 
 module.exports = {
-	name: Events.MessageCreate,
-	execute: async (msg, bot) => {
-    
-        if (msg.author.bot) return;
+        name: Events.MessageCreate,
+        execute: async (msg, bot) => {
 
-        let serverPrefix = getServerPrefixFromJson(msg.guild.id)
-        if (!msg.content.startsWith(serverPrefix)) return;
-        
-        const embed = new EmbedBuilder()
-           
-        if (msg.content.startsWith(serverPrefix)) {
-          const args = msg.content.split(' ');
-          await commandHandler(msg, args, embed, bot);
-        }
+                if (msg.author.bot) return;
 
-	},
+                const embed = new EmbedBuilder()
+
+                const args = msg.content.split(' ');
+
+                await commandHandler(msg, args, embed, bot);
+                
+        },
 };

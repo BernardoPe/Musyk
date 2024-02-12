@@ -1,10 +1,9 @@
-const { GuildQueueEvent, Util } = require('discord-player');
+const { GuildQueueEvent } = require('discord-player');
 const { EmbedBuilder } = require('discord.js')
 const { sendEmbed } = require('../../utils.js')
 module.exports = {
 	name: GuildQueueEvent.queueDelete,
 	execute: async (queue) => {
-        await Util.wait(200) 
 
         const [vc, channel, data, col] = queue.metadata;
 

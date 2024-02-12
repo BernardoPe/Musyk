@@ -18,13 +18,13 @@ module.exports = {
         }
         else {
             let index = parseInt(args[1])
-            if(isNaN(index)) {
-              embed.setDescription(`Value must be a number`);
-              return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+            if (isNaN(index)) {
+                embed.setDescription(`Value must be a number`);
+                return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
             }
-   
+
             serverQueue.node.skipTo(index - 1);
         }
     }
-  };
+};
 

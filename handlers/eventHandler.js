@@ -2,7 +2,7 @@ const { getAllFiles } = require('../utils.js')
 const path = require('node:path');
 
 function addEventListeners(bot, folderPath = path.join(__dirname, '../listeners')) {
-    
+
     const files = getAllFiles(folderPath);
 
     for (const file of files) {
@@ -17,7 +17,5 @@ function addEventListeners(bot, folderPath = path.join(__dirname, '../listeners'
     }
 
 }
-
-
 
 module.exports = { addEventListeners };

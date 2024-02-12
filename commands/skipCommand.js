@@ -9,17 +9,16 @@ module.exports = {
 
         let serverQueue = bot.player.nodes.get(msg.guild.id)
 
-        if (!serverQueue) 
+        if (!serverQueue)
             return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
-        else {
-            while(serverQueue.dispatcher.isBuffering()) {
-                Util.wait(5)
-            }
+      
+        while (serverQueue.dispatcher.isBuffering()) {
+           await Util.wait(5)
         }
-
-	    if(serverQueue.isPlaying()) return serverQueue.node.skip();
+        
+        if (serverQueue.isPlaying()) return serverQueue.node.skip();
 
     }
 };
 
-  
+

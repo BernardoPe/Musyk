@@ -1,5 +1,5 @@
 const { createQueueEmbed } = require('../utils.js')
-const paginate  = require('../paginator');
+const paginate = require('../paginator');
 const { sendEmbed } = require('../utils.js')
 
 module.exports = {
@@ -14,8 +14,8 @@ module.exports = {
         if (!serverQueue || serverQueue.isEmpty() || !serverQueue.isPlaying()) return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 
         let pages = createQueueEmbed(serverQueue)
-    
+
         return await paginate(msg, pages)
 
     }
-  };
+};
