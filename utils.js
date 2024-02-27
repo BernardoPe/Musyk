@@ -268,12 +268,16 @@ function saveJsonToFile(filename, json) {
 }
 
 async function sendEmbed(channel, info, timeout) {
+
     if (!channel.permissionsFor(channel.members.get('1104835081538912377').user).has('SendMessages')) return
+
     if (!timeout) return channel.send(info)
-    else return channel.send(info).then(async msg => {
+
+    return channel.send(info).then(async msg => {
         await Util.wait(timeout)
         msg.delete()
     })
+    
 }
 
 function setNewPrefix(serverID, prefix) {

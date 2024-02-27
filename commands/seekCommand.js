@@ -29,13 +29,13 @@ module.exports = {
       return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
     }
 
-    else {
-      let dur = `${serverQueue.currentTrack.duration.padStart(5, '0')}`
-      await serverQueue.node.seek(time)
-      let timestamp = millisecondsToTimestamp(time)
-      embed.setDescription(`Track playback time set to **` + timestamp + `/` + dur + `**`)
-      return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
-    }
+    
+    let dur = `${serverQueue.currentTrack.duration.padStart(5, '0')}`
+    await serverQueue.node.seek(time)
+    let timestamp = millisecondsToTimestamp(time)
+    embed.setDescription(`Track playback time set to **` + timestamp + `/` + dur + `**`)
+    return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+  
 
   }
 

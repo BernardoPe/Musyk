@@ -20,15 +20,15 @@ module.exports = {
             embed.setDescription(`Invalid queue position`);
             return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
         }
-        else {
-            let index = parseInt(args[1])
-            if (isNaN(index)) {
-                embed.setDescription(`Value must be a number`);
-                return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
-            }
-
-            serverQueue.node.jump(index - 1);
-
+        
+        let index = parseInt(args[1])
+        if (isNaN(index)) {
+            embed.setDescription(`Value must be a number`);
+            return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
         }
+
+        serverQueue.node.jump(index - 1);
+
+        
     }
 };

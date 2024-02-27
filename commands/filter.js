@@ -6,7 +6,6 @@ module.exports = {
     name: "filter",
     async execute(msg, args, embed, bot) {
 
-
         const serverQueue = bot.player.nodes.get(msg.guild.id);
 
         embed.setDescription(`There are no songs currently playing`);
@@ -39,10 +38,9 @@ module.exports = {
             embed.setDescription(`Enabled ${args[1]} filter`);
             return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
         }
-        else {
-            embed.setDescription(`Disabled ${args[1]} filter`);
-            return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
-        }
-
+        
+        embed.setDescription(`Disabled ${args[1]} filter`);
+        return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+        
     },
 }

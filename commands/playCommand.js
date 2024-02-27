@@ -25,20 +25,15 @@ module.exports = {
 
     const guildQueue = bot.player.nodes.get(msg.guild.id);
 
-    let queue;
+    let queue = (guildQueue) ? guildQueue : await bot.player.nodes.create(msg.guild, {
+      bufferingTimeout: 20000,
+      leaveOnEmpty: false,
+      leaveOnEnd: true,
+      leaveOnEndCooldown: 300000
+    }); 
   
-    if (guildQueue)
-      queue = guildQueue;
-    else {
-      queue = await bot.player.nodes.create(msg.guild, {
-        bufferingTimeout: 20000,
-        leaveOnEmpty: false,
-        leaveOnEnd: true,
-        leaveOnEndCooldown: 300000
-      });
-    }
-
     try {
+  
       if (!queue.connection) await queue.connect(voiceChannel);
 
       else if (queue.connection.joinConfig.channelId != voiceChannel) {

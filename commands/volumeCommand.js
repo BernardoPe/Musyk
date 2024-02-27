@@ -11,11 +11,9 @@ module.exports = {
 
     if (!serverQueue || !serverQueue.isPlaying()) return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 
-
     else if (!args[1]) {
       embed.setColor(0x2a03f5).setDescription(`The current volume is ${serverQueue.node.volume}%`)
       return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
-
     }
 
     let volume = parseInt(args[1]);

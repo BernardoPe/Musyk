@@ -30,8 +30,8 @@ module.exports = async (msg, args, embed, bot) => {
 
         await command.execute(msg, args, embed, bot);
 
-    } else {
-        return undefined;
-    }
+    } 
 
+    return undefined;
+    
 };

@@ -5,11 +5,13 @@ const { helpEmbeds, createLink, getServerPrefixFromJson, setNewPrefix } = requir
 module.exports = {
   name: Events.InteractionCreate,
   execute: async (interaction, bot) => {
+    
     if (!interaction.isButton()) {
-      await handleTextCommands(interaction)
-      return
+      return await handleTextCommands(interaction)
     }
+    
     await handleButtonCommands(interaction, bot)
+
   },
 
 };
@@ -23,6 +25,7 @@ async function handleTextCommands(interaction) {
   }
 
   else if (interaction.isChatInputCommand && interaction.commandName == 'prefix') {
+    
     let embed = new EmbedBuilder()
 
     let prefix = getServerPrefixFromJson(interaction.guild.id)

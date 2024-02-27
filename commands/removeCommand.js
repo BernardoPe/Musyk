@@ -26,12 +26,12 @@ module.exports = {
         return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
       }
 
-      else {
-        let song = serverQueue.node.remove(tracks[value - 1]);
-        embed.setColor(0x01ff34).setDescription(`Removed [${song.title}](${song.url}) from queue`)
-        updatePlayer(serverQueue)
-        return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
-      }
+      
+      let song = serverQueue.node.remove(tracks[value - 1]);
+      embed.setColor(0x01ff34).setDescription(`Removed [${song.title}](${song.url}) from queue`)
+      updatePlayer(serverQueue)
+      return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+    
 
     }
 
