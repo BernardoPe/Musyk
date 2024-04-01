@@ -1,0 +1,26 @@
+{
+	"env": {
+		"browser": true,
+		"commonjs": true,
+		"es2021": true
+	},
+	"extends": "eslint:recommended",
+	"parserOptions": {
+		"ecmaVersion": "latest"
+	},
+	"rules": {
+		"indent": ["error", "tab"],
+		"quotes": ["error", "double"],
+		"semi": ["error", "never"]
+	},
+	"overrides": [
+		{
+			"files": ["**/*.js"],
+			"rules": {
+				"no-undef": "off",
+				"no-prototype-builtins": "off",
+				"no-unused-vars": "off"
+			}
+		}
+	]
+}

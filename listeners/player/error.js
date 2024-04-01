@@ -1,8 +1,8 @@
-const { GuildQueueEvent } = require('discord-player');
+const { GuildQueueEvent } = require("discord-player")
+const logger = require("../../utils/logger.js")
 module.exports = {
 	name: GuildQueueEvent.playerError,
 	execute: (queue, error, track) => {
-        console.log(error)
-        console.log(track)
+		logger.error(`[ERROR]: ${queue.guild.name} | ${error} | ${track.title}`)
 	},
-};
+}

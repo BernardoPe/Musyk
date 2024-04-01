@@ -1,15 +1,18 @@
-const { GuildQueueEvent, Util } = require('discord-player');
-const { updatePlayer, queuePlaylistEmbed, sendEmbed } = require('../../utils.js')
+const { GuildQueueEvent } = require("discord-player")
+const { Util } = require("discord-player")
+const {
+	updatePlayer,
+	queuePlaylistEmbed,
+	sendEmbed,
+} = require("../../utils/embeds.js")
 
 module.exports = {
 	name: GuildQueueEvent.audioTracksAdd,
 	execute: async (queue, tracks) => {
-     
-        let embed = queuePlaylistEmbed(tracks[0].playlist, queue);
+		let embed = queuePlaylistEmbed(tracks[0].playlist, queue)
 
-        await updatePlayer(queue)
+		if (queue.isPlaying()) await updatePlayer(queue)
 
-        await sendEmbed(queue.metadata[1], {embeds: [embed]}, 60000)
- 
+		await sendEmbed(queue.metadata[1], { embeds: [embed] }, 60000)
 	},
-};
+}
