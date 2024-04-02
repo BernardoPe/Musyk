@@ -4,7 +4,7 @@ const path = require("node:path")
 function getServerPrefixFromJson(serverID) {
 	const serverConfigs = require("../servers.json")
 	for (let i in serverConfigs) {
-		if (serverID == serverConfigs[i].id) return serverConfigs[i].prefix
+		if (serverID === serverConfigs[i].id) return serverConfigs[i].prefix
 	}
 	return require("../config.json").prefix
 }
@@ -16,16 +16,16 @@ function saveJsonToFile(filename, json) {
 }
 
 function setNewPrefix(serverID, prefix) {
-	const serverConfigs = require("./servers.json")
+	const serverConfigs = require("../servers.json")
 	for (let i in serverConfigs) {
-		if (serverID == serverConfigs[i].id) {
+		if (serverID === serverConfigs[i].id) {
 			serverConfigs[i].prefix = prefix
-			saveJsonToFile("./servers.json", JSON.stringify(serverConfigs))
+			saveJsonToFile("../servers.json", JSON.stringify(serverConfigs))
 			return
 		}
 	}
 	serverConfigs.push({ id: serverID, prefix: prefix })
-	saveJsonToFile("./servers.json", JSON.stringify(serverConfigs))
+	saveJsonToFile("../servers.json", JSON.stringify(serverConfigs))
 }
 
 function getAllFiles(folderPath) {
@@ -49,6 +49,5 @@ function getAllFiles(folderPath) {
 module.exports = {
 	getAllFiles,
 	setNewPrefix,
-	saveJsonToFile,
 	getServerPrefixFromJson,
 }
