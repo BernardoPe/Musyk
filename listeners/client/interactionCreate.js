@@ -1,11 +1,11 @@
 const { Events, EmbedBuilder } = require("discord.js")
 const commandHandler = require("../../handlers/commands.js")
+const { helpEmbeds, createLink } = require("../../utils/embeds.js")
+
 const {
-	helpEmbeds,
-	createLink,
 	getServerPrefixFromJson,
 	setNewPrefix,
-} = require("../../utils/embeds.js")
+} = require("../../utils/configs.js")
 
 module.exports = {
 	name: Events.InteractionCreate,

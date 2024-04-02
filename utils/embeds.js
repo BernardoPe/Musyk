@@ -309,13 +309,13 @@ async function updatePlayer(queue) {
 		embeds: [embed],
 	})
 }
+
 async function sendEmbed(channel, info, timeout) {
-	if (
-		!channel
-			.permissionsFor(channel.members.get("1104835081538912377").user)
-			.has("SendMessages")
-	)
-		return
+	if (!channel) return
+	let bot = channel.members.get("1104836508944445551") // replace with your bot id
+
+	if (!bot) return
+	if (!channel.permissionsFor(bot).has("SendMessages")) return
 
 	if (!timeout) return channel.send(info)
 

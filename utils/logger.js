@@ -5,15 +5,6 @@ const timestamp = winston.format.timestamp
 const logger = winston.createLogger({
 	level: "info",
 	format: winston.format.combine(
-		winston.format.colorize({
-			level: false,
-			message: true,
-			colors: {
-				info: "cyan",
-				error: "orange",
-				warn: "yellow",
-			},
-		}),
 		winston.format.combine(timestamp(), winston.format.simple()),
 		winston.format.printf((info) => `[${info.timestamp}] ${info.message}`),
 	),
@@ -29,7 +20,16 @@ const logger = winston.createLogger({
 				),
 			),
 		}),
-		new winston.transports.Console({ level: "info" }),
+		new winston.transports.Console({
+			level: "info",
+			format: winston.format.combine(
+				winston.format.colorize(),
+				winston.format.simple(),
+				winston.format.printf(
+					(info) => `[${info.timestamp}] ${info.level}: ${info.message}`,
+				),
+			),
+		}),
 	],
 })
 

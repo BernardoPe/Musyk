@@ -12,7 +12,7 @@ commandFiles.forEach((file) => {
 module.exports = async (msg, args, embed, bot) => {
 	const PREFIX = getServerPrefixFromJson(msg.guild.id)
 
-	if (!msg.content.startsWith(PREFIX)) return
+	if (msg.content && !msg.content.startsWith(PREFIX)) return
 
 	const commandName = args[0].slice(PREFIX.length).toLowerCase()
 
@@ -20,11 +20,11 @@ module.exports = async (msg, args, embed, bot) => {
 		const command = commands[commandName]
 
 		command.msg = msg.content
-		command.user = msg.author.tag
+		command.user = msg.author ? msg.author.username : undefined
 		command.guild = msg.guild.name
 
 		winston.logger.info(
-			`[COMMAND]: ${command.msg} | User: ${command.user} | Guild: ${command.guild}`,
+			`[COMMAND]: ${command.name} | ${command.msg} | User: ${command.user} | Guild: ${command.guild}`,
 		)
 
 		await command.execute(
