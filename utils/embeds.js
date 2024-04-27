@@ -84,13 +84,10 @@ function helpEmbeds() {
 
 	let embed5 = new EmbedBuilder()
 		.setTitle("Aditional Information")
-		.setDescription(
-			"Make sure Musyk has the necessary permissions to join voice channels and manage music playback.\n" +
-				"If you enconter any bugs or have feature suggestions feel free to dm me.",
-		)
+		.setDescription("Make sure Musyk has the necessary permissions to join voice channels and manage music playback.")
 		.setColor(0x58b9ff)
 
-	return [embed1, embed2, embed3, embed4, embed5]
+	return [embed1, embed2, embed3, embed5]
 }
 
 function createButtons() {
