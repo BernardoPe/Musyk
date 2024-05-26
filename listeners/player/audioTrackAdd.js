@@ -1,5 +1,5 @@
 const { GuildQueueEvent } = require("discord-player")
-const { Util } = require("discord-player")
+
 const {
 	updatePlayer,
 	songQueuedEmbed,

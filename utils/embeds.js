@@ -6,13 +6,15 @@ const {
 } = require("discord.js")
 
 const { Util } = require("discord-player")
+const config = require("../config.json")
+
+const botID = config.botID
+const inviteLink = config.inviteLink
 
 function createLink() {
 	const link = new ButtonBuilder()
 		.setLabel("Invite Link")
-		.setURL(
-			"https://discord.com/api/oauth2/authorize?client_id=1104836508944445551&permissions=2184465408&scope=bot",
-		)
+		.setURL(inviteLink)
 		.setStyle(ButtonStyle.Link)
 
 	const row1 = new ActionRowBuilder().addComponents(link)
@@ -155,7 +157,7 @@ function createQueueEmbed(serverQueue) {
 			.setTitle(`Current Queue Page ${page}`)
 			.addFields({
 				name: "Currently playing",
-				value: `[${curr.title}](${curr.url}) ${duration}`,
+				value: `[${curr.cleanTitle}](${curr.url}) ${duration}`,
 			})
 			.setDescription(null)
 			.setColor(0x01ff34)
@@ -165,7 +167,7 @@ function createQueueEmbed(serverQueue) {
 			let duration = `(${song.duration.padStart(5, "0")})`
 			embed.addFields({
 				name: `Position ${size + 1}:`,
-				value: `[${song.title}](${song.url}) ${duration}`,
+				value: `[${song.cleanTitle}](${song.url}) ${duration}`,
 			})
 			size++
 		}
@@ -198,7 +200,7 @@ function queuePlaylistEmbed(playlist) {
 
 	embed
 		.setTitle("Playlist Queued")
-		.setDescription(`${emoji} **[${playlist.title}](${playlist.url})**`)
+		.setDescription(`${emoji} **[${playlist.cleanTitle}](${playlist.url})**`)
 		.setThumbnail(`${thumbnail}`)
 		.addFields(
 			{ name: "Songs", value: `${playlist.tracks.length}`, inline: true },
@@ -219,7 +221,7 @@ function nowPlayingEmbed(queue) {
 	let song = queue.currentTrack
 	embed
 		.setTitle("Now Playing")
-		.setDescription(`${emoji} **[${song.title}](${song.url})**`)
+		.setDescription(`${emoji} **[${song.cleanTitle}](${song.url})**`)
 		.setThumbnail(`${song.thumbnail}`)
 	if (queue.history.nextTrack) {
 		embed.addFields(
@@ -238,7 +240,7 @@ function nowPlayingEmbed(queue) {
 			{
 				name: "Next Track",
 				value: `${getEmoji(queue.history.nextTrack.source)} **[${
-					queue.history.nextTrack.title
+					queue.history.nextTrack.cleanTitle
 				}](${queue.history.nextTrack.url})**`,
 				inline: true,
 			},
@@ -270,7 +272,7 @@ function songQueuedEmbed(song, queue) {
 
 	embed
 		.setTitle("Song Queued")
-		.setDescription(`${emoji} **[${song.title}](${song.url})**`)
+		.setDescription(`${emoji} **[${song.cleanTitle}](${song.url})**`)
 		.setThumbnail(`${song.thumbnail}`)
 		.addFields(
 			{
@@ -309,11 +311,9 @@ async function updatePlayer(queue) {
 
 async function sendEmbed(channel, info, timeout) {
 	if (!channel) return
-	let bot = channel.members.get("1104836508944445551") // replace with your bot id
-
+	let bot = channel.members.get(botID) // replace with your bot id
 	if (!bot) return
 	if (!channel.permissionsFor(bot).has("SendMessages")) return
-
 	if (!timeout) return channel.send(info)
 
 	return channel.send(info).then(async (msg) => {

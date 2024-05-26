@@ -1,3 +1,5 @@
 {
-	"prefix": "BOT-PREFIX-HERE"
+	"prefix": "YOUR_PREFIX",
+	"botID": "YOUR_BOT_ID",
+	"inviteLink": "YOUR_INVITE_LINK"
 }

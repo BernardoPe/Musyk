@@ -4,7 +4,7 @@ module.exports = {
 	aliases: ["p", "play"],
 	name: "play",
 	execute: async (msg, args, embed, bot) => {
-		if (args.length == 1) {
+		if (args.length === 1) {
 			embed.setColor(0x06bb06).setDescription("No search arguments provided")
 			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
@@ -40,8 +40,9 @@ module.exports = {
 
 		try {
 			if (!queue.connection) await queue.connect(voiceChannel)
-			else if (queue.connection.joinConfig.channelId != voiceChannel) {
+			else if (queue.channel !== msg.member.voice.channel) {
 				embed.setDescription("Already playing in a different voice channel")
+					.setColor(0x06bb06)
 				return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 			}
 		} catch (error) {
@@ -59,7 +60,7 @@ module.exports = {
 		var song = result.tracks[0]
 
 		try {
-			if (result.tracks.length == 0) throw new Error("No results found")
+			if (result.tracks.length === 0) throw new Error("No results found")
 
 			if (!queue.isPlaying() && !queue.willStart) {
 				queue.setMetadata([queue.channel, msg.channel])
