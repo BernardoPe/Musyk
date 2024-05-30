@@ -200,7 +200,7 @@ function queuePlaylistEmbed(playlist) {
 
 	embed
 		.setTitle("Playlist Queued")
-		.setDescription(`${emoji} **[${playlist.cleanTitle}](${playlist.url})**`)
+		.setDescription(`${emoji} **[${playlist.title}](${playlist.url})**`)
 		.setThumbnail(`${thumbnail}`)
 		.addFields(
 			{ name: "Songs", value: `${playlist.tracks.length}`, inline: true },
