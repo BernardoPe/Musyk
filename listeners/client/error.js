@@ -1,9 +1,10 @@
 const { Events } = require("discord.js")
-const { logger } = require("../../utils/logger.js")
+const { winston } = require("../../utils/logger.js")
 
 module.exports = {
 	name: Events.Error,
 	execute(err) {
-		logger.error(err)
+		console.error(err)
+		winston.logger.error(err)
 	},
 }

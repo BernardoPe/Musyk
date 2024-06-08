@@ -1,4 +1,4 @@
-const { Util } = require("discord-player")
+/**const { Util } = require("discord-player")
 const { sendEmbed } = require("../utils/embeds")
 
 module.exports = {
@@ -12,10 +12,6 @@ module.exports = {
 
 		if (!serverQueue)
 			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
-
-		while (serverQueue.isBuffering()) {
-			await Util.wait(5)
-		}
 
 		let time = validateTimestamp(args[1], serverQueue.node.totalDuration)
 
@@ -110,3 +106,4 @@ function millisecondsToTimestamp(milliseconds) {
 		return `${formattedMinutes}:${formattedSeconds}`
 	}
 }
+*/
