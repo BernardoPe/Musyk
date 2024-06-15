@@ -48,7 +48,7 @@ function helpEmbeds() {
 				"**.pause**: Pause the current playback.\n\n" +
 				"**.resume**: Resume the paused playback.\n\n" +
 				"**.queue**: Shows the current song queue.\n\n" +
-				//"**.seek <timestamp>**: skip or rewind to a timestamp in the song. Format is hh:mm:ss, (zero values before first non-zero value can be omitted)\n\n" +
+				"**.seek <timestamp>**: skip or rewind to a timestamp in the song. Format is hh:mm:ss, (zero values before first non-zero value can be omitted)\n\n" +
 				"**.volume <volume>**: Adjust the volume of the playback. If no arguments are provided shows current volume \n\n" +
 				"**.remove <Queue Position>**: Remove a specific song from the music queue.\n\n" +
 				"**.shuffle**: Shuffle the order of songs in the music queue.\n\n" +
