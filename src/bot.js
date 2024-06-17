@@ -35,7 +35,7 @@ bot.player = new Player(bot, {
 			},
 		},
 	},
-	skipFFmpeg: true
+	skipFFmpeg: true,
 })
 
 //console.log(bot.player.scanDeps())

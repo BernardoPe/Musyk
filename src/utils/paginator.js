@@ -43,25 +43,6 @@ module.exports = async (msg, pages, buttons = []) => {
 		else if (i.customId === "2") index++
 		else return col.stop()
 
-		let button1 = new ButtonBuilder()
-			.setCustomId("1")
-			.setEmoji("◀️")
-			.setStyle(ButtonStyle.Primary)
-			.setDisabled(index === 0)
-
-		let button2 = new ButtonBuilder()
-			.setCustomId("2")
-			.setEmoji("▶️")
-			.setStyle(ButtonStyle.Primary)
-			.setDisabled(pages.length <= index + 1)
-
-		let button3 = new ButtonBuilder()
-			.setCustomId("3")
-			.setEmoji("❌")
-			.setStyle(ButtonStyle.Secondary)
-
-		row.components = [button1, button2, button3].concat(buttons)
-
 		data.edit({
 			components: [row],
 			embeds: [pages[index]],

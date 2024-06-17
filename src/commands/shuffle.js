@@ -24,9 +24,9 @@ function shuffle(serverQueue, array) {
 	let currentIndex = array.length,
 		randomIndex
 
-	while (currentIndex != 0) {
+	while (currentIndex !== 0) {
 		randomIndex = Math.floor(Math.random() * (array.length - 1))
-		
+
 		currentIndex--
 
 		serverQueue.node.swap(array[currentIndex], randomIndex)

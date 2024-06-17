@@ -35,11 +35,11 @@ module.exports = {
 		default:
 			if (serverQueue.repeatMode === QueueRepeatMode.AUTOPLAY) {
 				md = "autoplay"
-			} else if (serverQueue.repeatMode == QueueRepeatMode.QUEUE) {
+			} else if (serverQueue.repeatMode === QueueRepeatMode.QUEUE) {
 				md = "queue"
-			} else if (serverQueue.repeatMode == QueueRepeatMode.TRACK) {
+			} else if (serverQueue.repeatMode === QueueRepeatMode.TRACK) {
 				md = "track"
-			} else if (serverQueue.repeatMode == QueueRepeatMode.OFF) {
+			} else if (serverQueue.repeatMode === QueueRepeatMode.OFF) {
 				md = "off"
 			}
 			embed.setDescription(`Loop mode is set to: \`${md}\`.`)

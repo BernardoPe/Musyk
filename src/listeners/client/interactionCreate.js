@@ -29,7 +29,7 @@ async function handleTextCommands(interaction) {
 		})
 	} else if (
 		interaction.isChatInputCommand &&
-		interaction.commandName == "prefix"
+        interaction.commandName === "prefix"
 	) {
 		let embed = new EmbedBuilder()
 
@@ -39,7 +39,7 @@ async function handleTextCommands(interaction) {
 
 		embed.setDescription(`Current prefix is ${prefix}`)
 
-		if (newPrefix == "current" || newPrefix == "curr")
+		if (newPrefix === "current" || newPrefix === "curr")
 			return interaction.reply({ embeds: [embed], ephemeral: true })
 
 		try {
@@ -104,7 +104,7 @@ async function handleButtonCommands(interaction, bot) {
 		break
 
 	case "cycle":
-		if (serverQueue.repeatMode != 1)
+		if (serverQueue.repeatMode !== 1)
 			await commandHandler(
 				interaction,
 				[`${serverPrefix}${customId}`, "track"],
@@ -122,7 +122,7 @@ async function handleButtonCommands(interaction, bot) {
 		break
 
 	case "autoplay":
-		if (serverQueue.repeatMode != 3)
+		if (serverQueue.repeatMode !== 3)
 			await commandHandler(
 				interaction,
 				[`${serverPrefix}cycle`, "autoplay"],

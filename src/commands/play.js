@@ -41,7 +41,8 @@ module.exports = {
 		try {
 			if (!queue.connection) await queue.connect(voiceChannel)
 			else if (queue.channel !== msg.member.voice.channel) {
-				embed.setDescription("Already playing in a different voice channel")
+				embed
+					.setDescription("Already playing in a different voice channel")
 					.setColor(0x06bb06)
 				return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 			}

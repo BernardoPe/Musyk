@@ -19,13 +19,13 @@ module.exports = {
 		var filter = args[1]
 
 		if (
-			filter == "bassboost_low" ||
-			filter == "bassboost_high" ||
-			filter == "bassboost"
+			filter === "bassboost_low" ||
+			filter === "bassboost_high" ||
+			filter === "bassboost"
 		)
 			filter = "bassboost_low"
 
-		if (filter == "disableall") {
+		if (filter === "disableall") {
 			await serverQueue.filters.ffmpeg.setFilters(false)
 			embed.setDescription("Disabled all filters")
 			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)

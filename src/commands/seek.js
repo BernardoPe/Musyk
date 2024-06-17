@@ -1,4 +1,3 @@
-const { Util } = require("discord-player")
 const { sendEmbed } = require("../utils/embeds")
 
 module.exports = {
@@ -15,20 +14,20 @@ module.exports = {
 
 		let time = validateTimestamp(args[1], serverQueue.node.totalDuration)
 
-		if (time == false) {
+		if (time === false) {
 			embed.setDescription(
 				"**" +
-					args[1] +
-					"** is not a valid timestamp format, correct format should be **hh:mm:ss**.",
+          args[1] +
+          "** is not a valid timestamp format, correct format should be **hh:mm:ss**.",
 			)
 			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
-		if (time == -1) {
+		if (time === -1) {
 			embed.setDescription(
 				"**" +
-					args[1] +
-					"** is not a valid timestamp in this track, check this song's total duration.",
+          args[1] +
+          "** is not a valid timestamp in this track, check this song's total duration.",
 			)
 			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
@@ -49,8 +48,8 @@ function validateTimestamp(timestamp, maxDuration) {
 
 	if (
 		numComponents < 1 ||
-		numComponents > 3 ||
-		timestampComponents.some((num) => isNaN(num))
+    numComponents > 3 ||
+    timestampComponents.some((num) => isNaN(num))
 	) {
 		return false
 	}
@@ -73,11 +72,11 @@ function validateTimestamp(timestamp, maxDuration) {
 		[hours, minutes, seconds] = timestampComponents
 		if (
 			hours < 0 ||
-			hours > 23 ||
-			minutes < 0 ||
-			minutes > 59 ||
-			seconds < 0 ||
-			seconds > 59
+      hours > 23 ||
+      minutes < 0 ||
+      minutes > 59 ||
+      seconds < 0 ||
+      seconds > 59
 		) {
 			return false
 		}

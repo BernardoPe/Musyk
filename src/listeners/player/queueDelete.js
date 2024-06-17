@@ -12,7 +12,7 @@ module.exports = {
 
 		let embed = new EmbedBuilder()
 
-		if (vc.members.size == 0)
+		if (vc.members.size === 0)
 			embed.setDescription("Voice channel is empty, leaving...")
 		else embed.setDescription("Leaving the channel...")
 
