@@ -19,7 +19,7 @@ module.exports = {
 }
 
 async function handleTextCommands(interaction) {
-	if (interaction.isChatInputCommand && interaction.commandName == "help") {
+	if (interaction.isChatInputCommand && interaction.commandName === "help") {
 		let embed = helpEmbeds()
 		let link = createLink()
 		await interaction.reply({

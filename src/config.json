@@ -1,5 +1,5 @@
 {
-  "prefix": "//",
-  "botID": "1222969611692150846",
-  "inviteLink": "https://discord.com/oauth2/authorize?client_id=1104836508944445551"
+  "prefix": "YOUR_PREFIX",
+  "botID": "YOUR_BOT_ID",
+  "inviteLink": "YOUR_INVITE_LINK"
 }
