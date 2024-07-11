@@ -1,25 +1,24 @@
-{	
-	"scripts": {
-		"start": "node  ./src/bot.js",
-		"lint": "eslint ./src/**/*.js",
-		"lint:fix": "eslint ./src/**/*.js --fix",
-		"prettier": "prettier --write ./src/**/*.js",
-		"prettier-eslint": "prettier-eslint --write ./src/**/*.js"
-	},
-	"dependencies": {
-		"@discord-player/extractor": "^4.4.7",
-		"@discordjs/opus": "^0.9.0",
-		"@discordjs/voice": "^0.14.0",
-		"@web-scrobbler/metadata-filter": "^3.1.0",
-		"discord-player": "^6.6.10",
-		"discord.js": "^14.15.3",
-		"dotenv": "^16.4.5",
-		"prettier": "^3.2.5",
-		"prettier-eslint": "^16.3.0",
-		"winston": "^3.13.0",
-		"ytdl-core": "^4.11.5"
-	},
-	"devDependencies": {
-		"eslint": "^8.57.0"
-	}
+{
+    "scripts": {
+        "start": "node  ./src/bot.js",
+        "lint": "eslint ./src/**/*.js",
+        "lint:fix": "eslint ./src/**/*.js --fix",
+        "prettier": "prettier --write ./src/**/*.js",
+        "prettier-eslint": "prettier-eslint --write ./src/**/*.js"
+    },
+    "dependencies": {
+        "@discord-player/extractor": "^4.4.7",
+        "@discordjs/voice": "^0.14.0",
+        "@web-scrobbler/metadata-filter": "^3.1.0",
+        "discord-player": "^6.6.10",
+        "discord-player-youtubei": "^1.0.9",
+        "discord.js": "^14.15.3",
+        "dotenv": "^16.4.5",
+        "prettier": "^3.2.5",
+        "prettier-eslint": "^16.3.0",
+        "winston": "^3.13.0"
+    },
+    "devDependencies": {
+        "eslint": "^8.57.0"
+    }
 }

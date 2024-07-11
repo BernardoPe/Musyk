@@ -54,13 +54,12 @@ module.exports = {
 		args.shift()
 
 		const str = args.join(" ").trim()
-		let result = await bot.player
-			.search(str, { requestedBy: msg.author })
-			.catch(() => {})
+		let result = await bot.player.search(str, { requestedBy: msg.author })
 
 		var song = result.tracks[0]
 
 		try {
+			
 			if (result.tracks.length === 0) throw new Error("No results found")
 
 			if (!queue.isPlaying() && !queue.willStart) {

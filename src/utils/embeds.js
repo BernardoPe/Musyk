@@ -216,7 +216,7 @@ function queuePlaylistEmbed(playlist) {
 function nowPlayingEmbed(queue) {
 	let embed = new EmbedBuilder()
 	let emoji = getEmoji(queue.currentTrack.source, embed)
-
+	
 	let song = queue.currentTrack
 	embed
 		.setTitle("Now Playing")
@@ -298,7 +298,7 @@ async function updatePlayer(queue) {
 	let embed = nowPlayingEmbed(queue)
 	let buttons = createButtons()
 
-	while (!queue.metadata[2]) await Util.wait(100)
+	if (!queue.metadata[2]) return
 
 	const data = queue.metadata[2]
 
