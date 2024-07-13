@@ -1,5 +1,8 @@
 {
   "prefix": "YOUR_PREFIX",
   "botID": "YOUR_BOT_ID",
-  "inviteLink": "YOUR_INVITE_LINK"
+  "inviteLink": "YOUR_INVITE_LINK",
+  "adminIDs": [
+    "YOUR_DISCORD_ID"
+  ]
 }

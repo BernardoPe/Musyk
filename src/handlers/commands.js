@@ -1,4 +1,4 @@
-const { getAllFiles, getServerPrefixFromJson } = require("../utils/configs.js")
+const { getAllFiles, getServerPrefixFromJson, getAdminsFromJson } = require("../utils/configs.js")
 const path = require("node:path")
 const winston = require("../utils/logger.js")
 const commands = {}
@@ -18,6 +18,11 @@ module.exports = async (msg, args, embed, bot) => {
 
 	if (commands.hasOwnProperty(commandName)) {
 		const command = commands[commandName]
+
+		if (command.adminCommand) {
+			const admins = getAdminsFromJson()
+			if (!admins.includes(msg.author.id)) return
+		}
 
 		command.msg = msg.content
 		command.user = msg.author ? msg.author.username : undefined

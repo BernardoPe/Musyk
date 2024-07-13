@@ -9,6 +9,10 @@ function getServerPrefixFromJson(serverID) {
 	return require("../config.json").prefix
 }
 
+function getAdminsFromJson() {
+	return require("../config.json").adminIDs
+}
+
 function saveJsonToFile(filename, json) {
 	fs.writeFile(filename, json, function (err) {
 		if (err) console.log(err)
@@ -50,4 +54,5 @@ module.exports = {
 	getAllFiles,
 	setNewPrefix,
 	getServerPrefixFromJson,
+	getAdminsFromJson,
 }
