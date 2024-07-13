@@ -248,11 +248,6 @@ function nowPlayingEmbed(queue) {
 				value: `${queue.node.volume}%`,
 				inline: true,
 			},
-			{
-				name: "Progress",
-				value: `${queue.node.createProgressBar()}`,
-				inline: false,
-			}
 		)
 	} else {
 		embed.addFields(
@@ -263,11 +258,6 @@ function nowPlayingEmbed(queue) {
 			},
 			{ name: "Requested By", value: `${song.requestedBy}`, inline: true },
 			{ name: "Volume", value: `${queue.node.volume}%`, inline: true },
-			{
-				name: "Progress",
-				value: `${queue.node.createProgressBar()}`,
-				inline: false,
-			}
 		)
 	}
 
@@ -318,13 +308,6 @@ function updatePlayer(queue) {
 	})
 }
 
-async function handlePlayer(queue) {
-	while (queue) {
-		if(queue.isPlaying()) updatePlayer(queue)
-		await Util.wait(1000)
-	}
-}
-
 async function sendEmbed(channel, info, timeout) {
 	if (!channel) return
 	let bot = channel.members.get(botID) // replace with your bot id
@@ -348,5 +331,4 @@ module.exports = {
 	helpEmbeds,
 	createLink,
 	createQueueEmbed,
-	handlePlayer,
 }
