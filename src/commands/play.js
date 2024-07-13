@@ -55,18 +55,23 @@ module.exports = {
 
 		const str = args.join(" ").trim()
 		let result = await bot.player.search(str, { requestedBy: msg.author })
-
+		
 		var song = result.tracks[0]
+
+		if (result.playlist) { // temporary fix for playlist not being added to queue (youtube)
+			song.playlist = result.playlist
+		}
 
 		try {
 			
 			if (result.tracks.length === 0) throw new Error("No results found")
 
 			if (!queue.isPlaying() && !queue.willStart) {
+				
 				queue.setMetadata([queue.channel, msg.channel])
 
 				queue.willStart = true
-
+				
 				await queue.play(song)
 
 				queue.willStart = false
