@@ -27,4 +27,4 @@ CMD ["npm", "start"]
 
 # to build and deploy the Docker image, run the following commands:
 # docker build -t musyk .
-# docker run --env-file src/.env -p musyk
+# docker run --env-file src/.env -d musyk
