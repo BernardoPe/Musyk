@@ -9,9 +9,9 @@
     "dependencies": {
         "@discord-player/extractor": "^4.4.7",
         "@discordjs/voice": "^0.14.0",
-        "@distube/ytdl-core": "^4.13.5",
         "@web-scrobbler/metadata-filter": "^3.1.0",
         "discord-player": "^6.6.10",
+        "discord-player-youtubei": "^1.1.6",
         "discord.js": "^14.15.3",
         "dotenv": "^16.4.5",
         "prettier": "^3.2.5",

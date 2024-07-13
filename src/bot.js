@@ -4,6 +4,7 @@ const {
 	SpotifyExtractor,
 	SoundCloudExtractor,
 } = require("@discord-player/extractor")
+const { YoutubeiExtractor, createYoutubeiStream, generateOauthTokens } = require("discord-player-youtubei")
 const { Client, GatewayIntentBits } = require("discord.js")
 const { addEventListeners } = require("./handlers/events.js")
 
@@ -40,11 +41,23 @@ process.on("unhandledRejection", (reason, promise) => {
 
 // console.log(bot.player.scanDeps())
 
-bot.player.extractors.register(YouTubeExtractor, {})
+// generateOauthTokens() // Run this once to generate the necessary tokens
 
-bot.player.extractors.register(SpotifyExtractor, {})
+bot.player.extractors.register(YoutubeiExtractor, {
+	authentication: process.env.ACCESS_TOKEN,
+})
 
-bot.player.extractors.register(SoundCloudExtractor, {})
+bot.player.extractors.register(YouTubeExtractor, {
+	createStream: createYoutubeiStream
+})
+
+bot.player.extractors.register(SpotifyExtractor, {
+	createStream: createYoutubeiStream
+})
+
+bot.player.extractors.register(SoundCloudExtractor, {
+	createStream: createYoutubeiStream
+})
 
 addEventListeners(bot)
 
