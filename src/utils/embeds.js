@@ -248,6 +248,11 @@ function nowPlayingEmbed(queue) {
 				value: `${queue.node.volume}%`,
 				inline: true,
 			},
+			{
+				name: "Progress",
+				value: `${queue.node.createProgressBar()}`,
+				inline: false,
+			}
 		)
 	} else {
 		embed.addFields(
@@ -258,6 +263,11 @@ function nowPlayingEmbed(queue) {
 			},
 			{ name: "Requested By", value: `${song.requestedBy}`, inline: true },
 			{ name: "Volume", value: `${queue.node.volume}%`, inline: true },
+			{
+				name: "Progress",
+				value: `${queue.node.createProgressBar()}`,
+				inline: false,
+			}
 		)
 	}
 
@@ -294,7 +304,7 @@ function songQueuedEmbed(song, queue) {
 	return embed
 }
 
-async function updatePlayer(queue) {
+function updatePlayer(queue) {
 	let embed = nowPlayingEmbed(queue)
 	let buttons = createButtons()
 
@@ -306,6 +316,13 @@ async function updatePlayer(queue) {
 		components: buttons,
 		embeds: [embed],
 	})
+}
+
+async function handlePlayer(queue) {
+	while (queue) {
+		if(queue.isPlaying()) updatePlayer(queue)
+		await Util.wait(1000)
+	}
 }
 
 async function sendEmbed(channel, info, timeout) {
@@ -325,11 +342,11 @@ module.exports = {
 	sendEmbed,
 	updatePlayer,
 	createButtons,
-	getEmoji,
 	queuePlaylistEmbed,
 	nowPlayingEmbed,
 	songQueuedEmbed,
 	helpEmbeds,
 	createLink,
 	createQueueEmbed,
+	handlePlayer,
 }

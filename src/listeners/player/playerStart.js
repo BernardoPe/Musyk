@@ -1,9 +1,9 @@
-const { GuildQueueEvent } = require("discord-player")
+const { GuildQueueEvent, Util } = require("discord-player")
 const {
-	updatePlayer,
 	nowPlayingEmbed,
 	createButtons,
 	sendEmbed,
+	handlePlayer
 } = require("../../utils/embeds.js")
 
 module.exports = {
@@ -21,6 +21,7 @@ module.exports = {
 			})
 			const col = data ? data.createMessageComponentCollector() : undefined
 			queue.setMetadata([vc, textChannel, data, col])
-		} else updatePlayer(queue)
+			await handlePlayer(queue)
+		}
 	},
 }
