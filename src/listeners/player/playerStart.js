@@ -3,7 +3,7 @@ const {
 	nowPlayingEmbed,
 	createButtons,
 	sendEmbed,
-	updatePlayer
+	handlePlayer
 } = require("../../utils/embeds.js")
 
 module.exports = {
@@ -21,6 +21,7 @@ module.exports = {
 			})
 			const col = data ? data.createMessageComponentCollector() : undefined
 			queue.setMetadata([vc, textChannel, data, col])
-		} else updatePlayer(queue)
+			handlePlayer(queue)
+		} 
 	},
 }

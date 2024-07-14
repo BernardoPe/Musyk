@@ -248,6 +248,11 @@ function nowPlayingEmbed(queue) {
 				value: `${queue.node.volume}%`,
 				inline: true,
 			},
+			{
+				name: "Progress",
+				value: `${queue.node.createProgressBar()}`,
+				inline: false,
+			}
 		)
 	} else {
 		embed.addFields(
@@ -258,6 +263,11 @@ function nowPlayingEmbed(queue) {
 			},
 			{ name: "Requested By", value: `${song.requestedBy}`, inline: true },
 			{ name: "Volume", value: `${queue.node.volume}%`, inline: true },
+			{
+				name: "Progress",
+				value: `${queue.node.createProgressBar()}`,
+				inline: false,
+			}
 		)
 	}
 
@@ -295,16 +305,26 @@ function songQueuedEmbed(song, queue) {
 }
 
 function updatePlayer(queue) {
+
 	let embed = nowPlayingEmbed(queue)
-	let buttons = createButtons()
 
 	if (!queue.metadata[2]) return
 
 	const data = queue.metadata[2]
 
 	data.edit({
-		components: buttons,
 		embeds: [embed],
+	})
+
+}
+
+function handlePlayer(queue) {
+	if(!queue.metadata[2]) return 
+	const randTime = Math.floor(Math.random() * 3000) + 1000
+
+	Util.wait(randTime).then(() => {
+		if(queue.isPlaying()) updatePlayer(queue)
+		handlePlayer(queue)
 	})
 }
 
@@ -331,4 +351,5 @@ module.exports = {
 	helpEmbeds,
 	createLink,
 	createQueueEmbed,
+	handlePlayer
 }
