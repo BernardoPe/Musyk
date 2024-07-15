@@ -13,7 +13,7 @@ module.exports = {
 			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
-		let tracks = serverQueue.tracks.toArray()
+		const tracks = serverQueue.tracks.toArray()
 
 		if (value < 1 || value > tracks.length) {
 			embed.setDescription(`Invalid number, must be 1-${tracks.length}`)

@@ -6,7 +6,7 @@ module.exports = {
 	requiresPlayer: true,
 	async execute(msg, args, embed, bot, serverQueue) {
 
-		let time = validateTimestamp(args[1], serverQueue.node.totalDuration)
+		const time = validateTimestamp(args[1], serverQueue.node.totalDuration)
 
 		if (time === false) {
 			embed.setDescription(
@@ -26,10 +26,10 @@ module.exports = {
 			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
-		let dur = `${serverQueue.currentTrack.duration.padStart(5, "0")}`
+		const dur = `${serverQueue.currentTrack.duration.padStart(5, "0")}`
 		await serverQueue.node.seek(time)
 
-		let timestamp = millisecondsToTimestamp(time)
+		const timestamp = millisecondsToTimestamp(time)
 		embed.setDescription("Track playback time set to **" + timestamp + "/" + dur + "**",)
 
 		return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)

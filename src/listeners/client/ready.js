@@ -7,7 +7,6 @@ module.exports = {
 			name: ".help | /help",
 			type: ActivityType.Listening,
 		})
-
 		console.log("Bot is Up")
 	},
 }

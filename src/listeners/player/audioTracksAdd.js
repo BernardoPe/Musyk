@@ -9,7 +9,7 @@ const {
 module.exports = {
 	name: GuildQueueEvent.audioTracksAdd,
 	execute: async (queue, tracks) => {
-		let embed = queuePlaylistEmbed(tracks[0].playlist, queue)
+		const embed = queuePlaylistEmbed(tracks[0].playlist, queue)
 
 		if (queue.isPlaying()) await updatePlayer(queue)
 

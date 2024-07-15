@@ -1,5 +1,4 @@
 const { Util } = require("discord-player")
-const { sendEmbed } = require("../utils/embeds")
 
 module.exports = {
 	aliases: ["skip"],

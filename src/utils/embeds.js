@@ -20,7 +20,7 @@ function createLink() {
 }
 
 function helpEmbeds() {
-	let embed1 = new EmbedBuilder()
+	const embed1 = new EmbedBuilder()
 		.setAuthor({
 			name: "Syken",
 			url: "https://discord.com/users/259810801219534849",
@@ -34,7 +34,7 @@ function helpEmbeds() {
 		)
 		.setColor(0x58b9ff)
 
-	let embed2 = new EmbedBuilder()
+	const embed2 = new EmbedBuilder()
 		.setTitle("Playing Music")
 		.setDescription(
 			"To play music, use the command '.play <song name / url>'. Musyk will join your voice channel and start playing the requested song.\n\n" +
@@ -46,7 +46,7 @@ function helpEmbeds() {
 		)
 		.setColor(0x58b9ff)
 
-	let embed3 = new EmbedBuilder()
+	const embed3 = new EmbedBuilder()
 		.setTitle("Command List")
 		.setDescription(
 			"Musyk commands start with the default prefix '.'. This prefix can be changed with the slash command '/prefix'. Available commands are listed below.\n\n" +
@@ -68,7 +68,7 @@ function helpEmbeds() {
 		)
 		.setColor(0x58b9ff)
 
-	let embed4 = new EmbedBuilder()
+	const embed4 = new EmbedBuilder()
 		.setTitle("Play Buttons")
 		.addFields(
 			{ name: "⏭️", value: "Skips the current song" },
@@ -92,7 +92,7 @@ function helpEmbeds() {
 	//    .setColor(0x58b9ff);
 	//
 
-	let embed5 = new EmbedBuilder()
+	const embed5 = new EmbedBuilder()
 		.setTitle("Aditional Information")
 		.setDescription(
 			"Make sure Musyk has the necessary permissions to join voice channels and manage music playback.",
@@ -152,8 +152,8 @@ function getEmoji(source, embed) {
 }
 
 function createQueueEmbed(serverQueue) {
-	var pages = []
-	let tracks = serverQueue.tracks.toArray()
+	const pages = []
+	const tracks = serverQueue.tracks.toArray()
 
 	let size = 0
 	let page = 1
@@ -199,14 +199,11 @@ function createQueueEmbed(serverQueue) {
 }
 
 function queuePlaylistEmbed(playlist) {
-	let type = playlist.tracks[0].source
-	let embed = new EmbedBuilder()
-	let emoji = getEmoji(type, embed)
+	const type = playlist.tracks[0].source
+	const embed = new EmbedBuilder()
+	const emoji = getEmoji(type, embed)
 
-	let thumbnail
-
-	if (!playlist.thumbnail.includes("null")) thumbnail = playlist.thumbnail
-	else thumbnail = playlist.tracks[0].thumbnail
+	const thumbnail = playlist.thumbnail.includes("null") ? playlist.tracks[0].thumbnail : playlist.thumbnail
 
 	embed
 		.setTitle("Playlist Queued")
@@ -225,14 +222,16 @@ function queuePlaylistEmbed(playlist) {
 }
 
 function nowPlayingEmbed(queue) {
-	let embed = new EmbedBuilder()
-	let emoji = getEmoji(queue.currentTrack.source, embed)
-	
-	let song = queue.currentTrack
+
+	const embed = new EmbedBuilder()
+	const emoji = getEmoji(queue.currentTrack.source, embed)
+	const song = queue.currentTrack
+
 	embed
 		.setTitle("Now Playing")
 		.setDescription(`${emoji} **[${song.cleanTitle}](${song.url})**`)
 		.setThumbnail(`${song.thumbnail}`)
+
 	if (queue.history.nextTrack) {
 		embed.addFields(
 			{
@@ -286,9 +285,9 @@ function nowPlayingEmbed(queue) {
 }
 
 function songQueuedEmbed(song, queue) {
-	let type = song.source
-	let embed = new EmbedBuilder()
-	let emoji = getEmoji(type, embed)
+	const type = song.source
+	const embed = new EmbedBuilder()
+	const emoji = getEmoji(type, embed)
 
 	embed
 		.setTitle("Song Queued")
@@ -319,7 +318,7 @@ function updatePlayer(queue) {
 
 	queue.updating = true
 
-	let embed = nowPlayingEmbed(queue)
+	const embed = nowPlayingEmbed(queue)
 
 	if (!queue.metadata[2]) return
 
@@ -344,7 +343,7 @@ function handlePlayer(queue) {
 
 async function sendEmbed(channel, info, timeout) {
 	if (!channel) return
-	let bot = channel.members.get(botID) // replace with your bot id
+	const bot = channel.members.get(botID)
 	if (!bot) return
 	if (!channel.permissionsFor(bot).has("SendMessages")) return
 	if (!timeout) return channel.send(info)

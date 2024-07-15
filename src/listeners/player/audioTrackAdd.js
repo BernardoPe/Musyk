@@ -11,7 +11,7 @@ module.exports = {
 	execute: async (queue, track) => {
 		if (!queue.isPlaying()) return
 
-		let embed = songQueuedEmbed(track, queue)
+		const embed = songQueuedEmbed(track, queue)
 
 		if (queue.isPlaying()) await updatePlayer(queue)
 

@@ -17,9 +17,9 @@ module.exports = {
 			queue.metadata[2] = undefined
 		}
 
-		let embed = new EmbedBuilder()
-		embed.setDescription("Queue is empty, leaving in 5 minutes...")
-		embed.setColor(0xed4245)
+		const embed = new EmbedBuilder()
+			.setDescription("Queue is empty, leaving in 5 minutes...")
+			.setColor(0xed4245)
 
 		await sendEmbed(channel, { embeds: [embed] }, 60000)
 	},

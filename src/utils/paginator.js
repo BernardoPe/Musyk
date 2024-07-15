@@ -5,24 +5,24 @@ module.exports = async (msg, pages, buttons = []) => {
 
 	let index = 0
 
-	let button1 = new ButtonBuilder()
+	const button1 = new ButtonBuilder()
 		.setCustomId("1")
 		.setEmoji("◀️")
 		.setStyle(ButtonStyle.Primary)
 		.setDisabled(true)
 
-	let button2 = new ButtonBuilder()
+	const button2 = new ButtonBuilder()
 		.setCustomId("2")
 		.setEmoji("▶️")
 		.setStyle(ButtonStyle.Primary)
 		.setDisabled(pages.length <= index + 1)
 
-	let button3 = new ButtonBuilder()
+	const button3 = new ButtonBuilder()
 		.setCustomId("3")
 		.setEmoji("❌")
 		.setStyle(ButtonStyle.Secondary)
 
-	let row = new ActionRowBuilder().addComponents(button1, button2, button3)
+	const row = new ActionRowBuilder().addComponents(button1, button2, button3)
 
 	for (let i = 0; i < buttons.length; i++) {
 		row.addComponents(buttons[i])
@@ -42,20 +42,20 @@ module.exports = async (msg, pages, buttons = []) => {
 		if (i.customId === "1") index--
 		else if (i.customId === "2") index++
 		else return col.stop()
-		
-		let button1 = new ButtonBuilder()
+
+		const button1 = new ButtonBuilder()
 			.setCustomId("1")
 			.setEmoji("◀️")
 			.setStyle(ButtonStyle.Primary)
 			.setDisabled(index === 0)
 
-		let button2 = new ButtonBuilder()
+		const button2 = new ButtonBuilder()
 			.setCustomId("2")
 			.setEmoji("▶️")
 			.setStyle(ButtonStyle.Primary)
 			.setDisabled(pages.length <= index + 1)
 
-		let button3 = new ButtonBuilder()
+		const button3 = new ButtonBuilder()
 			.setCustomId("3")
 			.setEmoji("❌")
 			.setStyle(ButtonStyle.Secondary)
