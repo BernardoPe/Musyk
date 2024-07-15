@@ -10,141 +10,113 @@ const {
 module.exports = {
 	name: Events.InteractionCreate,
 	execute: async (interaction, bot) => {
+		const serverPrefix = getServerPrefixFromJson(interaction.guild.id)
+		const serverQueue = bot.player.nodes.get(interaction.guild.id)
+		const embed = new EmbedBuilder()
 		if (!interaction.isButton()) {
-			return await handleTextCommands(interaction)
+			await handleTextCommands(interaction, bot, serverQueue, serverPrefix, embed)
+		} else {
+			await handleButtonCommands(interaction, bot, serverQueue, serverPrefix, embed)
 		}
-
-		await handleButtonCommands(interaction, bot)
 	},
 }
 
-async function handleTextCommands(interaction) {
-	if (interaction.isChatInputCommand && interaction.commandName === "help") {
-		let embed = helpEmbeds()
-		let link = createLink()
-		await interaction.reply({
-			embeds: embed,
-			components: [link],
-			ephemeral: true,
-		})
-	} else if (
-		interaction.isChatInputCommand &&
-        interaction.commandName === "prefix"
-	) {
-		let embed = new EmbedBuilder()
+const textCommands = {
+	help: helpCommand,
+	prefix: prefixCommand,
+}
 
-		let prefix = getServerPrefixFromJson(interaction.guild.id)
+const buttonCommands = {
+	pause: pauseCommand,
+	resume: pauseCommand,
+	increaseVolume: increaseVolumeCommand,
+	decreaseVolume: decreaseVolumeCommand,
+	cycle: cycleCommand,
+	autoplay: autoplayCommand,
+}
 
-		let newPrefix = interaction.options.get("prefix").value
-
-		embed.setDescription(`Current prefix is ${prefix}`)
-
-		if (newPrefix === "current" || newPrefix === "curr")
-			return interaction.reply({ embeds: [embed], ephemeral: true })
-
-		try {
-			setNewPrefix(interaction.guild.id, newPrefix)
-		} catch (err) {
-			embed.setDescription("There was an error while saving the new prefix")
-			console.log(err)
-			return interaction.reply({ embeds: [embed], ephemeral: true })
+async function handleTextCommands(interaction, bot, serverQueue, serverPrefix, embed) {
+	if (interaction.isChatInputCommand) {
+		const { commandName } = interaction
+		if (textCommands[commandName]) {
+			await textCommands[commandName](interaction, bot, serverQueue, serverPrefix, embed)
 		}
-
-		embed.setDescription("Prefix successfully set to **" + newPrefix + "**")
-		return interaction.reply({ embeds: [embed] })
 	}
 }
 
-async function handleButtonCommands(interaction, bot) {
-	const { customId } = interaction
+async function handleButtonCommands(interaction, bot, serverQueue, serverPrefix, embed){
 
-	const serverPrefix = getServerPrefixFromJson(interaction.guild.id)
-	const serverQueue = bot.player.nodes.get(interaction.guild.id)
-	const embed = new EmbedBuilder()
+	const { customId } = interaction
 
 	await interaction.deferUpdate()
 
-	switch (customId) {
-	case "pause":
-		if (serverQueue.isPlaying() && !serverQueue.dispatcher.isPaused())
-			await commandHandler(
-				interaction,
-				[`${serverPrefix}${"pause"}`],
-				embed,
-				bot,
-			)
-		else
-			await commandHandler(
-				interaction,
-				[`${serverPrefix}${"resume"}`],
-				embed,
-				bot,
-			)
-		break
-
-	case "increaseVolume":
-		if (!serverQueue) break
-		if (serverQueue.node.volume >= 180) {
-			serverQueue.node.setVolume(
-				serverQueue.node.volume + (200 - serverQueue.node.volume),
-			)
-			return
-		}
-		serverQueue.node.setVolume(serverQueue.node.volume + 20)
-		break
-
-	case "decreaseVolume":
-		if (serverQueue.node.volume <= 20) {
-			serverQueue.node.setVolume(
-				serverQueue.node.volume + (0 - serverQueue.node.volume),
-			)
-			return
-		}
-		serverQueue.node.setVolume(serverQueue.node.volume - 20)
-		break
-
-	case "cycle":
-		if (serverQueue.repeatMode !== 1)
-			await commandHandler(
-				interaction,
-				[`${serverPrefix}${customId}`, "track"],
-				embed,
-				bot,
-			)
-		else
-			await commandHandler(
-				interaction,
-				[`${serverPrefix}${customId}`, "off"],
-				embed,
-				bot,
-			)
-
-		break
-
-	case "autoplay":
-		if (serverQueue.repeatMode !== 3)
-			await commandHandler(
-				interaction,
-				[`${serverPrefix}cycle`, "autoplay"],
-				embed,
-				bot,
-			)
-		else
-			await commandHandler(
-				interaction,
-				[`${serverPrefix}cycle`, "off"],
-				embed,
-				bot,
-			)
-
-		break
-
-	default:
-		await commandHandler(
+	if (buttonCommands[customId]) {
+		await buttonCommands[customId](
 			interaction,
-			[`${serverPrefix}${customId}`],
-			embed,
 			bot,
+			serverQueue,
+			serverPrefix,
+			embed,
 		)
+	} else {
+		await commandHandler(interaction, [`${serverPrefix}${customId}`], embed, bot)
 	}
+
+}
+
+async function helpCommand(interaction, bot, serverQueue, serverPrefix, embed) {
+	embed = helpEmbeds()
+	const link = createLink()
+	await interaction.reply({
+		embeds: embed,
+		components: [link],
+		ephemeral: true,
+	})
+}
+
+async function prefixCommand(interaction, bot, serverQueue, serverPrefix, embed) {
+
+	let newPrefix = interaction.options.get("prefix").value
+
+	if (newPrefix === "current" || newPrefix === "curr") {
+		embed.setDescription("The current prefix is **" + serverPrefix + "**")
+		return interaction.reply({ embeds: [embed], ephemeral: true })
+	}
+
+	try {
+		setNewPrefix(interaction.guild.id, newPrefix)
+	} catch (err) {
+		embed.setDescription("There was an error while saving the new prefix")
+		console.error(err)
+		return interaction.reply({ embeds: [embed], ephemeral: true })
+	}
+
+	embed.setDescription("Prefix successfully set to **" + newPrefix + "**")
+	return interaction.reply({ embeds: [embed] })
+}
+
+async function pauseCommand(interaction, bot, serverQueue, serverPrefix, embed) {
+	const command = serverQueue.isPlaying() && !serverQueue.dispatcher.isPaused() ? "pause" : "resume"
+	await commandHandler(interaction, [`${serverPrefix}${command}`], embed, bot)
+}
+
+async function increaseVolumeCommand(interaction, bot, serverQueue, serverPrefix, embed) {
+	if (!serverQueue) return
+	const newVolume = serverQueue.node.volume === 200 ? 200 : serverQueue.node.volume + 20
+	serverQueue.node.setVolume(newVolume)
+}
+
+async function decreaseVolumeCommand(interaction, bot, serverQueue, serverPrefix, embed) {
+	const newVolume = serverQueue.node.volume === 0 ? 0 : serverQueue.node.volume - 20
+	serverQueue.node.setVolume(newVolume)
+}
+
+async function cycleCommand(interaction, bot, serverQueue, serverPrefix, embed) {
+	const repeatMode = serverQueue.repeatMode !== 1 ? "track" : "off"
+	await commandHandler(interaction, [`${serverPrefix}cycle`, repeatMode], embed, bot)
+}
+
+async function autoplayCommand(interaction, bot, serverQueue, serverPrefix, embed) {
+	const repeatMode = serverQueue.repeatMode !== 3 ? "autoplay" : "off"
+	await commandHandler(interaction, [`${serverPrefix}cycle`, repeatMode], embed, bot)
 }

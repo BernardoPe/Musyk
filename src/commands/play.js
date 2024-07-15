@@ -1,5 +1,11 @@
 const { sendEmbed } = require("../utils/embeds")
 
+const searchEngines = {
+	"-sp": "spotifySearch",
+	"-yt": "youtube",
+	"-sc": "soundcloudSearch"
+}
+
 module.exports = {
 	aliases: ["p", "play"],
 	name: "play",
@@ -52,12 +58,6 @@ module.exports = {
 		}
 
 		args.shift() // Remove the command from the args
-
-		const searchEngines = {
-			"-sp": "spotifySearch",
-			"-yt": "youtube",
-			"-sc": "soundcloudSearch"
-		}
 
 		let searchArg = args.find(arg => searchEngines[arg] !== undefined)
 		let searchEngine = searchEngines[searchArg] || "youtube"
