@@ -3,14 +3,8 @@ const { sendEmbed, updatePlayer } = require("../utils/embeds")
 module.exports = {
 	aliases: ["reverse"],
 	name: "reverse",
-	execute: async (msg, args, embed, bot) => {
-		const serverQueue = bot.player.nodes.get(msg.guild.id)
-
-		embed.setDescription("There are no songs currently playing")
-
-		if (!serverQueue || !serverQueue.isPlaying())
-			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
-
+	requiresPlayer: true,
+	execute: async (msg, args, embed, bot, serverQueue) => {
 		reverse(serverQueue, serverQueue.tracks.toArray())
 
 		updatePlayer(serverQueue)

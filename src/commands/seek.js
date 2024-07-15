@@ -3,22 +3,16 @@ const { sendEmbed } = require("../utils/embeds")
 module.exports = {
 	aliases: ["seek"],
 	name: "seek",
-
-	async execute(msg, args, embed, bot) {
-		embed.setColor(0xfd0033).setDescription("Not currently playing any songs")
-
-		let serverQueue = bot.player.nodes.get(msg.guild.id)
-
-		if (!serverQueue)
-			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+	requiresPlayer: true,
+	async execute(msg, args, embed, bot, serverQueue) {
 
 		let time = validateTimestamp(args[1], serverQueue.node.totalDuration)
 
 		if (time === false) {
 			embed.setDescription(
 				"**" +
-          args[1] +
-          "** is not a valid timestamp format, correct format should be **hh:mm:ss**.",
+             args[1] +
+             "** is not a valid timestamp format, correct format should be **hh:mm:ss**.",
 			)
 			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
@@ -34,10 +28,10 @@ module.exports = {
 
 		let dur = `${serverQueue.currentTrack.duration.padStart(5, "0")}`
 		await serverQueue.node.seek(time)
+
 		let timestamp = millisecondsToTimestamp(time)
-		embed.setDescription(
-			"Track playback time set to **" + timestamp + "/" + dur + "**",
-		)
+		embed.setDescription("Track playback time set to **" + timestamp + "/" + dur + "**",)
+
 		return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 	},
 }

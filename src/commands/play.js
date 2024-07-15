@@ -10,6 +10,7 @@ module.exports = {
 	aliases: ["p", "play"],
 	name: "play",
 	execute: async (msg, args, embed, bot) => {
+
 		if (args.length === 1) {
 			embed.setColor(0x06bb06).setDescription("No search arguments provided")
 			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
@@ -60,7 +61,7 @@ module.exports = {
 		args.shift() // Remove the command from the args
 
 		let searchArg = args.find(arg => searchEngines[arg] !== undefined)
-		let searchEngine = searchEngines[searchArg] || "youtube"
+		let searchEngine = searchEngines[searchArg] || "auto"
 
 		args = args.filter(arg => searchEngines[arg] === undefined)
 

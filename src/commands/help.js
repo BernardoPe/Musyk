@@ -5,10 +5,8 @@ module.exports = {
 	aliases: ["help"],
 	name: "help",
 	execute: async (msg) => {
-		let embed = helpEmbeds()
-
-		let link = createLink()
-
+		const embed = helpEmbeds()
+		const link = createLink()
 		await paginate(msg, embed, link.components)
 	},
 }

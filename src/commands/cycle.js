@@ -4,14 +4,8 @@ const { sendEmbed } = require("../utils/embeds.js")
 module.exports = {
 	aliases: ["cycle"],
 	name: "cycle",
-	async execute(msg, args, embed, bot) {
-		embed.setColor(0xfd0033).setDescription("Not currently playing any songs")
-
-		let serverQueue = bot.player.nodes.get(msg.guild.id)
-
-		if (!serverQueue || !serverQueue.isPlaying())
-			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
-
+	requiresPlayer: true,
+	async execute(msg, args, embed, bot, serverQueue) {
 		let md = "none"
 		let mode = undefined
 

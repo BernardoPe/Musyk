@@ -1,4 +1,5 @@
 const { getAllFiles, getServerPrefixFromJson, getAdminsFromJson } = require("../utils/configs.js")
+const { sendEmbed } = require("../utils/embeds.js")
 const path = require("node:path")
 const winston = require("../utils/logger.js")
 const commands = {}
@@ -17,11 +18,18 @@ module.exports = async (msg, args, embed, bot) => {
 	const commandName = args[0].slice(PREFIX.length).toLowerCase()
 
 	if (commands.hasOwnProperty(commandName)) {
+
 		const command = commands[commandName]
+		const serverQueue = bot.player.nodes.get(msg.guild.id)
 
 		if (command.adminCommand) {
 			const admins = getAdminsFromJson()
 			if (!admins.includes(msg.author.id)) return
+		}
+
+		if (command.requiresPlayer && (!serverQueue || !serverQueue.isPlaying())) {
+			embed.setColor(0xfd0033).setDescription("Not currently playing any songs")
+			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
 		command.msg = msg.content
@@ -39,8 +47,8 @@ module.exports = async (msg, args, embed, bot) => {
 			}),
 			embed,
 			bot,
+			serverQueue,
 		)
 	}
 
-	return undefined
 }
