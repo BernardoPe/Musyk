@@ -35,6 +35,18 @@ function helpEmbeds() {
 		.setColor(0x58b9ff)
 
 	let embed2 = new EmbedBuilder()
+		.setTitle("Playing Music")
+		.setDescription(
+			"To play music, use the command '.play <song name / url>'. Musyk will join your voice channel and start playing the requested song.\n\n" +
+			"Musyk will automatically search for the requested song on Youtube if no URL is provided. If you want to search on a specific platform, use the following parameters:\n\n" +
+			"**-yt** : Search on Youtube\n" +
+			"**-sp** : Search on Spotify\n" +
+			"**-sc** : Search on SoundCloud\n\n" +
+			"For instance, '.play -yt Never Gonna Give You Up ' will search for 'Never Gonna Give You Up' on Youtube.",
+		)
+		.setColor(0x58b9ff)
+
+	let embed3 = new EmbedBuilder()
 		.setTitle("Command List")
 		.setDescription(
 			"Musyk commands start with the default prefix '.'. This prefix can be changed with the slash command '/prefix'. Available commands are listed below.\n\n" +
@@ -54,10 +66,9 @@ function helpEmbeds() {
         "**.jump <Queue Position>**: Jump to a specific position in the queue. Keeps all the songs between the current one and the specified one from the queue.\n\n" +
         "**.cycle <mode>**: Toggle the repeat mode for the music queue. Available options are 'off' for no repetition, 'track' for current track repetition, 'queue' for queue cycling, and 'autoplay for auto-search after the queue ends.",
 		)
-
 		.setColor(0x58b9ff)
 
-	let embed3 = new EmbedBuilder()
+	let embed4 = new EmbedBuilder()
 		.setTitle("Play Buttons")
 		.addFields(
 			{ name: "⏭️", value: "Skips the current song" },
@@ -88,7 +99,7 @@ function helpEmbeds() {
 		)
 		.setColor(0x58b9ff)
 
-	return [embed1, embed2, embed3, embed5]
+	return [embed1, embed2, embed3, embed4, embed5]
 }
 
 function createButtons() {
@@ -306,6 +317,8 @@ function songQueuedEmbed(song, queue) {
 
 function updatePlayer(queue) {
 
+	queue.updating = true
+
 	let embed = nowPlayingEmbed(queue)
 
 	if (!queue.metadata[2]) return
@@ -316,13 +329,14 @@ function updatePlayer(queue) {
 		embeds: [embed],
 	})
 
+	queue.updating = false
+
 }
 
 function handlePlayer(queue) {
 	if(!queue.metadata[2]) return 
-	const randTime = Math.floor(Math.random() * 3000) + 1000
 
-	Util.wait(randTime).then(() => {
+	Util.wait(1000).then(() => {
 		if(queue.isPlaying()) updatePlayer(queue)
 		handlePlayer(queue)
 	})

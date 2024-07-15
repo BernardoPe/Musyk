@@ -51,16 +51,27 @@ module.exports = {
 			return console.log(error)
 		}
 
-		args.shift()
+		args.shift() // Remove the command from the args
 
-		const str = args.join(" ").trim()
-		let result = await bot.player.search(str, { requestedBy: msg.author })
-		
-		var song = result.tracks[0]
-
-		if (result.playlist) { // temporary fix for playlist not being added to queue (youtube)
-			song.playlist = result.playlist
+		const searchEngines = {
+			"-sp": "spotifySearch",
+			"-yt": "youtube",
+			"-sc": "soundcloudSearch"
 		}
+
+		let searchArg = args.find(arg => searchEngines[arg] !== undefined)
+		let searchEngine = searchEngines[searchArg] || "youtube"
+
+		args = args.filter(arg => searchEngines[arg] === undefined)
+
+		const str = args.filter(arg => arg.trim() !== "").join(" ")
+
+		const result = await bot.player.search(str, {
+			requestedBy: msg.author,
+			searchEngine: searchEngine,
+		})
+		
+		let song = result.tracks[0]
 
 		try {
 			
