@@ -9,8 +9,12 @@ module.exports = {
 		while (serverQueue.dispatcher.isBuffering()) {
 			await Util.wait(5)
 		}
-		serverQueue.dispatcher.pause()
+		if (serverQueue.dispatcher.paused) {
+			embed.setColor(0xed4245).setDescription("The player is already paused")
+			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+		}
 		embed.setColor(0x01ff34).setDescription("Paused current song")
+		serverQueue.dispatcher.pause()
 		return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 	},
 }
