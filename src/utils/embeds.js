@@ -260,7 +260,7 @@ function nowPlayingEmbed(queue) {
 			},
 			{
 				name: "Progress",
-				value: `${queue.node.createProgressBar()}`,
+				value: `${progressBar(queue, { length: 20 })}`,
 				inline: false,
 			}
 		)
@@ -275,7 +275,7 @@ function nowPlayingEmbed(queue) {
 			{ name: "Volume", value: `${queue.node.volume}%`, inline: true },
 			{
 				name: "Progress",
-				value: `${queue.node.createProgressBar()}`,
+				value: `${progressBar(queue, { length: 20 })}`,
 				inline: false,
 			}
 		)
@@ -339,6 +339,37 @@ function handlePlayer(queue) {
 		if(queue.isPlaying()) updatePlayer(queue)
 		handlePlayer(queue)
 	})
+}
+
+function progressBar(queue, options) {
+	const total = {
+		value: queue.currentTrack.durationMS,
+		label: queue.currentTrack.duration,
+	}
+	const current = {
+		value: queue.node.estimatedPlaybackTime,
+		label: Util.formatDuration(queue.node.estimatedPlaybackTime),
+	}
+	if (!total|| !current)
+		return null
+	const { indicator = "\u{1F518}", leftChar = "\u25AC", rightChar = "\u25AC", length = 15, timecodes = true, separator = "\u2503" } = options || {}
+	const index = Math.round(current.value / total.value * length)
+	if (index >= 1 && index <= length) {
+		const bar = leftChar.repeat(index - 1).split("")
+		bar.push(indicator)
+		bar.push(rightChar.repeat(length - index))
+		if (timecodes) {
+			return `${current.label} ${separator} ${bar.join("")} ${separator} ${total.label}`
+		} else {
+			return `${bar.join("")}`
+		}
+	} else {
+		if (timecodes) {
+			return `${current.label} ${separator} ${indicator}${rightChar.repeat(length - 1)} ${separator} ${total.label}`
+		} else {
+			return `${indicator}${rightChar.repeat(length - 1)}`
+		}
+	}
 }
 
 async function sendEmbed(channel, info, timeout) {
