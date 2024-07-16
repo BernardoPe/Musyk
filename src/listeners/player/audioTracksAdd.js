@@ -13,6 +13,6 @@ module.exports = {
 
 		if (queue.isPlaying()) await updatePlayer(queue)
 
-		await sendEmbed(queue.metadata[1], { embeds: [embed] }, 60000)
+		sendEmbed(queue.metadata[1], { embeds: [embed] }, 60000)
 	},
 }

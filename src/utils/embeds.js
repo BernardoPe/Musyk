@@ -314,17 +314,19 @@ function songQueuedEmbed(song, queue) {
 	return embed
 }
 
-function updatePlayer(queue) {
-
-	queue.updating = true
+async function updatePlayer(queue) {
 
 	const embed = nowPlayingEmbed(queue)
 
-	if (!queue.metadata[2]) return
+	if (!queue.metadata[2] || queue.updating) {
+		return
+	}
+
+	queue.updating = true
 
 	const data = queue.metadata[2]
 
-	data.edit({
+	await data.edit({
 		embeds: [embed],
 	})
 
@@ -332,13 +334,13 @@ function updatePlayer(queue) {
 
 }
 
-function handlePlayer(queue) {
-	if(!queue.metadata[2]) return 
-	const randTime = Math.floor(Math.random() * 3000) + 1000
-	Util.wait(randTime).then(() => {
-		if(queue.isPlaying()) updatePlayer(queue)
-		handlePlayer(queue)
-	})
+async function handlePlayer(queue) {
+	while (queue.metadata[2]) {
+		await Util.wait(1000)
+		if (queue.isPlaying()) {
+			await updatePlayer(queue)
+		}
+	}
 }
 
 function progressBar(queue, options) {

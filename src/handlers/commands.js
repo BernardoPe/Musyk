@@ -29,7 +29,7 @@ module.exports = async (msg, args, embed, bot) => {
 
 		if (command.requiresPlayer && (!serverQueue || !serverQueue.isPlaying())) {
 			embed.setColor(0xfd0033).setDescription("Not currently playing any songs")
-			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
 		command.msg = msg.content

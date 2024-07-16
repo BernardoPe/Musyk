@@ -1,4 +1,4 @@
-const { GuildQueueEvent } = require("discord-player")
+const { GuildQueueEvent, Util } = require("discord-player")
 const { EmbedBuilder } = require("discord.js")
 const { sendEmbed } = require("../../utils/embeds.js")
 
@@ -6,6 +6,8 @@ module.exports = {
 	name: GuildQueueEvent.emptyQueue,
 	execute: async (queue) => {
 		const [vc, channel, data, col] = queue.metadata
+		
+		while (queue.updating) await Util.wait(100)
 
 		if (col) {
 			col.stop()
@@ -21,6 +23,6 @@ module.exports = {
 			.setDescription("Queue is empty, leaving in 5 minutes...")
 			.setColor(0xed4245)
 
-		await sendEmbed(channel, { embeds: [embed] }, 60000)
+		sendEmbed(channel, { embeds: [embed] }, 60000)
 	},
 }

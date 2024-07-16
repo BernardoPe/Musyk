@@ -16,11 +16,13 @@ module.exports = {
 			embed.setDescription("Voice channel is empty, leaving...")
 		else embed.setDescription("Leaving the channel...")
 
+		while (queue.updating) await Util.wait(100)
+
 		if (col) col.stop()
 		if (data) data.delete()
 
 		embed.setColor(0xed4245)
 
-		await sendEmbed(channel, { embeds: [embed] }, 20000)
+		sendEmbed(channel, { embeds: [embed] }, 20000)
 	},
 }
