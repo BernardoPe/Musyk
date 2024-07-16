@@ -15,7 +15,7 @@ module.exports = {
 
 		if (isNaN(jumpPosition) || jumpPosition < 1 || jumpPosition > serverQueue.tracks.size) {
 			embed.setDescription("Invalid queue position")
-			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
 		serverQueue.node.jump(jumpPosition - 1)

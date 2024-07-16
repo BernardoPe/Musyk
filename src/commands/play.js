@@ -51,7 +51,7 @@ module.exports = {
 				embed
 					.setDescription("Already playing in a different voice channel")
 					.setColor(0x06bb06)
-				return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+				return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 			}
 		} catch (error) {
 			bot.player.nodes.delete(msg.guild.id)
@@ -98,7 +98,7 @@ module.exports = {
 		} catch (e) {
 			console.log(e)
 			embed.setDescription("No search results were found")
-			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 	},
 }

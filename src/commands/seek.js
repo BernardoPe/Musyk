@@ -14,7 +14,7 @@ module.exports = {
              args[1] +
              "** is not a valid timestamp format, correct format should be **hh:mm:ss**.",
 			)
-			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
 		if (time === -1) {
@@ -23,7 +23,7 @@ module.exports = {
           args[1] +
           "** is not a valid timestamp in this track, check this song's total duration.",
 			)
-			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
 		const dur = `${serverQueue.currentTrack.duration.padStart(5, "0")}`
@@ -32,7 +32,7 @@ module.exports = {
 		const timestamp = millisecondsToTimestamp(time)
 		embed.setDescription("Track playback time set to **" + timestamp + "/" + dur + "**",)
 
-		return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+		return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 	},
 }
 

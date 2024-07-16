@@ -11,6 +11,6 @@ module.exports = {
 			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 		const pages = createQueueEmbed(serverQueue)
-		return await paginate(msg, pages)
+		return paginate(msg, pages)
 	},
 }

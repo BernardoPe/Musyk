@@ -39,6 +39,6 @@ module.exports = {
 			embed.setDescription(`Loop mode is set to: \`${md}\`.`)
 		}
 		if (mode) embed.setDescription(mode)
-		await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+		sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 	},
 }

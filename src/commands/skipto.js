@@ -9,7 +9,7 @@ module.exports = {
 
 		if (isNaN(skipPos) || skipPos < 1 || skipPos > serverQueue.tracks.size) {
 			embed.setDescription("Invalid queue position")
-			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
 		serverQueue.node.skipTo(skipPos - 1)

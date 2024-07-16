@@ -54,6 +54,7 @@ function helpEmbeds() {
         "**.play <song name / url>** : Play a song/playlist or add it to the music queue.\n\n" +
         "**.stop**: Stop the current playback and clear the music queue.\n\n" +
         "**.skip**: Skip the currently playing song and play the next song in the queue.\n\n" +
+		"**.progress**: Show the progress bar of the current song.\n\n" +
         "**.pause**: Pause the current playback.\n\n" +
         "**.resume**: Resume the paused playback.\n\n" +
         "**.queue**: Shows the current song queue.\n\n" +
@@ -258,11 +259,6 @@ function nowPlayingEmbed(queue) {
 				value: `${queue.node.volume}%`,
 				inline: true,
 			},
-			{
-				name: "Progress",
-				value: `${progressBar(queue, { length: 20 })}`,
-				inline: false,
-			}
 		)
 	} else {
 		embed.addFields(
@@ -273,11 +269,6 @@ function nowPlayingEmbed(queue) {
 			},
 			{ name: "Requested By", value: `${song.requestedBy}`, inline: true },
 			{ name: "Volume", value: `${queue.node.volume}%`, inline: true },
-			{
-				name: "Progress",
-				value: `${progressBar(queue, { length: 20 })}`,
-				inline: false,
-			}
 		)
 	}
 
@@ -314,7 +305,7 @@ function songQueuedEmbed(song, queue) {
 	return embed
 }
 
-async function updatePlayer(queue) {
+function updatePlayer(queue) {
 
 	const embed = nowPlayingEmbed(queue)
 
@@ -326,22 +317,14 @@ async function updatePlayer(queue) {
 
 	const data = queue.metadata[2]
 
-	await data.edit({
+	data.edit({
 		embeds: [embed],
+	}).then(() => {
+		queue.updating = false
 	})
-
-	queue.updating = false
-
+	
 }
 
-async function handlePlayer(queue) {
-	while (queue.metadata[2]) {
-		await Util.wait(1000)
-		if (queue.isPlaying()) {
-			await updatePlayer(queue)
-		}
-	}
-}
 
 function progressBar(queue, options) {
 	const total = {
@@ -397,5 +380,5 @@ module.exports = {
 	helpEmbeds,
 	createLink,
 	createQueueEmbed,
-	handlePlayer
+	progressBar
 }

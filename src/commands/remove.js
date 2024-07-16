@@ -10,14 +10,14 @@ module.exports = {
 
 		if (isNaN(value)) {
 			embed.setDescription("Value must be a number")
-			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
 		const tracks = serverQueue.tracks.toArray()
 
 		if (value < 1 || value > tracks.length) {
 			embed.setDescription(`Invalid number, must be 1-${tracks.length}`)
-			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
 		const song = serverQueue.node.remove(tracks[value - 1])
@@ -28,6 +28,6 @@ module.exports = {
 
 		updatePlayer(serverQueue)
 
-		return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+		return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 	},
 }

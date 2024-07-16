@@ -20,22 +20,22 @@ module.exports = {
 		if (filter === "disableall") {
 			await serverQueue.filters.ffmpeg.setFilters(false)
 			embed.setDescription("Disabled all filters")
-			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
 		if (!serverQueue.filters.ffmpeg.isValidFilter(filter)) {
 			embed.setDescription("Invalid filter")
-			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
 		await serverQueue.filters.ffmpeg.toggle([filter])
 
 		if (serverQueue.filters.ffmpeg.isEnabled(filter)) {
 			embed.setDescription(`Enabled ${filter} filter`)
-			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
 		embed.setDescription(`Disabled ${filter} filter`)
-		return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+		return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 	},
 }

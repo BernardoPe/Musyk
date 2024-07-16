@@ -11,7 +11,7 @@ module.exports = {
 
 		embed.setDescription("Shuffled Queue")
 
-		return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+		return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 	},
 }
 
