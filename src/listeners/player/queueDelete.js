@@ -8,8 +8,6 @@ module.exports = {
 	execute: async (queue) => {
 		const [vc, channel, data, col] = queue.metadata
 
-		await Util.wait(200)
-
 		let embed = new EmbedBuilder()
 
 		if (vc.members.size === 0)

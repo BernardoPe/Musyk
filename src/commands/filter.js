@@ -7,10 +7,6 @@ module.exports = {
 	requiresPlayer: true,
 	async execute(msg, args, embed, bot, serverQueue) {
 
-		while (serverQueue.dispatcher.isBuffering()) {
-			await Util.wait(5)
-		}
-
 		let filter = args[1]
 
 		if (!filter.includes("bassboost")) {
