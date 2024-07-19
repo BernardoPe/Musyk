@@ -1,4 +1,4 @@
-const { GuildQueueEvent, Util } = require("discord-player")
+const { GuildQueueEvent } = require("discord-player")
 
 module.exports = {
 	name: GuildQueueEvent.emptyChannel,

@@ -1,5 +1,3 @@
-const { Util } = require("discord-player")
-
 module.exports = {
 	aliases: ["skip"],
 	name: "skip",

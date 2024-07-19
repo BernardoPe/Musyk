@@ -2,6 +2,7 @@ const { getAllFiles, getServerPrefixFromJson, getAdminsFromJson } = require("../
 const { sendEmbed } = require("../utils/embeds.js")
 const path = require("node:path")
 const winston = require("../utils/logger.js")
+
 const commands = {}
 const commandFiles = getAllFiles(path.join(__dirname, "../commands"))
 

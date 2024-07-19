@@ -1,6 +1,7 @@
 const { Events, EmbedBuilder } = require("discord.js")
 const commandHandler = require("../../handlers/commands.js")
 const { helpEmbeds, createLink } = require("../../utils/embeds.js")
+const { QueueRepeatMode } = require("discord-player")
 
 const {
 	getServerPrefixFromJson,
@@ -112,11 +113,11 @@ async function decreaseVolumeCommand(interaction, bot, serverQueue, serverPrefix
 }
 
 async function cycleCommand(interaction, bot, serverQueue, serverPrefix, embed) {
-	const repeatMode = serverQueue.repeatMode !== 1 ? "track" : "off"
+	const repeatMode = serverQueue.repeatMode !== QueueRepeatMode.TRACK ? "track" : "off"
 	await commandHandler(interaction, [`${serverPrefix}cycle`, repeatMode], embed, bot)
 }
 
 async function autoplayCommand(interaction, bot, serverQueue, serverPrefix, embed) {
-	const repeatMode = serverQueue.repeatMode !== 3 ? "autoplay" : "off"
+	const repeatMode = serverQueue.repeatMode !== QueueRepeatMode.AUTOPLAY ? "autoplay" : "off"
 	await commandHandler(interaction, [`${serverPrefix}cycle`, repeatMode], embed, bot)
 }
