@@ -54,6 +54,7 @@ function helpEmbeds() {
         "**.play <song name / url>** : Play a song/playlist or add it to the music queue.\n\n" +
         "**.stop**: Stop the current playback and clear the music queue.\n\n" +
         "**.skip**: Skip the currently playing song and play the next song in the queue.\n\n" +
+		"**.swap <Queue Position 1> <Queue Position 2>**: Swap the position of two songs in the queue.\n\n" +
 		"**.progress**: Show the progress bar of the current song.\n\n" +
         "**.pause**: Pause the current playback.\n\n" +
         "**.resume**: Resume the paused playback.\n\n" +

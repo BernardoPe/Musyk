@@ -1,5 +1,3 @@
-const { sendEmbed } = require("../utils/embeds")
-
 module.exports = {
 	aliases: ["stop"],
 	name: "stop",
