@@ -1,6 +1,6 @@
 const { GuildQueueEvent, Util } = require("discord-player")
 const { EmbedBuilder } = require("discord.js")
-const { sendEmbed } = require("../../utils/embeds.js")
+const { sendEmbed, Color } = require("../../utils/embeds.js")
 
 module.exports = {
 	name: GuildQueueEvent.emptyQueue,
@@ -21,7 +21,7 @@ module.exports = {
 
 		const embed = new EmbedBuilder()
 			.setDescription("Queue is empty, leaving in 5 minutes...")
-			.setColor(0xed4245)
+			.setColor(Color.RED)
 
 		sendEmbed(channel, { embeds: [embed] }, 60000)
 	},

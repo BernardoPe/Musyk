@@ -1,4 +1,4 @@
-const { sendEmbed } = require("../utils/embeds")
+const { sendEmbed, Color } = require("../utils/embeds")
 
 const searchEngines = {
 	"-sp": "spotifySearch",
@@ -12,7 +12,7 @@ module.exports = {
 	execute: async (msg, args, embed, bot) => {
 
 		if (args.length === 1) {
-			embed.setColor(0x06bb06).setDescription("No search arguments provided")
+			embed.setColor(Color.RED).setDescription("No search arguments provided")
 			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
@@ -20,7 +20,7 @@ module.exports = {
 
 		if (!voiceChannel) {
 			embed
-				.setColor(0x06bb06)
+				.setColor(Color.RED)
 				.setDescription(`Join a voice channel, ${msg.member}`)
 			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
@@ -50,7 +50,7 @@ module.exports = {
 			else if (queue.channel !== msg.member.voice.channel) {
 				embed
 					.setDescription("Already playing in a different voice channel")
-					.setColor(0x06bb06)
+					.setColor(Color.RED)
 				return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 			}
 		} catch (error) {

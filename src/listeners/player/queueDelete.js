@@ -1,6 +1,6 @@
 const { GuildQueueEvent } = require("discord-player")
 const { EmbedBuilder } = require("discord.js")
-const { sendEmbed } = require("../../utils/embeds.js")
+const { sendEmbed, Color } = require("../../utils/embeds.js")
 const { Util } = require("discord-player")
 
 module.exports = {
@@ -19,7 +19,7 @@ module.exports = {
 		if (col) col.stop()
 		if (data) data.delete()
 
-		embed.setColor(0xed4245)
+		embed.setColor(Color.RED)
 
 		sendEmbed(channel, { embeds: [embed] }, 20000)
 	},

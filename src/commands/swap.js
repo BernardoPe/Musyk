@@ -1,4 +1,4 @@
-const { sendEmbed, updatePlayer} = require("../utils/embeds")
+const { sendEmbed, updatePlayer, Color} = require("../utils/embeds")
 
 module.exports = {
 	aliases: ["swap"],
@@ -25,6 +25,7 @@ module.exports = {
 		const song2 = tracks[swapPos2 - 1]
 
 		embed.setDescription(`Swapped **[${song1.cleanTitle}](${song1.url})** with **[${song2.cleanTitle}](${song2.url})**`)
+			.setColor(Color.BLUE)
 		sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 
 		if (swapPos1 === 1 || swapPos2 === 1) updatePlayer(serverQueue)

@@ -1,4 +1,4 @@
-const { sendEmbed, updatePlayer } = require("../utils/embeds")
+const { sendEmbed, updatePlayer, Color } = require("../utils/embeds")
 
 module.exports = {
 	aliases: ["remove"],
@@ -23,7 +23,7 @@ module.exports = {
 		const song = serverQueue.node.remove(tracks[value - 1])
 
 		embed
-			.setColor(0x01ff34)
+			.setColor(Color.BLUE)
 			.setDescription(`Removed [${song.cleanTitle}](${song.url}) from queue`)
 
 		updatePlayer(serverQueue)

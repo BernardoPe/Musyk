@@ -1,5 +1,5 @@
 const { getAllFiles, getServerPrefixFromJson, getAdminsFromJson } = require("../utils/configs.js")
-const { sendEmbed } = require("../utils/embeds.js")
+const { sendEmbed, Color } = require("../utils/embeds.js")
 const path = require("node:path")
 const winston = require("../utils/logger.js")
 
@@ -29,7 +29,7 @@ module.exports = async (msg, args, embed, bot) => {
 		}
 
 		if (command.requiresPlayer && (!serverQueue || !serverQueue.isPlaying())) {
-			embed.setColor(0xfd0033).setDescription("Not currently playing any songs")
+			embed.setColor(Color.RED).setDescription("Not currently playing any songs")
 			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 

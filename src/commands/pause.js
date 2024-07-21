@@ -1,4 +1,4 @@
-const { sendEmbed } = require("../utils/embeds")
+const { sendEmbed, Color } = require("../utils/embeds")
 
 module.exports = {
 	aliases: ["pause"],
@@ -6,10 +6,10 @@ module.exports = {
 	requiresPlayer: true,
 	execute: async (msg, args, embed, bot, serverQueue) => {
 		if (serverQueue.dispatcher.paused) {
-			embed.setColor(0xed4245).setDescription("The player is already paused")
+			embed.setColor(Color.RED).setDescription("The player is already paused")
 			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
-		embed.setColor(0x01ff34).setDescription("Paused current song")
+		embed.setColor(Color.BLUE).setDescription("Paused current song")
 		serverQueue.dispatcher.pause()
 		return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 	},

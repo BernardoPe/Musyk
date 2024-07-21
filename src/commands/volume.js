@@ -1,4 +1,4 @@
-const { sendEmbed } = require("../utils/embeds")
+const { sendEmbed, Color } = require("../utils/embeds")
 
 module.exports = {
 	aliases: ["volume"],
@@ -7,7 +7,7 @@ module.exports = {
 	execute: async (msg, args, embed, bot, serverQueue) => {
 		if (!args[1]) {
 			embed
-				.setColor(0x2a03f5)
+				.setColor(Color.BLUE)
 				.setDescription(`The current volume is ${serverQueue.node.volume}%`)
 			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
@@ -26,6 +26,7 @@ module.exports = {
 
 		serverQueue.node.setVolume(volume)
 		embed.setDescription(`Set volume to ${volume}%`)
+			.setColor(Color.BLUE)
 		return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 	},
 }
