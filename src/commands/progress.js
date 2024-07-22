@@ -1,6 +1,4 @@
 const { progressBar, sendEmbed, Color} = require("../utils/embeds")
-const queue = require("./queue")
-
 
 module.exports = {
 	aliases: ["progress", "pg"],
