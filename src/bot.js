@@ -47,17 +47,9 @@ bot.player.extractors.register(YoutubeiExtractor, {
 	authentication: process.env.ACCESS_TOKEN,
 })
 
-bot.player.extractors.register(YouTubeExtractor, {
-	createStream: createYoutubeiStream
-})
+bot.player.extractors.register(SpotifyExtractor, {})
 
-bot.player.extractors.register(SpotifyExtractor, {
-	createStream: createYoutubeiStream
-})
-
-bot.player.extractors.register(SoundCloudExtractor, {
-	createStream: createYoutubeiStream
-})
+bot.player.extractors.register(SoundCloudExtractor, {})
 
 addEventListeners(bot)
 
