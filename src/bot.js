@@ -10,9 +10,6 @@ const { addEventListeners } = require("./handlers/events.js")
 require("dotenv").config()
 const process = require("process")
 
-//const access = fs.createWriteStream(`${__dirname}/LOG.log`)
-//process.stdout.write = process.stderr.write = access.write.bind(access)
-
 const TOKEN = process.env.TOKEN
 
 const bot = new Client({
