@@ -7,7 +7,7 @@
         "prettier-eslint": "prettier-eslint --write ./src/**/*.js"
     },
     "dependencies": {
-        "@discord-player/extractor": "^4.4.7",
+        "@discord-player/extractor": "^4.5.1",
         "@discordjs/voice": "^0.14.0",
         "@web-scrobbler/metadata-filter": "^3.1.0",
         "discord-player": "^6.7.1",
