@@ -2,6 +2,7 @@ const { getAllFiles, getServerPrefixFromJson, getAdminsFromJson } = require("../
 const { sendEmbed, Color } = require("../utils/embeds.js")
 const path = require("node:path")
 const winston = require("../utils/logger.js")
+const { ButtonInteraction } = require("discord.js")
 
 const commands = {}
 const commandFiles = getAllFiles(path.join(__dirname, "../commands"))
@@ -34,7 +35,7 @@ module.exports = async (msg, args, embed, bot) => {
 		}
 
 		command.msg = msg.content
-		command.user = msg.author ? msg.author.username : undefined
+		command.user = msg instanceof ButtonInteraction ? msg.user.username : msg.author.username
 		command.guild = msg.guild.name
 
 		winston.logger.info(
