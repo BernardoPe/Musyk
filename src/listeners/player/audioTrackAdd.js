@@ -15,6 +15,6 @@ module.exports = {
 
 		if (queue.isPlaying()) await updatePlayer(queue)
 
-		sendEmbed(queue.metadata[1], { embeds: [embed] }, 60000)
+		sendEmbed(queue.metadata["textChannel"], { embeds: [embed] }, 60000)
 	},
 }

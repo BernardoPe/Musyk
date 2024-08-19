@@ -75,21 +75,16 @@ module.exports = {
 		let song = result.tracks[0]
 
 		try {
-			
 			if (result.tracks.length === 0) throw new Error("No results found")
 
-			if (!queue.isPlaying() && !queue.willStart) {
-				
-				queue.setMetadata([queue.channel, msg.channel])
-
-				queue.willStart = true
-				
+			if (!queue.isPlaying() && !queue.dispatcher.isBuffering()) {
+				queue.setMetadata(
+					{
+						"voiceChannel": voiceChannel,
+						"textChannel": msg.channel,
+					}
+				)
 				await queue.play(song)
-
-				queue.willStart = false
-
-				if (!queue.isPlaying() && !queue.dispatcher.isBuffering())
-					throw new Error("Play error")
 			} else if (!result.playlist) {
 				queue.addTrack(song)
 			} else {

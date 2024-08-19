@@ -317,20 +317,32 @@ function updatePlayer(queue) {
 
 	const embed = nowPlayingEmbed(queue)
 
-	if (!queue.metadata[2] || queue.updating) {
+	if (!queue.metadata["message"] || queue.updating) {
 		return
 	}
 
-	queue.updating = true
+	queue.updatingPlayer = true // Prevents unnecessary concurrent updates
 
-	const data = queue.metadata[2]
+	const data = queue.metadata["message"]
 
 	data.edit({
 		embeds: [embed],
 	}).then(() => {
-		queue.updating = false
+		queue.updatingPlayer = false
 	})
 	
+}
+
+function leavingEmbed() {
+	return new EmbedBuilder()
+		.setDescription("Queue is empty, leaving in 5 minutes...")
+		.setColor(Color.RED)
+}
+
+function leftEmbed() {
+	return new EmbedBuilder()
+		.setDescription("Leaving the channel...")
+		.setColor(Color.RED)
 }
 
 
@@ -389,5 +401,7 @@ module.exports = {
 	createLink,
 	createQueueEmbed,
 	progressBar,
+	leavingEmbed,
+	leftEmbed,
 	Color,
 }
