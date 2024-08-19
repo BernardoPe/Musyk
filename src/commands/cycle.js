@@ -1,6 +1,6 @@
 const { QueueRepeatMode } = require("discord-player")
 const { sendEmbed } = require("../utils/embeds.js")
-const {successEmbed} = require("../utils/embeds");
+const {successEmbed} = require("../utils/embeds")
 
 module.exports = {
 	aliases: ["cycle"],

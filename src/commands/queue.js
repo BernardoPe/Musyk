@@ -1,5 +1,5 @@
 const paginate = require("../utils/paginator.js")
-const { sendEmbed, createQueueEmbed, Color, errorEmbed} = require("../utils/embeds")
+const { sendEmbed, createQueueEmbed, errorEmbed} = require("../utils/embeds")
 
 module.exports = {
 	aliases: ["queue"],

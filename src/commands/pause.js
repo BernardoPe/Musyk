@@ -1,4 +1,4 @@
-const { sendEmbed, Color, errorEmbed, successEmbed} = require("../utils/embeds")
+const { sendEmbed, errorEmbed, successEmbed} = require("../utils/embeds")
 
 module.exports = {
 	aliases: ["pause"],

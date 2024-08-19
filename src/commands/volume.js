@@ -1,4 +1,4 @@
-const { sendEmbed, Color, successEmbed, errorEmbed} = require("../utils/embeds")
+const { sendEmbed, successEmbed, errorEmbed} = require("../utils/embeds")
 
 module.exports = {
 	aliases: ["volume"],

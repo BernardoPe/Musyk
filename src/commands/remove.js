@@ -1,4 +1,4 @@
-const { sendEmbed, updatePlayer, Color, errorEmbed, successEmbed} = require("../utils/embeds")
+const { sendEmbed, updatePlayer, errorEmbed, successEmbed} = require("../utils/embeds")
 
 module.exports = {
 	aliases: ["remove"],

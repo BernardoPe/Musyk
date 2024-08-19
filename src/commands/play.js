@@ -1,4 +1,4 @@
-const { sendEmbed, Color, errorEmbed} = require("../utils/embeds")
+const { sendEmbed, errorEmbed} = require("../utils/embeds")
 
 const searchEngines = {
 	"-sp": "spotifySearch",

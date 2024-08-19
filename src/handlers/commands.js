@@ -1,9 +1,9 @@
 const { getAllFiles, getServerPrefixFromJson, getAdminsFromJson } = require("../utils/configs.js")
-const { sendEmbed, Color } = require("../utils/embeds.js")
+const { sendEmbed } = require("../utils/embeds.js")
 const path = require("node:path")
 const winston = require("../utils/logger.js")
 const { ButtonInteraction } = require("discord.js")
-const {errorEmbed} = require("../utils/embeds");
+const {errorEmbed} = require("../utils/embeds")
 
 const commands = {}
 const commandFiles = getAllFiles(path.join(__dirname, "../commands"))
