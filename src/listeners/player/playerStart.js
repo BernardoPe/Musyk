@@ -3,7 +3,6 @@ const {
 	nowPlayingEmbed,
 	createButtons,
 	sendEmbed,
-	handlePlayer,
 	updatePlayer
 } = require("../../utils/embeds.js")
 

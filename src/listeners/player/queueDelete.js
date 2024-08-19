@@ -8,7 +8,7 @@ module.exports = {
 	execute: async (queue) => {
 		const [vc, channel, data, col] = Object.values(queue.metadata)
 
-		while (queue.updating) await Util.wait(100)
+		while (queue.updatingPlayer) await Util.wait(100)
 
 		if (col) col.stop()
 		if (data) data.delete()
