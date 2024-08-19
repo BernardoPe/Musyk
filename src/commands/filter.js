@@ -1,10 +1,10 @@
-const { sendEmbed } = require("../utils/embeds")
+const { sendEmbed, successEmbed, errorEmbed} = require("../utils/embeds")
 
 module.exports = {
 	aliases: ["filter"],
 	name: "filter",
 	requiresPlayer: true,
-	async execute(msg, args, embed, bot, serverQueue) {
+	async execute(msg, args, bot, serverQueue) {
 
 		let filter = args[1]
 
@@ -14,23 +14,23 @@ module.exports = {
 
 		if (filter === "disableall") {
 			await serverQueue.filters.ffmpeg.setFilters(false)
-			embed.setDescription("Disabled all filters")
+			const embed = successEmbed(undefined, "Disabled all filters")
 			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
 		if (!serverQueue.filters.ffmpeg.isValidFilter(filter)) {
-			embed.setDescription("Invalid filter")
+			const embed = errorEmbed(undefined, "Invalid filter")
 			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
 		await serverQueue.filters.ffmpeg.toggle([filter])
 
 		if (serverQueue.filters.ffmpeg.isEnabled(filter)) {
-			embed.setDescription(`Enabled ${filter} filter`)
+			const embed = successEmbed(undefined, `Enabled ${filter} filter`)
 			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
-		embed.setDescription(`Disabled ${filter} filter`)
+		const embed = successEmbed(undefined, `Disabled ${filter} filter`)
 		return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 	},
 }

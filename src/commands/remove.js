@@ -1,30 +1,28 @@
-const { sendEmbed, updatePlayer, Color } = require("../utils/embeds")
+const { sendEmbed, updatePlayer, Color, errorEmbed, successEmbed} = require("../utils/embeds")
 
 module.exports = {
 	aliases: ["remove"],
 	name: "remove",
 	requiresPlayer: true,
-	execute: async (msg, args, embed, bot, serverQueue) => {
+	execute: async (msg, args, bot, serverQueue) => {
 
 		const value = parseInt(args[1])
 
 		if (isNaN(value)) {
-			embed.setDescription("Value must be a number")
+			const embed = errorEmbed(undefined, "Value must be a number")
 			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
 		const tracks = serverQueue.tracks.toArray()
 
 		if (value < 1 || value > tracks.length) {
-			embed.setDescription(`Invalid number, must be 1-${tracks.length}`)
+			const embed = errorEmbed(undefined, `Invalid number, must be 1-${tracks.length}`)
 			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
 		const song = serverQueue.node.remove(tracks[value - 1])
 
-		embed
-			.setColor(Color.BLUE)
-			.setDescription(`Removed [${song.cleanTitle}](${song.url}) from queue`)
+		const embed = successEmbed(undefined, `Removed [${song.title}](${song.uri}) from the queue`)
 
 		updatePlayer(serverQueue)
 

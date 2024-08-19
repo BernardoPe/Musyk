@@ -26,6 +26,23 @@ function createLink() {
 	return new ActionRowBuilder().addComponents(link)
 }
 
+function successEmbed(title, description) {
+	const embed = new EmbedBuilder()
+	if (title) embed.setTitle(title)
+	if (description) embed.setDescription(description)
+	embed.setColor(Color.GREEN)
+	return embed
+}
+
+function errorEmbed(title, description) {
+	const embed = new EmbedBuilder()
+	if (title) embed.setTitle(title)
+	if (description) embed.setDescription(description)
+	embed.setColor(Color.RED)
+	return embed
+}
+
+
 function helpEmbeds() {
 	const embed1 = new EmbedBuilder()
 		.setAuthor({
@@ -403,5 +420,7 @@ module.exports = {
 	progressBar,
 	leavingEmbed,
 	leftEmbed,
+	successEmbed,
+	errorEmbed,
 	Color,
 }

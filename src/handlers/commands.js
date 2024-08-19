@@ -3,6 +3,7 @@ const { sendEmbed, Color } = require("../utils/embeds.js")
 const path = require("node:path")
 const winston = require("../utils/logger.js")
 const { ButtonInteraction } = require("discord.js")
+const {errorEmbed} = require("../utils/embeds");
 
 const commands = {}
 const commandFiles = getAllFiles(path.join(__dirname, "../commands"))
@@ -12,7 +13,7 @@ commandFiles.forEach((file) => {
 	command.aliases.forEach((alias) => (commands[alias] = command))
 })
 
-module.exports = async (msg, args, embed, bot) => {
+module.exports = async (msg, args, bot) => {
 	const PREFIX = getServerPrefixFromJson(msg.guild.id)
 
 	if (msg.content && !msg.content.startsWith(PREFIX)) return
@@ -30,7 +31,7 @@ module.exports = async (msg, args, embed, bot) => {
 		}
 
 		if (command.requiresPlayer && (!serverQueue || !serverQueue.isPlaying())) {
-			embed.setColor(Color.RED).setDescription("Not currently playing any songs")
+			const embed = errorEmbed(undefined, "Not currently playing any songs")
 			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
@@ -47,7 +48,6 @@ module.exports = async (msg, args, embed, bot) => {
 			args.filter((str) => {
 				return str.trim() !== ""
 			}),
-			embed,
 			bot,
 			serverQueue,
 		)

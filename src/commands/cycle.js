@@ -1,11 +1,12 @@
 const { QueueRepeatMode } = require("discord-player")
 const { sendEmbed } = require("../utils/embeds.js")
+const {successEmbed} = require("../utils/embeds");
 
 module.exports = {
 	aliases: ["cycle"],
 	name: "cycle",
 	requiresPlayer: true,
-	async execute(msg, args, embed, bot, serverQueue) {
+	async execute(msg, args, bot, serverQueue) {
 		let md = "none"
 		let mode = undefined
 
@@ -36,9 +37,8 @@ module.exports = {
 			} else if (serverQueue.repeatMode === QueueRepeatMode.OFF) {
 				md = "off"
 			}
-			embed.setDescription(`Loop mode is set to: \`${md}\`.`)
 		}
-		if (mode) embed.setDescription(mode)
+		const embed = mode ? successEmbed(undefined, mode) : successEmbed(undefined, `Current mode: ${md}`)
 		sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 	},
 }

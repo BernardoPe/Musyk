@@ -1,15 +1,15 @@
-const { sendEmbed, updatePlayer } = require("../utils/embeds")
+const { sendEmbed, updatePlayer, successEmbed} = require("../utils/embeds")
 
 module.exports = {
 	aliases: ["shuffle"],
 	name: "shuffle",
 	requiresPlayer: true,
-	execute: async (msg, args, embed, bot, serverQueue) => {
+	execute: async (msg, args, bot, serverQueue) => {
 		shuffle(serverQueue, serverQueue.tracks.toArray())
 
 		updatePlayer(serverQueue)
 
-		embed.setDescription("Shuffled Queue")
+		const embed = successEmbed(undefined, "Shuffled the queue")
 
 		return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 	},

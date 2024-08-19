@@ -1,15 +1,26 @@
-const { sendEmbed, updatePlayer } = require("../utils/embeds")
+const { sendEmbed, updatePlayer, successEmbed, errorEmbed} = require("../utils/embeds")
 
 module.exports = {
 	aliases: ["reverse"],
 	name: "reverse",
 	requiresPlayer: true,
-	execute: async (msg, args, embed, bot, serverQueue) => {
+	execute: async (msg, args, bot, serverQueue) => {
+
+		if (serverQueue.isEmpty()) {
+			const embed = errorEmbed(undefined, "Queue is empty")
+			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+		}
+
+		if (serverQueue.tracks.size === 1) {
+			const embed = errorEmbed(undefined, "Queue has only one song")
+			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+		}
+
 		reverse(serverQueue, serverQueue.tracks.toArray())
 
 		updatePlayer(serverQueue)
 
-		embed.setDescription("Reversed Queue")
+		const embed = successEmbed(undefined, "Reversed the queue")
 
 		return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 	},

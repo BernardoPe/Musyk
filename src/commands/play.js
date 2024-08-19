@@ -1,4 +1,4 @@
-const { sendEmbed, Color } = require("../utils/embeds")
+const { sendEmbed, Color, errorEmbed} = require("../utils/embeds")
 
 const searchEngines = {
 	"-sp": "spotifySearch",
@@ -9,28 +9,24 @@ const searchEngines = {
 module.exports = {
 	aliases: ["p", "play"],
 	name: "play",
-	execute: async (msg, args, embed, bot) => {
+	execute: async (msg, args, bot) => {
 
 		if (args.length === 1) {
-			embed.setColor(Color.RED).setDescription("No search arguments provided")
+			const embed = errorEmbed(undefined, "Please provide a search query")
 			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
 		const voiceChannel = msg.member.voice.channel
 
 		if (!voiceChannel) {
-			embed
-				.setColor(Color.RED)
-				.setDescription(`Join a voice channel, ${msg.member}`)
+			const embed = errorEmbed(undefined, "You need to be in a voice channel to play music")
 			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
 		const permissions = voiceChannel.permissionsFor(msg.client.user)
 
 		if (!permissions.has("Connect") || !permissions.has("Speak")) {
-			embed.setDescription(
-				"I cannot connect or speak in the voice channel. Please make sure to give me the necessary permissions.",
-			)
+			const embed = errorEmbed(undefined, "I need the permissions to join and speak in your voice channel")
 			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 
@@ -48,9 +44,7 @@ module.exports = {
 		try {
 			if (!queue.connection) await queue.connect(voiceChannel)
 			else if (queue.channel !== msg.member.voice.channel) {
-				embed
-					.setDescription("Already playing in a different voice channel")
-					.setColor(Color.RED)
+				const embed = errorEmbed(undefined, "Already connected to a different voice channel")
 				return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 			}
 		} catch (error) {
@@ -92,7 +86,7 @@ module.exports = {
 			}
 		} catch (e) {
 			console.log(e)
-			embed.setDescription("No search results were found")
+			const embed = errorEmbed(undefined, "An error occurred while playing the song")
 			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 	},

@@ -1,16 +1,16 @@
-const { sendEmbed } = require("../utils/embeds")
+const { sendEmbed, successEmbed} = require("../utils/embeds")
 const { validateTimestamp, millisecondsToTimestamp } = require("../utils/time")
 
 module.exports = {
 	aliases: ["seek"],
 	name: "seek",
 	requiresPlayer: true,
-	async execute(msg, args, embed, bot, serverQueue) {
+	async execute(msg, args, bot, serverQueue) {
 
 		const time = validateTimestamp(args[1], serverQueue.node.totalDuration)
 
 		if (time === false) {
-			embed.setDescription(
+			const embed = successEmbed(undefined,
 				"**" +
              args[1] +
              "** is not a valid timestamp format, correct format should be **hh:mm:ss**.",
@@ -19,7 +19,7 @@ module.exports = {
 		}
 
 		if (time === -1) {
-			embed.setDescription(
+			const embed = successEmbed(undefined,
 				"**" +
           args[1] +
           "** is not a valid timestamp in this track, check this song's total duration.",
@@ -31,7 +31,7 @@ module.exports = {
 		await serverQueue.node.seek(time)
 
 		const timestamp = millisecondsToTimestamp(time)
-		embed.setDescription("Track playback time set to **" + timestamp + "/" + dur + "**",)
+		const embed = successEmbed(undefined, "Track playback time set to **" + timestamp + "/" + dur + "**",)
 
 		return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 	},

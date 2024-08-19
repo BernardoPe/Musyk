@@ -1,13 +1,13 @@
 const paginate = require("../utils/paginator.js")
-const { sendEmbed, createQueueEmbed, Color } = require("../utils/embeds")
+const { sendEmbed, createQueueEmbed, Color, errorEmbed} = require("../utils/embeds")
 
 module.exports = {
 	aliases: ["queue"],
 	name: "queue",
 	requiresPlayer: true,
-	execute: async (msg, args, embed, bot, serverQueue) => {
+	execute: async (msg, args, bot, serverQueue) => {
 		if (serverQueue.isEmpty()) {
-			embed.setColor(Color.RED).setDescription("There are no songs in queue")
+			const embed = errorEmbed(undefined, "The queue is empty")
 			return await sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 		const pages = createQueueEmbed(serverQueue)

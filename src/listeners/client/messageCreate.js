@@ -6,10 +6,8 @@ module.exports = {
 	execute: async (msg, bot) => {
 		if (msg.author.bot) return
 
-		const embed = new EmbedBuilder()
-
 		const args = msg.content.split(" ")
 
-		await commandHandler(msg, args, embed, bot)
+		await commandHandler(msg, args, bot)
 	},
 }
