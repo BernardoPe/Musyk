@@ -46,8 +46,8 @@ If you have [Git](https://git-scm.com/) installed, you can clone the repository 
 1. Open a terminal and navigate to the folder where the bot's files are located.
 2. Run `npm install` to install the bot's dependencies.
 3. Copy the `.env.example` file and rename it to `.env`.
-Fill in the bot's token, and the YouTube access tokens (Optional). To generate the access tokens, you can run the 
-bot with line 40 of [bot.js](src/bot.js) uncommented. The bot will log the access tokens to the console. You can then copy and paste the access tokens into the `.env` file.
+Fill in the bot's token. Optionally, you can add your youtube access token. To do this, run the 
+bot with line 40 of [bot.js](src/bot.js) uncommented. The bot will log the access tokens to the console. You can then copy and paste the access tokens into the `.env` file. 
 4. Set your bot's config info in the [config.json](src/config.json) file. 
 5. Run `npm start` to start the bot.
 
