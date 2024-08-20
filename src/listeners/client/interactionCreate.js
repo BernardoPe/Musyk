@@ -1,4 +1,4 @@
-const { Events, EmbedBuilder } = require("discord.js")
+const { Events } = require("discord.js")
 const commandHandler = require("../../handlers/commands.js")
 const { helpEmbeds, createLink } = require("../../utils/embeds.js")
 const { QueueRepeatMode } = require("discord-player")
@@ -7,7 +7,7 @@ const {
 	getServerPrefixFromJson,
 	setNewPrefix,
 } = require("../../utils/configs.js")
-const {successEmbed, errorEmbed} = require("../../utils/embeds");
+const {successEmbed, errorEmbed} = require("../../utils/embeds")
 
 module.exports = {
 	name: Events.InteractionCreate,
@@ -64,7 +64,7 @@ async function handleButtonCommands(interaction, bot, serverQueue, serverPrefix)
 
 }
 
-async function helpCommand(interaction, bot, serverQueue, serverPrefix) {
+async function helpCommand(interaction) {
 	const embed = helpEmbeds()
 	const link = createLink()
 	await interaction.reply({
@@ -99,13 +99,13 @@ async function pauseCommand(interaction, bot, serverQueue, serverPrefix) {
 	await commandHandler(interaction, [`${serverPrefix}${command}`], bot)
 }
 
-async function increaseVolumeCommand(interaction, bot, serverQueue, serverPrefix) {
+async function increaseVolumeCommand(interaction, bot, serverQueue) {
 	if (!serverQueue) return
 	const newVolume = serverQueue.node.volume === 200 ? 200 : serverQueue.node.volume + 20
 	serverQueue.node.setVolume(newVolume)
 }
 
-async function decreaseVolumeCommand(interaction, bot, serverQueue, serverPrefix) {
+async function decreaseVolumeCommand(interaction, bot, serverQueue) {
 	const newVolume = serverQueue.node.volume === 0 ? 0 : serverQueue.node.volume - 20
 	serverQueue.node.setVolume(newVolume)
 }

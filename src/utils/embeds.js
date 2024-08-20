@@ -110,22 +110,24 @@ function helpEmbeds() {
 		)
 		.setColor(Color.BLUE)
 
-	//let embed4 = new EmbedBuilder()
-	//    .setTitle('Play Filters')
-	//    .setDescription("Through the **.filter <filter>** command, you can set filters for the audio player.\n\n"
-	//                    + "Available filters are: bassboost, 8D, vaporwave, nightcore, phaser, tremolo, vibrato, reverse, treble, normalizer, normalizer2, surrounding, pulsator, subboost, karaoke, flanger, gate, hass, mcompand, mono, mstlr, mstrr, compress, expander, softlimiter, chorus, chorus2d, chorus3d, fadein, dim, and lofi.\n\n"
-	//                    + "If you pass 'disableall' as the argument, all filters will be disabled.")
-	//    .setColor(0x58b9ff);
-	//
-
 	const embed5 = new EmbedBuilder()
+		.setTitle("Play Filters")
+		.setDescription("Through the **.filter <filter>** command, you can set filters for the audio player.\n\n" +
+			"Available filters are: bassboost, 8D, vaporwave, nightcore, phaser, tremolo," +
+			"vibrato, reverse, treble, normalizer, normalizer2, surrounding, pulsator, subboost, " +
+			"karaoke, flanger, gate, hass, mcompand, mono, mstlr, mstrr, compress, expander, " +
+			"softlimiter, chorus, chorus2d, chorus3d, fadein, dim, and lofi.\n\n"
+			+ "If you pass 'disableall' as the argument, all filters will be disabled.").setColor(0x58b9ff)
+
+	const embed6 = new EmbedBuilder()
 		.setTitle("Aditional Information")
 		.setDescription(
-			"Make sure Musyk has the necessary permissions to join voice channels and manage music playback.",
+			"Make sure Musyk has the necessary permissions to join voice channels and manage music playback.\n\n" +
+			"If you find any bugs, you can open an issue in my [GitHub repository](https://github.com/BernardoPe/Musyk).",
 		)
 		.setColor(Color.BLUE)
 
-	return [embed1, embed2, embed3, embed4, embed5]
+	return [embed1, embed2, embed3, embed4, embed5, embed6]
 }
 
 function createButtons() {

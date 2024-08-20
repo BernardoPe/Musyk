@@ -1,4 +1,4 @@
-const { Events, EmbedBuilder } = require("discord.js")
+const { Events } = require("discord.js")
 const commandHandler = require("../../handlers/commands.js")
 
 module.exports = {
