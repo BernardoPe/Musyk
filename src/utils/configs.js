@@ -1,16 +1,20 @@
 const fs = require("fs")
 const path = require("node:path")
 
-function getServerPrefixFromJson(serverID) {
+require("dotenv").config()
+const defaultPrefix = process.env.BOT_PREFIX
+const admins = process.env.ADMINS.split(",")
+
+function getServerPrefix(serverID) {
 	const serverConfigs = require("../servers.json")
 	for (let i in serverConfigs) {
 		if (serverID === serverConfigs[i].id) return serverConfigs[i].prefix
 	}
-	return require("../config.json").prefix
+	return defaultPrefix
 }
 
-function getAdminsFromJson() {
-	return require("../config.json").adminIDs
+function getAdmins() {
+	return admins
 }
 
 function saveJsonToFile(filename, json) {
@@ -53,6 +57,6 @@ function getAllFiles(folderPath) {
 module.exports = {
 	getAllFiles,
 	setNewPrefix,
-	getServerPrefixFromJson,
-	getAdminsFromJson,
+	getServerPrefixFromJson: getServerPrefix,
+	getAdminsFromJson: getAdmins,
 }

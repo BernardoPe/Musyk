@@ -45,17 +45,15 @@ If you have [Git](https://git-scm.com/) installed, you can clone the repository 
 ##### Setup continuation
 1. Open a terminal and navigate to the folder where the bot's files are located.
 2. Run `npm install` to install the bot's dependencies.
-3. Copy the `.env.example` file and rename it to `.env`.
-Fill in the bot's token. Optionally, you can add your youtube access token. To do this, run the 
-bot with line 40 of [bot.js](src/bot.js) uncommented. The bot will log the access tokens to the console. You can then copy and paste the access tokens into the `.env` file. 
-4. Set your bot's config info in the [config.json](src/config.json) file. 
-5. Run `npm start` to start the bot.
+3. Copy the `.env.example` file and rename it to `.env`. Fill in all the required information. 
+To get the optional Youtube access token, go to [bot.js](src/bot.js) and uncomment the line `// generateOauthTokens();`. Run the bot and follow the instructions to get the token.
+4. Run `npm start` to start the bot.
 
 To create the bot's invite link, go to the [Discord Developer site](https://discord.com/developers/applications) and click on your bot's application. 
 
 In the sidebar, you'll find the OAuth2 URL generator. Select the bot and applications.commands options. Once you select the bot option, a list of permissions will appear, allowing you to configure the permissions your bot needs.
 
-After configuring the permissions, copy the generated URL and paste it into the [config.json](src/config.json) file, on the `inviteLink` field.
+After configuring the permissions, copy the generated URL and paste it into the .env file as the `INVITE_LINK` variable.
 
 #### Docker installation
 
@@ -84,7 +82,7 @@ docker run -d \
 musyk
 ```
 
-Don't forget to fill in the `.env` file with the bot's token, and set the bot's config info in the [config.json](src/config.json) file.
+Don't forget to fill in the `.env` file with all the required information.
 
 ## Support :rocket:
 

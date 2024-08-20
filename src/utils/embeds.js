@@ -6,10 +6,9 @@ const {
 } = require("discord.js")
 
 const { Util } = require("discord-player")
-const config = require("../config.json")
 
-const botID = config.botID
-const inviteLink = config.inviteLink
+const botID = process.env.BOT_ID
+const inviteLink = process.env.INVITE_LINK
 
 const Color = {
 	RED: 0xed4245,

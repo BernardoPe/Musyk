@@ -6,9 +6,7 @@ const {
 const { YoutubeiExtractor, generateOauthTokens } = require("discord-player-youtubei")
 const { Client, GatewayIntentBits } = require("discord.js")
 const { addEventListeners } = require("./handlers/events.js")
-
 require("dotenv").config()
-const process = require("process")
 
 const TOKEN = process.env.TOKEN
 
