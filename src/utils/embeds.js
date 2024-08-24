@@ -258,15 +258,18 @@ function nowPlayingEmbed(queue) {
 		.setTitle("Now Playing")
 		.setDescription(`${emoji} **[${song.cleanTitle}](${song.url})**`)
 		.setThumbnail(`${song.thumbnail}`)
-
-	if (queue.history.nextTrack) {
-		embed.addFields(
+		.addFields(
 			{
 				name: "Duration",
-				value: `${song.duration.padStart(5, "0")}`,
+				value: `${song.metadata.live ? "Live" : song.duration.padStart(5, "0")}`,
 				inline: true,
 			},
 			{ name: "Requested By", value: `${song.requestedBy}`, inline: true },
+			{ name: "Volume", value: `${queue.node.volume}%`, inline: true },
+		)
+	
+	if (queue.history.nextTrack) {
+		embed.addFields(
 			{ name: "Songs in queue", value: `${queue.size}`, inline: true },
 			{
 				name: "Total queue duration",
@@ -280,23 +283,9 @@ function nowPlayingEmbed(queue) {
 				}](${queue.history.nextTrack.url})**`,
 				inline: true,
 			},
-			{
-				name: "Volume",
-				value: `${queue.node.volume}%`,
-				inline: true,
-			},
-		)
-	} else {
-		embed.addFields(
-			{
-				name: "Duration",
-				value: `${song.duration.padStart(5, "0")}`,
-				inline: true,
-			},
-			{ name: "Requested By", value: `${song.requestedBy}`, inline: true },
-			{ name: "Volume", value: `${queue.node.volume}%`, inline: true },
 		)
 	}
+	
 
 	return embed
 }
@@ -305,7 +294,6 @@ function songQueuedEmbed(song, queue) {
 	const type = song.source
 	const embed = new EmbedBuilder()
 	const emoji = getEmoji(type, embed)
-
 	embed
 		.setTitle("Song Queued")
 		.setDescription(`${emoji} **[${song.cleanTitle}](${song.url})**`)
@@ -313,7 +301,7 @@ function songQueuedEmbed(song, queue) {
 		.addFields(
 			{
 				name: "Duration",
-				value: `${song.duration.padStart(5, "0")}`,
+				value: `${song.metadata.live ? "Live" : song.duration.padStart(5, "0")}`,
 				inline: true,
 			},
 			{
@@ -335,13 +323,13 @@ function updatePlayer(queue) {
 
 	const embed = nowPlayingEmbed(queue)
 
-	if (!queue.metadata["message"] || queue.updating) {
+	if (!queue.metadata.message || queue.updating) {
 		return
 	}
 
 	queue.updatingPlayer = true // Prevents unnecessary concurrent updates
 
-	const data = queue.metadata["message"]
+	const data = queue.metadata.message
 
 	data.edit({
 		embeds: [embed],

@@ -11,12 +11,12 @@ module.exports = {
 
 		if (col) {
 			col.stop()
-			queue.metadata["playButtons"] = undefined
+			queue.metadata.playButtons = undefined
 		}
 
 		if (data) {
 			data.delete()
-			queue.metadata["message"] = undefined
+			queue.metadata.message = undefined
 		}
 
 		const embed = leavingEmbed()

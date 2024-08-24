@@ -10,12 +10,10 @@ module.exports = {
 	name: GuildQueueEvent.playerStart,
 	execute: async (queue) => {
 		if (Object.keys(queue.metadata).length === 2) {
-			const vc = queue.metadata["voiceChannel"]
-			const textChannel = queue.metadata["textChannel"]
 			const embed = nowPlayingEmbed(queue)
 			const buttons = createButtons()
 
-			const data = await sendEmbed(textChannel, {
+			const data = await sendEmbed(queue.metadata.textChannel, {
 				embeds: [embed],
 				components: buttons,
 				fetchReply: true,
@@ -24,8 +22,8 @@ module.exports = {
 			const col = data ? data.createMessageComponentCollector() : undefined
 			queue.setMetadata(
 				{
-					"voiceChannel": vc,
-					"textChannel": textChannel,
+					"voiceChannel": queue.metadata.voiceChannel,
+					"textChannel": queue.metadata.textChannel,
 					"message": data,
 					"playButtons": col,
 				}
