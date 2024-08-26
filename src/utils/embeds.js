@@ -108,6 +108,8 @@ function helpEmbeds() {
 			{ name: "🕒", value: "Shows the current queue" },
 			{ name: "🔄", value: "Toggles current track cycling" },
 			{ name: "🤖", value: "Toggles autoplay" },
+			{ name: "🗑️", value: "Clears the queue" },
+			{ name: "🔌", value: "Disconnects the bot from the voice channel" },
 		)
 		.setColor(Color.BLUE)
 
