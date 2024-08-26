@@ -1,11 +1,17 @@
-const { sendEmbed, updatePlayer, successEmbed} = require("../utils/embeds")
+const { sendEmbed, updatePlayer, successEmbed, errorEmbed} = require("../utils/embeds")
 
 module.exports = {
 	aliases: ["shuffle"],
 	name: "shuffle",
 	requiresPlayer: true,
 	execute: async (msg, args, bot, serverQueue) => {
-		shuffle(serverQueue, serverQueue.tracks.toArray())
+
+		if (serverQueue.tracks.size < 2) {
+			const embed = errorEmbed(undefined, "There are not enough songs in the queue to shuffle")
+			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+		}
+
+		serverQueue.tracks.shuffle()
 
 		updatePlayer(serverQueue)
 
@@ -13,19 +19,4 @@ module.exports = {
 
 		return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 	},
-}
-
-function shuffle(serverQueue, array) {
-	let currentIndex = array.length,
-		randomIndex
-
-	while (currentIndex !== 0) {
-		randomIndex = Math.floor(Math.random() * (array.length - 1))
-
-		currentIndex--
-
-		serverQueue.node.swap(array[currentIndex], randomIndex)
-	}
-
-	return array
 }
