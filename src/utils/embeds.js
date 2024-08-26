@@ -74,8 +74,10 @@ function helpEmbeds() {
 		.setDescription(
 			"Musyk commands start with the default prefix '.'. This prefix can be changed with the slash command '/prefix'. Available commands are listed below.\n\n" +
         "**/prefix <new prefix> ** : Set a new command prefix for this server. If 'current' or 'curr' is provided this command will display the current prefix. \n\n" +
-        "**.play <song name / url>** : Play a song/playlist or add it to the music queue.\n\n" +
+        "**.play/.p <song name / url>** : Play a song/playlist or add it to the music queue.\n\n" +
         "**.stop**: Stop the current playback and clear the music queue.\n\n" +
+		"**.clear**: Clear the music queue.\n\n" +
+		"**.disconnect/.leave/.dc**: Disconnect the bot from the voice channel.\n\n" +
         "**.skip**: Skip the currently playing song and play the next song in the queue.\n\n" +
 		"**.swap <Queue Position 1> <Queue Position 2>**: Swap the position of two songs in the queue.\n\n" +
 		"**.progress**: Show the progress bar of the current song.\n\n" +
@@ -130,30 +132,33 @@ function helpEmbeds() {
 }
 
 function createButtons() {
-	const commands = [
-		"skip",
-		"pause",
-		"stop",
-		"increaseVolume",
-		"decreaseVolume",
-		"shuffle",
-		"reverse",
-		"queue",
-		"cycle",
-		"autoplay",
-	]
-	const emojis = ["⏭️", "⏯️", "⏹️", "🔊", "🔉", "🔀", "🔃", "🕒", "🔄", "🤖"]
+	const commands = {
+		"skip": "⏭️",
+		"pause": "⏯️",
+		"stop": "⏹️",
+		"increaseVolume": "🔊",
+		"decreaseVolume": "🔉",
+		"shuffle": "🔀",
+		"reverse": "🔃",
+		"queue": "🕒",
+		"cycle": "🔄",
+		"autoplay": "🤖",
+		"clear": "🗑️",
+		"disconnect": "🔌",
+	}
 
-	const rows = Array(Math.floor(commands.length / 5))
+	const commandNames = Object.keys(commands)
+
+	const rows = new Array(Math.ceil(commandNames.length / 5))
 
 	for (let i = 0; i < rows.length; i++) {
 		rows[i] = new ActionRowBuilder()
 	}
 
-	for (let i = 0; i < commands.length; i++) {
+	for (let i = 0; i < commandNames.length; i++) {
 		const button = new ButtonBuilder()
-			.setCustomId(commands[i])
-			.setEmoji(emojis[i])
+			.setCustomId(commandNames[i])
+			.setEmoji(commands[commandNames[i]])
 			.setStyle(ButtonStyle.Secondary)
 
 		rows[Math.floor(i / 5)].addComponents(button)
@@ -285,8 +290,6 @@ function nowPlayingEmbed(queue) {
 			},
 		)
 	}
-	
-
 	return embed
 }
 
