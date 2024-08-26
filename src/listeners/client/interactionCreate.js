@@ -34,6 +34,8 @@ const buttonCommands = {
 	decreaseVolume: decreaseVolumeCommand,
 	cycle: cycleCommand,
 	autoplay: autoplayCommand,
+	clear: clearCommand,
+	disconnect: disconnectCommand,
 }
 
 async function handleTextCommands(interaction, bot, serverQueue, serverPrefix) {
@@ -118,4 +120,12 @@ async function cycleCommand(interaction, bot, serverQueue, serverPrefix) {
 async function autoplayCommand(interaction, bot, serverQueue, serverPrefix) {
 	const repeatMode = serverQueue.repeatMode !== QueueRepeatMode.AUTOPLAY ? "autoplay" : "off"
 	await commandHandler(interaction, [`${serverPrefix}cycle`, repeatMode], bot)
+}
+
+async function clearCommand(interaction, bot, serverQueue, serverPrefix) {
+	await commandHandler(interaction, [`${serverPrefix}clear`], bot)
+}
+
+async function disconnectCommand(interaction, bot, serverQueue, serverPrefix) {
+	await commandHandler(interaction, [`${serverPrefix}disconnect`], bot)
 }
