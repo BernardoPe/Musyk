@@ -86,7 +86,7 @@ module.exports = {
 			}
 		} catch (e) {
 			console.log(e)
-			const embed = errorEmbed(undefined, "An error occurred while playing the song")
+			const embed = errorEmbed(undefined, "No results found or an error occurred")
 			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 		}
 	},
