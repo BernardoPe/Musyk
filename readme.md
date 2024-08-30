@@ -9,7 +9,7 @@ You can add my bot to your discord server using this [link](https://discord.com/
 ## Features :bulb:
 
 
-- Music playback from YouTube, SoundCloud, and Spotify with search functionality and playlist support.
+- Music playback from multiple platforms with search functionality and playlist support.
 - Queue management with skip, pause, resume, and stop commands.
 - Volume control
 - Playback UI for ease of use and better user experience.
