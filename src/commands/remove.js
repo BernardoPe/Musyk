@@ -22,7 +22,7 @@ module.exports = {
 
 		const song = serverQueue.node.remove(tracks[value - 1])
 
-		const embed = successEmbed(undefined, `Removed [${song.title}](${song.uri}) from the queue`)
+		const embed = successEmbed(undefined, `Removed [${song.title}](${song.url}) from the queue`)
 
 		updatePlayer(serverQueue)
 
