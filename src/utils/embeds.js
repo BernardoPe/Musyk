@@ -171,7 +171,6 @@ function createButtons() {
 
 function getEmoji(source, embed) {
 	let emoji
-
 	if (source.includes("youtube")) {
 		emoji = "<:YouTube1:1124140924876902411>"
 		embed ? embed.setColor(Color.RED) : embed

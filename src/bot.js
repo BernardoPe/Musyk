@@ -24,17 +24,6 @@ bot.player = new Player(bot, {
 	skipFFmpeg: true
 })
 
-// Handle uncaught exceptions and unhandled promise rejections
-process.on("uncaughtException", (error) => {
-	console.error("There was an uncaught error", error)
-})
-
-process.on("unhandledRejection", (reason, promise) => {
-	console.error("Unhandled Rejection at:", promise, "reason:", reason)
-})
-
-// console.log(bot.player.scanDeps())
-
 // generateOauthTokens() // Run this once to generate the necessary tokens
 
 bot.player.extractors.register(YoutubeiExtractor, {
@@ -49,3 +38,12 @@ bot.player.extractors.register(SoundCloudExtractor, {})
 addEventListeners(bot)
 
 bot.login(TOKEN)
+
+// Handle uncaught exceptions and unhandled promise rejections
+process.on("uncaughtException", (error) => {
+	console.error("There was an uncaught error", error)
+})
+
+process.on("unhandledRejection", (reason, promise) => {
+	console.error("Unhandled Rejection at:", promise, "reason:", reason)
+})

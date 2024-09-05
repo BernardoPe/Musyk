@@ -14,11 +14,11 @@ commandFiles.forEach((file) => {
 })
 
 module.exports = async (msg, args, bot) => {
-	const PREFIX = getServerPrefixFromJson(msg.guild.id)
+	const prefix = getServerPrefixFromJson(msg.guild.id)
 
-	if (msg.content && !msg.content.startsWith(PREFIX)) return
+	if (msg.content && !msg.content.startsWith(prefix)) return
 
-	const commandName = args[0].slice(PREFIX.length).toLowerCase()
+	const commandName = args[0].slice(prefix.length).toLowerCase()
 
 	if (commands.hasOwnProperty(commandName)) {
 
