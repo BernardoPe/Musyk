@@ -10,6 +10,8 @@ const { Util } = require("discord-player")
 const botID = process.env.BOT_ID
 const inviteLink = process.env.INVITE_LINK
 
+const winston = require("./logger.js")
+
 const Color = {
 	RED: 0xed4245,
 	GREEN: 0x57f287,
@@ -388,12 +390,26 @@ function progressBar(queue, options) {
 }
 
 async function sendEmbed(channel, info, timeout) {
-	if (!channel) return
+	if (!channel) {
+		winston.logger.error(
+			"Channel not found",
+		)
+		return
+	}
 	const bot = channel.members.get(botID)
-	if (!bot) return
-	if (!channel.permissionsFor(bot).has("SendMessages")) return
+	if (!bot) {
+		winston.logger.error(
+			"Bot not found in the channel",
+		)
+		return
+	}
+	if (!channel.permissionsFor(bot).has("SendMessages")) {
+		winston.logger.error(
+			"Bot doesn't have permission to send messages",
+		)
+		return
+	}
 	if (!timeout) return channel.send(info)
-
 	return channel.send(info).then(async (msg) => {
 		await Util.wait(timeout)
 		msg.delete()
