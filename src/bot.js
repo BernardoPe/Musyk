@@ -6,6 +6,7 @@ const {
 const { YoutubeiExtractor, generateOauthTokens } = require("discord-player-youtubei")
 const { Client, GatewayIntentBits } = require("discord.js")
 const { addEventListeners } = require("./handlers/events.js")
+const logger = require("./utils/logger.js").logger
 require("dotenv").config()
 
 const TOKEN = process.env.TOKEN
@@ -41,9 +42,9 @@ bot.login(TOKEN)
 
 // Handle uncaught exceptions and unhandled promise rejections
 process.on("uncaughtException", (error) => {
-	console.error("There was an uncaught error", error)
+	logger.error("There was an uncaught error", error, error.stack)
 })
 
 process.on("unhandledRejection", (reason, promise) => {
-	console.error("Unhandled Rejection at:", promise, "reason:", reason)
+	logger.error("Unhandled Rejection at:", promise, "reason:", reason, reason.stack)
 })

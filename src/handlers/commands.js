@@ -29,7 +29,7 @@ module.exports = async (msg, args, bot) => {
 			const admins = getAdminsFromJson()
 			if (!admins.includes(msg.author.id)) return
 		}
-
+		
 		if (command.requiresPlayer && (!serverQueue || !serverQueue.isPlaying())) {
 			const embed = errorEmbed(undefined, "Not currently playing any songs")
 			return sendEmbed(msg.channel, { embeds: [embed] }, 20000)
