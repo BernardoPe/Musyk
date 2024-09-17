@@ -46,9 +46,9 @@ bot.login(TOKEN)
 
 // Handle uncaught exceptions and unhandled promise rejections
 process.on("uncaughtException", (error) => {
-	logger.error("There was an uncaught error", error, error.stack)
+	console.error("There was an uncaught error", error, error.stack)
 })
 
 process.on("unhandledRejection", (reason, promise) => {
-	logger.error("Unhandled Rejection at:", promise, "reason:", reason, reason.stack)
+	console.error("Unhandled Rejection at:", promise)
 })
