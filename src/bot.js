@@ -6,12 +6,7 @@ const {
 const { YoutubeiExtractor, generateOauthTokens } = require("discord-player-youtubei")
 const { Client, GatewayIntentBits } = require("discord.js")
 const { addEventListeners } = require("./handlers/events.js")
-const logger = require("./utils/logger.js").logger
 require("dotenv").config()
-
-// temp fix for youtubei.js logger warning, removed once fixed in youtubei.js
-const youtubeiLogger = require("youtubei.js").Log 
-youtubeiLogger.setLevel("NONE")
 
 const TOKEN = process.env.TOKEN
 
@@ -33,7 +28,6 @@ bot.player = new Player(bot, {
 
 bot.player.extractors.register(YoutubeiExtractor, {
 	authentication: process.env.ACCESS_TOKEN,
-	overrideBridgeMode: "ytmusic",
 })
 
 bot.player.extractors.register(SpotifyExtractor, {})
