@@ -6,6 +6,7 @@ const {
 const { YoutubeiExtractor, generateOauthTokens } = require("discord-player-youtubei")
 const { Client, GatewayIntentBits } = require("discord.js")
 const { addEventListeners } = require("./handlers/events.js")
+const { Worker } = require("node:worker_threads")
 require("dotenv").config()
 
 const TOKEN = process.env.TOKEN
@@ -26,9 +27,30 @@ bot.player = new Player(bot, {
 
 // generateOauthTokens() // Run this once to generate the necessary tokens
 
+const generateToken = () => new Promise((resolve, reject) => {
+	const worker = new Worker(`${__dirname}/potoken.worker.js`)
+    
+	worker.once("message", (v) => {
+		resolve(v)
+	})
+
+	worker.once("error", (v) => {
+		reject(v)
+	})
+})
+
 bot.player.extractors.register(YoutubeiExtractor, {
 	authentication: process.env.ACCESS_TOKEN,
+	streamOptions: {
+		useClient: "WEB"
+	}
 })
+
+generateToken().then((tokens) => {
+	const instance = YoutubeiExtractor.getInstance()
+	if(instance) instance.setTrustedTokens(tokens)
+})
+
 
 bot.player.extractors.register(SpotifyExtractor, {})
 
