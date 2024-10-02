@@ -25,8 +25,18 @@ bot.player = new Player(bot, {
 	skipFFmpeg: true
 })
 
+const ppteerOpts = {
+	puppeteerOptions: {
+		args: [
+			"--no-sandbox",
+			"--disable-setuid-sandbox",
+			"--headless"
+		]
+	}
+}
+
 // generateOauthTokens() // Run this once to generate the necessary tokens
-const tokens = generateTrustedToken()
+const tokens = generateTrustedToken(ppteerOpts)
 
 bot.player.extractors.register(YoutubeiExtractor, {
 	authentication: process.env.ACCESS_TOKEN,
@@ -37,7 +47,7 @@ bot.player.extractors.register(YoutubeiExtractor, {
 })
 
 const task = async () => {
-	const tokens = await generateTrustedToken()
+	const tokens = await generateTrustedToken(ppteerOpts)
 	bot.player.extractors.get(YoutubeiExtractor).setTrustedTokens(tokens)
 }
 
