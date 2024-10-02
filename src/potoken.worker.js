@@ -1,13 +1,12 @@
 const { generateTrustedToken } = require("discord-player-youtubei")
 const { parentPort } = require("node:worker_threads")
 
-generateTrustedToken(
-	{
-		puppeteerOptions: {
-			headless: true,
-			args: ["--no-sandbox", "--disable-setuid-sandbox"]
-		},
-	}
-).then((v) => {
+
+
+generateTrustedToken({
+	puppeteerOptions: {
+		args: ["--no-sandbox", "--disable-setuid-sandbox", "--headless"],
+	},
+}).then((v) => {
 	parentPort.postMessage(v)
 })
