@@ -3,10 +3,10 @@ const {
 	SpotifyExtractor,
 	SoundCloudExtractor,
 } = require("@discord-player/extractor")
-const { YoutubeiExtractor, generateOauthTokens } = require("discord-player-youtubei")
+const { YoutubeiExtractor, generateOauthTokens, generateTrustedToken } = require("discord-player-youtubei")
 const { Client, GatewayIntentBits } = require("discord.js")
 const { addEventListeners } = require("./handlers/events.js")
-const { Worker } = require("node:worker_threads")
+const cron = require("node-cron")
 require("dotenv").config()
 
 const TOKEN = process.env.TOKEN
@@ -26,31 +26,22 @@ bot.player = new Player(bot, {
 })
 
 // generateOauthTokens() // Run this once to generate the necessary tokens
-
-const generateToken = () => new Promise((resolve, reject) => {
-	const worker = new Worker(`${__dirname}/potoken.worker.js`)
-    
-	worker.once("message", (v) => {
-		resolve(v)
-	})
-
-	worker.once("error", (v) => {
-		reject(v)
-	})
-})
+const tokens = generateTrustedToken()
 
 bot.player.extractors.register(YoutubeiExtractor, {
 	authentication: process.env.ACCESS_TOKEN,
 	streamOptions: {
-		useClient: "WEB"
-	}
+		useClient: "ANDROID"
+	},
+	trustedTokens: tokens
 })
 
-generateToken().then((tokens) => {
-	const instance = YoutubeiExtractor.getInstance()
-	if(instance) instance.setTrustedTokens(tokens)
-})
+const task = async () => {
+	const tokens = await generateTrustedToken()
+	bot.player.extractors.get(YoutubeiExtractor).setTrustedTokens(tokens)
+}
 
+cron.schedule("0 0 * * 0", task)
 
 bot.player.extractors.register(SpotifyExtractor, {})
 
