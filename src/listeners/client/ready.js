@@ -12,8 +12,9 @@ module.exports = {
 		bot.guilds.cache.forEach((guild) => {
 			guild.members.fetch().then((fetchedMembers) => {
 				fetchedMembers.forEach((member) => {
-					if (member.user.bot || members.has(member.id)) return
-					members.add(member.id)
+					if (!(member.user.bot || members.has(member.id))) {
+						members.add(member.id)
+					} 
 				})
 				serverCount--
 			})
