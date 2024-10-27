@@ -23,7 +23,7 @@ export async function addEventListeners(
 	}
 }
 
-function addPlayerListener(bot: MusicBot, event: any) {
+function addPlayerListener(bot: MusicBot, event: GuildQueueEventHandler) {
 	bot.player.events.on(event.name, (...args: any) =>
 		event.execute(...args, bot),
 	)
