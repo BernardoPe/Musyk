@@ -42,7 +42,6 @@ class InteractionCreateHandler implements ClientEventHandler {
 	private async handleTextCommands(interaction: ChatInputCommandInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) {
 		const {commandName} = interaction as ChatInputCommandInteraction
 		if (this.textCommands[commandName]) {
-			console.log(commandName)
 			await this.textCommands[commandName](interaction, bot, serverQueue, serverPrefix)
 		}
 	}
@@ -61,7 +60,6 @@ class InteractionCreateHandler implements ClientEventHandler {
 				serverPrefix,
 			)
 		} else {
-			console.log(serverPrefix + customId)
 			await handleCommand(interaction, [`${serverPrefix}${customId}`], bot)
 		}
 
