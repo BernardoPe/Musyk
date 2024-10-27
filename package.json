@@ -1,10 +1,10 @@
 {
     "scripts": {
-        "start": "node  ./src/bot.js",
+        "start": "ts-node src/bot.ts",
         "lint": "eslint ./src/**/*.js",
-        "lint:fix": "eslint ./src/**/*.js --fix",
-        "prettier": "prettier --write ./src/**/*.js",
-        "prettier-eslint": "prettier-eslint --write ./src/**/*.js"
+        "lint:fix": "eslint ./src/**/*.ts --fix",
+        "prettier": "prettier --write ./src/**/*.ts",
+        "prettier-eslint": "prettier-eslint --write ./src/**/*.ts"
     },
     "dependencies": {
         "@discord-player/extractor": "^4.5.1",
@@ -16,11 +16,16 @@
         "discord.js": "^14.16.1",
         "dotenv": "^16.4.5",
         "ffmpeg-static": "^5.2.0",
-        "prettier": "^3.2.5",
-        "prettier-eslint": "^16.3.0",
+        "prettier": "^3.3.3",
         "winston": "^3.13.0"
     },
     "devDependencies": {
-        "eslint": "^8.57.0"
+        "@types/node": "^22.8.1",
+        "@typescript-eslint/eslint-plugin": "^8.11.0",
+        "@typescript-eslint/parser": "^8.11.0",
+        "eslint": "^8.57.1",
+        "eslint-plugin-import": "^2.31.0",
+        "prettier-eslint": "^16.3.0",
+        "ts-node": "^10.9.2"
     }
 }

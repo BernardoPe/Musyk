@@ -10,7 +10,7 @@ logs
 npm-debug.log*
 
 # Directory for environments
-.env
+src/.env
 .env.sample
 
 # Docker-related files

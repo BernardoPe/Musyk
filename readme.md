@@ -48,7 +48,7 @@ If you have [Git](https://git-scm.com/) installed, you can clone the repository 
 1. Open a terminal and navigate to the folder where the bot's files are located.
 2. Run `npm install` to install the bot's dependencies.
 3. Copy the `.env.example` file and rename it to `.env`. Fill in all the required information. 
-To get the optional Youtube access token, go to [bot.js](src/bot.js) and uncomment the line `// generateOauthTokens();`. Run the bot and follow the instructions to get the token.
+To get the optional Youtube access token, go to [bot.ts](src/bot.ts) and uncomment the line `// generateOauthTokens();`. Run the bot and follow the instructions to get the token.
 4. Run `npm start` to start the bot.
 
 To create the bot's invite link, go to the [Discord Developer site](https://discord.com/developers/applications) and click on your bot's application. 
