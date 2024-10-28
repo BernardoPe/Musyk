@@ -5,6 +5,7 @@ import {
 	GuildQueueEventHandler,
 	MusicBot,
 } from "../types.ts"
+import {ClientEvents} from "discord.js"
 
 export async function addEventListeners(
 	bot: MusicBot,
@@ -30,7 +31,7 @@ function addPlayerListener(bot: MusicBot, event: GuildQueueEventHandler) {
 }
 
 function addBotListener(bot: MusicBot, event: ClientEventHandler) {
-	bot.on(event.name, (...args: any) => event.execute(...args, bot))
+	bot.on(event.name as keyof ClientEvents, (...args: any) => event.execute(...args, bot))
 }
 
 export default addEventListeners
