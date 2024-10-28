@@ -64,11 +64,7 @@ After configuring the permissions, copy the generated URL and paste it into the 
 You can access the bot's Docker image on [Docker Hub](https://hub.docker.com/r/bernardope/musyk). 
 To run the bot using this image, you can use the following command:
 ```
-docker run -d \
---name musyk 
---env-file /path/to/.env \
---restart unless-stopped \
-bernardope/musyk:latest
+docker compose up -d
 ```
 Alternatively, you can use the provided [Dockerfile](Dockerfile) to build the image yourself. 
 Run the following command to build the image:

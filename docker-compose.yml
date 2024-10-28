@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  musyk:
+    image: bernardope/musyk:latest
+    container_name: musyk
+    env_file: .env
+    restart: always
+    pull_policy: always
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    command: --interval 30
