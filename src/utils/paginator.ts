@@ -56,10 +56,11 @@ async function paginate(
 		else if (i.customId === "2") index++
 		else return col.stop()
 
-		const newRow = row.addComponents(buttons)
+		button1.setDisabled(index === 0)
+		button2.setDisabled(index === pages.length - 1)
 
 		data.edit({
-			components: [newRow],
+			components: [row],
 			embeds: [pages[index]],
 		})
 	})
