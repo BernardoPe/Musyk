@@ -1,7 +1,8 @@
 import { GuildQueue, QueueRepeatMode } from "discord-player"
-import { sendEmbed, successEmbed } from "../utils/embeds.ts"
-import { MusicBot, PlayerCommand, QueueMetadata } from "../types.ts"
+import { sendEmbed } from "../../../utils/embeds/channels.ts"
+import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
 import { GuildTextBasedChannel } from "discord.js"
+import {successEmbed} from "../../../utils/embeds/status.ts"
 
 class CycleCommand implements PlayerCommand {
 	public aliases = ["cycle"]
@@ -12,7 +13,7 @@ class CycleCommand implements PlayerCommand {
 	public guild = null
 	public msg = null
 
-	public async execute(
+	public execute(
 		channel: GuildTextBasedChannel,
 		args: string[],
 		bot: MusicBot,
@@ -52,7 +53,7 @@ class CycleCommand implements PlayerCommand {
 		const embed = mode
 			? successEmbed(null, mode)
 			: successEmbed(null, `Current mode: ${md}`)
-		await sendEmbed(channel, { embeds: [embed] }, 20000)
+		sendEmbed(channel, { embeds: [embed] }, 20000)
 	}
 }
 

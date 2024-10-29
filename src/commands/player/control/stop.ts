@@ -1,6 +1,6 @@
 import { GuildQueue } from "discord-player"
 import { QueueRepeatMode } from "discord-player"
-import { MusicBot, PlayerCommand, QueueMetadata } from "../types.ts"
+import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
 import { GuildTextBasedChannel } from "discord.js"
 
 class StopCommand implements PlayerCommand {
@@ -12,7 +12,7 @@ class StopCommand implements PlayerCommand {
 	public msg = null
 	public user = null
 
-	async execute(
+	execute(
 		channel: GuildTextBasedChannel,
 		args: string[],
 		bot: MusicBot,

@@ -2,10 +2,11 @@ import {
 	MusicBot,
 	PlayerCommand,
 	QueueMetadata,
-} from "../types.ts"
+} from "../../../types.ts"
 import { GuildQueue } from "discord-player"
-import { sendEmbed, errorEmbed, successEmbed } from "../utils/embeds.ts"
+import { sendEmbed } from "../../../utils/embeds/channels.ts"
 import { GuildTextBasedChannel } from "discord.js"
+import {errorEmbed, successEmbed} from "../../../utils/embeds/status.ts"
 
 class ResumeCommand implements PlayerCommand {
 	aliases = ["resume"]
@@ -16,7 +17,7 @@ class ResumeCommand implements PlayerCommand {
 	msg = null
 	user = null
 
-	async execute(
+	execute(
 		channel: GuildTextBasedChannel,
 		args: string[],
 		bot: MusicBot,
@@ -28,7 +29,7 @@ class ResumeCommand implements PlayerCommand {
       !serverQueue.dispatcher.isPaused()
 		) {
 			const embed = errorEmbed(null, "The player is not paused")
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 		if (
@@ -38,7 +39,7 @@ class ResumeCommand implements PlayerCommand {
 		) {
 			serverQueue.dispatcher.resume()
 			const embed = successEmbed(null, "Resumed the player")
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 	}

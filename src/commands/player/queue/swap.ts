@@ -1,13 +1,13 @@
-import { MusicBot, PlayerCommand, QueueMetadata } from "../types.ts"
+import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 
 import {
-	sendEmbed,
-	updatePlayer,
-	errorEmbed,
-	successEmbed,
-} from "../utils/embeds.ts"
+	sendEmbed
+
+} from "../../../utils/embeds/channels.ts"
 import { GuildTextBasedChannel } from "discord.js"
+import {errorEmbed, successEmbed} from "../../../utils/embeds/status.ts"
+import {updatePlayer} from "../../../utils/embeds/player/playing.ts"
 
 class SwapCommand implements PlayerCommand {
 	public aliases = ["swap"]
@@ -18,7 +18,7 @@ class SwapCommand implements PlayerCommand {
 	public guild = null
 	public msg = null
 
-	public async execute(
+	public execute(
 		channel: GuildTextBasedChannel,
 		args: string[],
 		bot: MusicBot,
@@ -29,13 +29,13 @@ class SwapCommand implements PlayerCommand {
 
 		if (isNaN(swapPos1) || swapPos1 < 1 || swapPos1 > serverQueue.tracks.size) {
 			const embed = errorEmbed(null, "Invalid position 1 provided")
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
 		if (isNaN(swapPos2) || swapPos2 < 1 || swapPos2 > serverQueue.tracks.size) {
 			const embed = errorEmbed(null, "Invalid position 2 provided")
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
@@ -49,7 +49,7 @@ class SwapCommand implements PlayerCommand {
 			null,
 			`Swapped **[${song1.cleanTitle}](${song1.url})** with **[${song2.cleanTitle}](${song2.url})**`,
 		)
-		await sendEmbed(channel, { embeds: [embed] }, 20000)
+		sendEmbed(channel, { embeds: [embed] }, 20000)
 
 		if (swapPos1 === 1 || swapPos2 === 1) updatePlayer(serverQueue)
 	}

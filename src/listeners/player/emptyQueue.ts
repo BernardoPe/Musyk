@@ -1,9 +1,9 @@
-import {GuildQueue} from "discord-player"
+import {GuildQueue, Util} from "discord-player"
 import {GuildQueueEventHandler, QueueMetadata} from "../../types.ts"
 
-import {GuildQueueEvent, Util} from "discord-player"
-import {sendEmbed} from "../../utils/embeds.ts"
-import {leavingEmbed} from "../../utils/embeds.ts"
+import {GuildQueueEvent} from "discord-player"
+import {sendEmbed} from "../../utils/embeds/channels.ts"
+import {leavingEmbed} from "../../utils/embeds/player/queue.ts"
 
 class EmptyQueueHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.emptyQueue
@@ -28,8 +28,9 @@ class EmptyQueueHandler implements GuildQueueEventHandler {
 
 		const embed = leavingEmbed()
 
-		await sendEmbed(channel, {embeds: [embed]}, 60000)
+		sendEmbed(channel, {embeds: [embed]}, 60000)
 	}
+
 }
 
 export default new EmptyQueueHandler()

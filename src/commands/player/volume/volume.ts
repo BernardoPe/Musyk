@@ -1,7 +1,8 @@
-import { MusicBot, PlayerCommand, QueueMetadata } from "../types.ts"
-import { errorEmbed, sendEmbed, successEmbed } from "../utils/embeds.ts"
+import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
+import { sendEmbed } from "../../../utils/embeds/channels.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
+import { errorEmbed, successEmbed } from "../../../utils/embeds/status.ts"
 
 class VolumeCommand implements PlayerCommand {
 	public aliases = ["volume"]
@@ -12,7 +13,7 @@ class VolumeCommand implements PlayerCommand {
 	public msg: string | null = null
 	public user: string | null = null
 
-	async execute(
+	execute(
 		channel: GuildTextBasedChannel,
 		args: string[],
 		bot: MusicBot,

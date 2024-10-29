@@ -1,7 +1,8 @@
-import { sendEmbed, errorEmbed } from "../utils/embeds.ts"
-import { MusicBot, PlayerCommand, QueueMetadata } from "../types.ts"
+import { sendEmbed } from "../../../utils/embeds/channels.ts"
+import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
+import {errorEmbed} from "../../../utils/embeds/status.ts"
 
 class SkipToCommand implements PlayerCommand {
 	public aliases = ["skipto"]
@@ -12,7 +13,7 @@ class SkipToCommand implements PlayerCommand {
 	public guild = null
 	public msg = null
 
-	public async execute(
+	public execute(
 		channel: GuildTextBasedChannel,
 		args: string[],
 		bot: MusicBot,
@@ -22,7 +23,7 @@ class SkipToCommand implements PlayerCommand {
 
 		if (isNaN(skipPos) || skipPos < 1 || skipPos > serverQueue!.tracks.size) {
 			const embed = errorEmbed(null, "Invalid position")
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 

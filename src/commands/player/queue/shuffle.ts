@@ -1,12 +1,11 @@
 import {
 	sendEmbed,
-	updatePlayer,
-	successEmbed,
-	errorEmbed,
-} from "../utils/embeds.ts"
-import { MusicBot, PlayerCommand, QueueMetadata } from "../types.ts"
+} from "../../../utils/embeds/channels.ts"
+import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
+import {errorEmbed, successEmbed} from "../../../utils/embeds/status.ts"
+import {updatePlayer} from "../../../utils/embeds/player/playing.ts"
 
 class ShuffleCommand implements PlayerCommand {
 	public aliases = ["shuffle"]
@@ -17,7 +16,7 @@ class ShuffleCommand implements PlayerCommand {
 	public msg: string | null = null
 	public user: string | null = null
 
-	async execute(
+	execute(
 		channel: GuildTextBasedChannel,
 		args: string[],
 		bot: MusicBot,
@@ -28,7 +27,7 @@ class ShuffleCommand implements PlayerCommand {
 				null,
 				"There are not enough songs in the queue to shuffle",
 			)
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
@@ -38,7 +37,7 @@ class ShuffleCommand implements PlayerCommand {
 
 		const embed = successEmbed(null, "Shuffled the queue")
 
-		await sendEmbed(channel, { embeds: [embed] }, 20000)
+		sendEmbed(channel, { embeds: [embed] }, 20000)
 		return
 	}
 }

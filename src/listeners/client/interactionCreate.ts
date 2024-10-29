@@ -1,25 +1,26 @@
 import {BaseInteraction, ButtonInteraction, ChatInputCommandInteraction, Events} from "discord.js"
 import {ClientEventHandler, MusicBot, QueueMetadata, ServerPrefix} from "../../types.ts"
 import {handleCommand} from "../../handlers/commands.ts"
-import {helpEmbeds, createLink} from "../../utils/embeds.ts"
 import {GuildQueue, QueueRepeatMode} from "discord-player"
-import {getServerPrefix, setNewPrefix} from "../../utils/configs.ts"
-import {successEmbed, errorEmbed} from "../../utils/embeds.ts"
-import {logger} from "../../utils/logger.ts"
+import {logger} from "../../utils/logging/logger.ts"
+import {errorEmbed, successEmbed} from "../../utils/embeds/status.ts"
+import {helpEmbeds} from "../../utils/embeds/help.ts"
+import {createLink} from "../../utils/embeds/links.ts"
+import {getServerPrefix, setNewPrefix} from "../../utils/configs/server.ts"
 
-type ButtonCommand = (interaction: ButtonInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) => Promise<void>
-type TextCommand = (interaction: ChatInputCommandInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) => Promise<void>
+type ButtonCommand = (interaction: ButtonInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) => void
+type TextCommand = (interaction: ChatInputCommandInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) => void
 
 class InteractionCreateHandler implements ClientEventHandler {
 	public name: Events.InteractionCreate = Events.InteractionCreate
 
-	public async execute(interaction: BaseInteraction, bot: MusicBot) {
+	public execute(interaction: BaseInteraction, bot: MusicBot) {
 		const serverPrefix = getServerPrefix(interaction.guild!.id)
 		const serverQueue: GuildQueue<QueueMetadata> | null = bot.player.nodes.get(interaction.guild!.id)
 		if (!interaction.isButton()) {
-			await this.handleTextCommands(interaction as ChatInputCommandInteraction, bot, serverQueue, serverPrefix)
+			this.handleTextCommands(interaction as ChatInputCommandInteraction, bot, serverQueue, serverPrefix)
 		} else {
-			await this.handleButtonCommands(interaction, bot, serverQueue, serverPrefix)
+			this.handleButtonCommands(interaction, bot, serverQueue, serverPrefix)
 		}
 	}
 
@@ -39,29 +40,29 @@ class InteractionCreateHandler implements ClientEventHandler {
 		disconnect: this.disconnectCommand,
 	}
 
-	private async handleTextCommands(interaction: ChatInputCommandInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) {
+	private handleTextCommands(interaction: ChatInputCommandInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) {
 		const {commandName} = interaction as ChatInputCommandInteraction
 		if (this.textCommands[commandName]) {
-			await this.textCommands[commandName](interaction, bot, serverQueue, serverPrefix)
+			this.textCommands[commandName](interaction, bot, serverQueue, serverPrefix)
 		}
 	}
 
-	private async handleButtonCommands(interaction: ButtonInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) {
+	private handleButtonCommands(interaction: ButtonInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) {
 
 		const {customId} = interaction
 
-		await interaction.deferUpdate()
-
-		if (this.buttonCommands[customId]) {
-			await this.buttonCommands[customId](
-				interaction,
-				bot,
-				serverQueue,
-				serverPrefix,
-			)
-		} else {
-			await handleCommand(interaction, [`${serverPrefix}${customId}`], bot)
-		}
+		interaction.deferUpdate().then(() => {
+			if (this.buttonCommands[customId]) {
+				this.buttonCommands[customId](
+					interaction,
+					bot,
+					serverQueue,
+					serverPrefix,
+				)
+			} else {
+				handleCommand(interaction, [`${serverPrefix}${customId}`], bot)
+			}
+		})
 
 	}
 
@@ -96,44 +97,44 @@ class InteractionCreateHandler implements ClientEventHandler {
 		await interaction.reply({embeds: [embed]})
 	}
 
-	private async pauseCommand(interaction: ButtonInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) {
+	private pauseCommand(interaction: ButtonInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) {
 		if (!serverQueue) return
 		const command = serverQueue.isPlaying() && !serverQueue.dispatcher!.isPaused() ? "pause" : "resume"
-		await handleCommand(interaction, [`${serverPrefix}${command}`], bot)
+		handleCommand(interaction, [`${serverPrefix}${command}`], bot)
 	}
 
-	private async increaseVolumeCommand(interaction: ButtonInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) {
+	private increaseVolumeCommand(interaction: ButtonInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) {
 		if (!serverQueue) return
 		const newVolume = serverQueue.node.volume === 200 ? 200 : serverQueue.node.volume + 20
 		serverQueue.node.setVolume(newVolume)
 	}
 
-	private async decreaseVolumeCommand(interaction: ButtonInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) {
+	private decreaseVolumeCommand(interaction: ButtonInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) {
 		if (!serverQueue) return
 		const newVolume = serverQueue.node.volume === 0 ? 0 : serverQueue.node.volume - 20
 		serverQueue.node.setVolume(newVolume)
 	}
 
-	private async cycleCommand(interaction: ButtonInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) {
+	private cycleCommand(interaction: ButtonInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) {
 		if (!serverQueue) return
 		const repeatMode = serverQueue.repeatMode !== QueueRepeatMode.TRACK ? "track" : "off"
-		await handleCommand(interaction, [`${serverPrefix}cycle`, repeatMode], bot)
+		handleCommand(interaction, [`${serverPrefix}cycle`, repeatMode], bot)
 	}
 
-	private async autoplayCommand(interaction: ButtonInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) {
+	private autoplayCommand(interaction: ButtonInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) {
 		if (!serverQueue) return
 		const repeatMode = serverQueue.repeatMode !== QueueRepeatMode.AUTOPLAY ? "autoplay" : "off"
-		await handleCommand(interaction, [`${serverPrefix}cycle`, repeatMode], bot)
+		handleCommand(interaction, [`${serverPrefix}cycle`, repeatMode], bot)
 	}
 
-	private async clearCommand(interaction: ButtonInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) {
+	private clearCommand(interaction: ButtonInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) {
 		if (!serverQueue) return
-		await handleCommand(interaction, [`${serverPrefix}clear`], bot)
+		handleCommand(interaction, [`${serverPrefix}clear`], bot)
 	}
 
-	private async disconnectCommand(interaction: ButtonInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) {
+	private disconnectCommand(interaction: ButtonInteraction, bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null, serverPrefix: ServerPrefix) {
 		if (!serverQueue) return
-		await handleCommand(interaction, [`${serverPrefix}disconnect`], bot)
+		handleCommand(interaction, [`${serverPrefix}disconnect`], bot)
 	}
 
 }

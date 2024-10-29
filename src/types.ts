@@ -59,7 +59,7 @@ type ServerPrefix = string;
  * @param guild - The guild that the command was triggered in
  * @param user - The user that triggered the command
  */
-interface Command {
+interface BaseCommand {
     name: string;
     aliases: string[];
     adminCommand: boolean;
@@ -72,14 +72,14 @@ interface Command {
 /**
  * Represents a command that requires a player to exist for the server
  */
-interface PlayerCommand extends Command {
+interface PlayerCommand extends BaseCommand {
     execute: (channel: GuildTextBasedChannel, args: string[], bot: MusicBot, serverQueue: GuildQueue<QueueMetadata>) => void;
 }
 
 /**
  * Represents a text command, that does not require a player to exist for the server
  */
-interface TextCommand extends Command {
+interface TextCommand extends BaseCommand {
     execute: (msg: GuildMessage, args: string[], bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null) => void;
 }
 
@@ -105,4 +105,4 @@ type QueueMetadata = {
  */
 type GuildMessage = Message<true>
 
-export { MusicBot, GuildQueueEventHandler, ClientEventHandler, ServerPrefix, Command, QueueMetadata, GuildMessage, PlayerCommand, TextCommand }
+export { MusicBot, GuildQueueEventHandler, ClientEventHandler, ServerPrefix, BaseCommand, QueueMetadata, GuildMessage, PlayerCommand, TextCommand }

@@ -1,6 +1,7 @@
 import {GuildQueueEventHandler, QueueMetadata} from "../../types.ts"
-import {sendEmbed, leftEmbed} from "../../utils/embeds.ts"
-import {GuildQueue, GuildQueueEvent, Util} from "discord-player"
+import {sendEmbed, leftEmbed} from "../../utils/embeds/channels.ts"
+import {GuildQueue, GuildQueueEvent} from "discord-player"
+import {Util} from "discord-player"
 
 
 class QueueDeleteHandler implements GuildQueueEventHandler {
@@ -14,12 +15,19 @@ class QueueDeleteHandler implements GuildQueueEventHandler {
 
 		while (queue.metadata.updatingPlayer) await Util.wait(100)
 
-		if (col) col.stop()
-		if (message) await message.delete()
+		if (col) {
+			col.stop()
+			queue.metadata.collector = null
+		}
+
+		if (message) {
+			await message.delete()
+			queue.metadata.playerEmbed = null
+		}
 
 		const embed = leftEmbed()
 
-		await sendEmbed(channel!, {embeds: [embed]}, 20000)
+		sendEmbed(channel!, {embeds: [embed]}, 20000)
 	}
 }
 

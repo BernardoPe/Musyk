@@ -1,13 +1,12 @@
 import { GuildQueue, Track } from "discord-player"
-import { MusicBot, PlayerCommand, QueueMetadata } from "../types.ts"
+import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
 
 import {
 	sendEmbed,
-	updatePlayer,
-	successEmbed,
-	errorEmbed,
-} from "../utils/embeds.ts"
+} from "../../../utils/embeds/channels.ts"
 import { GuildTextBasedChannel } from "discord.js"
+import {errorEmbed, successEmbed} from "../../../utils/embeds/status.ts"
+import {updatePlayer} from "../../../utils/embeds/player/playing.ts"
 
 class ReverseCommand implements PlayerCommand {
 	aliases = ["reverse"]
@@ -18,7 +17,7 @@ class ReverseCommand implements PlayerCommand {
 	msg = null
 	user = null
 
-	async execute(
+	execute(
 		channel: GuildTextBasedChannel,
 		args: string[],
 		bot: MusicBot,
@@ -26,18 +25,18 @@ class ReverseCommand implements PlayerCommand {
 	) {
 		if (serverQueue.isEmpty()) {
 			const embed = errorEmbed(null, "Queue is empty")
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 		if (serverQueue.tracks.size === 1) {
 			const embed = errorEmbed(null, "Queue has only one song")
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 		this.reverse(serverQueue, serverQueue.tracks.toArray())
 		updatePlayer(serverQueue)
 		const embed = successEmbed(null, "Reversed the queue")
-		await sendEmbed(channel, { embeds: [embed] }, 20000)
+		sendEmbed(channel, { embeds: [embed] }, 20000)
 		return
 	}
 

@@ -1,7 +1,8 @@
-import { sendEmbed, errorEmbed, successEmbed } from "../utils/embeds.ts"
-import { MusicBot, PlayerCommand } from "../types.ts"
+import { sendEmbed } from "../../../utils/embeds/channels.ts"
+import { MusicBot, PlayerCommand } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
+import {errorEmbed, successEmbed} from "../../../utils/embeds/status.ts"
 
 class PauseCommand implements PlayerCommand {
 	public aliases = ["pause"]
@@ -12,7 +13,7 @@ class PauseCommand implements PlayerCommand {
 	public guild = null
 	public msg = null
 
-	public async execute(
+	public execute(
 		channel: GuildTextBasedChannel,
 		args: string[],
 		bot: MusicBot,
@@ -20,12 +21,12 @@ class PauseCommand implements PlayerCommand {
 	) {
 		if (serverQueue.dispatcher!.paused) {
 			const embed = errorEmbed(null, "The player is already paused")
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 		const embed = successEmbed(null, "Paused the player")
     serverQueue.dispatcher!.pause()
-    await sendEmbed(channel, { embeds: [embed] }, 20000)
+    sendEmbed(channel, { embeds: [embed] }, 20000)
     return
 	}
 }

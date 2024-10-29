@@ -1,5 +1,5 @@
 import {GuildQueue, GuildQueueEvent, Track} from "discord-player"
-import {logger} from "../../utils/logger.ts"
+import {logger} from "../../utils/logging/logger.ts"
 import {GuildQueueEventHandler} from "../../types.ts"
 
 class PlayerErrorHandler implements GuildQueueEventHandler {

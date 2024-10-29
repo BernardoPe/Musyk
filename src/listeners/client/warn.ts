@@ -1,5 +1,5 @@
 import {Events} from "discord.js"
-import {logger} from "../../utils/logger.ts"
+import {logger} from "../../utils/logging/logger.ts"
 
 class WarnEventHandler {
 	public name = Events.Warn

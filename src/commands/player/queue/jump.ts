@@ -1,7 +1,8 @@
-import { sendEmbed, errorEmbed } from "../utils/embeds.ts"
-import { MusicBot, PlayerCommand, QueueMetadata } from "../types.ts"
+import { sendEmbed } from "../../../utils/embeds/channels.ts"
+import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
+import {errorEmbed} from "../../../utils/embeds/status.ts"
 
 class JumpCommand implements PlayerCommand {
 	public aliases = ["jump"]
@@ -12,7 +13,7 @@ class JumpCommand implements PlayerCommand {
 	public guild = null
 	public msg = null
 
-	public async execute(
+	public execute(
 		channel: GuildTextBasedChannel,
 		args: string[],
 		bot: MusicBot,
@@ -26,7 +27,7 @@ class JumpCommand implements PlayerCommand {
       jumpPosition > serverQueue.tracks.size
 		) {
 			const embed = errorEmbed(null, "Invalid position")
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 

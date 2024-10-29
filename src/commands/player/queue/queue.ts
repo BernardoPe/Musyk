@@ -1,8 +1,10 @@
-import { sendEmbed, createQueueEmbed, errorEmbed } from "../utils/embeds.ts"
-import paginate from "../utils/paginator.ts"
-import { MusicBot, PlayerCommand, QueueMetadata } from "../types.ts"
+import { sendEmbed } from "../../../utils/embeds/channels.ts"
+import paginate from "../../../utils/embeds/paginator.ts"
+import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
+import {createQueueEmbed} from "../../../utils/embeds/player/queue.ts"
+import {errorEmbed} from "../../../utils/embeds/status.ts"
 
 class QueueCommand implements PlayerCommand {
 	public aliases = ["queue"]
@@ -13,7 +15,7 @@ class QueueCommand implements PlayerCommand {
 	public msg: string | null = null
 	public user: string | null = null
 
-	public async execute(
+	public execute(
 		channel: GuildTextBasedChannel,
 		args: string[],
 		bot: MusicBot,
@@ -21,7 +23,7 @@ class QueueCommand implements PlayerCommand {
 	) {
 		if (serverQueue.isEmpty()) {
 			const embed = errorEmbed(null, "The queue is empty")
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 		const pages = createQueueEmbed(serverQueue)

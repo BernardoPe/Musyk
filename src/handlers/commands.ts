@@ -1,29 +1,31 @@
-import { getAllFiles, getServerPrefix, getAdmins } from "../utils/configs.ts"
-import { sendEmbed } from "../utils/embeds.ts"
+import { sendEmbed } from "../utils/embeds/channels.ts"
 import * as path from "path"
-import { logger } from "../utils/logger.ts"
+import { logger } from "../utils/logging/logger.ts"
 import { ButtonInteraction, GuildTextBasedChannel, Message } from "discord.js"
-import { errorEmbed } from "../utils/embeds.ts"
 import {
 	TextCommand,
-	Command,
+	BaseCommand,
 	GuildMessage,
 	MusicBot,
 	PlayerCommand,
 	QueueMetadata,
 } from "../types.ts"
 import { GuildQueue } from "discord-player"
+import { errorEmbed } from "../utils/embeds/status.ts"
+import { getAdmins, getServerPrefix } from "../utils/configs/server.ts"
+import { getAllFiles } from "../utils/configs/json.ts"
 
-const commands: { [key: string]: Command } = {}
+const commands: { [key: string]: BaseCommand } = {}
 const commandFiles: string[] = getAllFiles(path.join(__dirname, "../commands"))
 
 commandFiles.forEach(async (file) => {
-	const commandModule = await import(file)
-	const command: Command = commandModule.default
+	const module = await import(file)
+	const command: BaseCommand = module.default
 	command.aliases.forEach((alias) => (commands[alias] = command))
+	logger.info(`[COMMAND]: ${command.name} loaded`)
 })
 
-export async function handleCommand(
+export function handleCommand(
 	msg: GuildMessage | ButtonInteraction,
 	args: string[],
 	bot: MusicBot,

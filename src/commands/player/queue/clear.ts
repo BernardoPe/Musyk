@@ -1,16 +1,15 @@
 import {
-	updatePlayer,
-	errorEmbed,
 	sendEmbed,
-	successEmbed,
-} from "../utils/embeds.ts"
+} from "../../../utils/embeds/channels.ts"
 import {
 	MusicBot,
 	PlayerCommand,
 	QueueMetadata,
-} from "../types.ts"
+} from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
+import {errorEmbed, successEmbed} from "../../../utils/embeds/status.ts"
+import {updatePlayer} from "../../../utils/embeds/player/playing.ts"
 
 class ClearCommand implements PlayerCommand {
 	aliases = ["clear"]
@@ -21,7 +20,7 @@ class ClearCommand implements PlayerCommand {
 	msg = null
 	user = null
 
-	async execute(
+	execute(
 		channel: GuildTextBasedChannel,
 		args: string[],
 		bot: MusicBot,
@@ -29,13 +28,13 @@ class ClearCommand implements PlayerCommand {
 	) {
 		if (serverQueue.tracks.size === 0) {
 			const embed = errorEmbed(null, "There are no songs in the queue")
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 		serverQueue.tracks.clear()
 		updatePlayer(serverQueue)
 		const embed = successEmbed(null, "Cleared the queue")
-		await sendEmbed(channel, { embeds: [embed] }, 20000)
+		sendEmbed(channel, { embeds: [embed] }, 20000)
 	}
 }
 

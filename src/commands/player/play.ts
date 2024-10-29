@@ -3,12 +3,13 @@ import {
 	GuildMessage,
 	MusicBot,
 	QueueMetadata,
-} from "../types.ts"
+} from "../../types.ts"
 
-import { errorEmbed, sendEmbed } from "../utils/embeds.ts"
-import { GuildQueue, SearchQueryType } from "discord-player"
+import { sendEmbed } from "../../utils/embeds/channels.ts"
+import {GuildQueue, SearchQueryType} from "discord-player"
 import { GuildTextBasedChannel, VoiceBasedChannel } from "discord.js"
-import { logger } from "../utils/logger.ts"
+import { logger } from "../../utils/logging/logger.ts"
+import { errorEmbed } from "../../utils/embeds/status.ts"
 
 class PlayCommand implements TextCommand {
 	adminCommand: boolean = false
@@ -35,7 +36,7 @@ class PlayCommand implements TextCommand {
 
 		if (args.length === 1) {
 			const embed = errorEmbed(null, "Please provide a search query")
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
@@ -46,7 +47,7 @@ class PlayCommand implements TextCommand {
 				null,
 				"You need to be in a voice channel to play music",
 			)
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
@@ -57,34 +58,32 @@ class PlayCommand implements TextCommand {
 				null,
 				"I need the permissions to join and speak in your voice channel",
 			)
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
-		const queue: GuildQueue<QueueMetadata> =
-      serverQueue || this.createQueue(bot, channel, voiceChannel)
+		const queue: GuildQueue<QueueMetadata> = serverQueue || this.createQueue(bot, channel, voiceChannel)
 
-		try {
-			if (!queue.connection) await queue.connect(voiceChannel)
-			else if (queue.channel !== msg.member!.voice.channel) {
-				const embed = errorEmbed(
-					null,
-					"Already connected to a different voice channel",
-				)
-				await sendEmbed(channel, { embeds: [embed] }, 20000)
-				return
-			}
-		} catch (error) {
-			bot.player.nodes.delete(msg.guild.id)
-			logger.error(error)
+		if (queue.connection && queue.channel !== msg.member!.voice.channel) {
+			const embed = errorEmbed(null, "Already connected to a different voice channel")
+			sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 			return
+		}
+		if (!queue.connection) {
+			try {
+				await queue.connect(voiceChannel)
+			} catch (e) {
+				bot.player.nodes.delete(msg.guild.id)
+				logger.error(e)
+			}
 		}
 
 		args.shift() // Remove the command from the args
 
 		const searchArg = args.find((arg) => arg in this.searchEngines) as
-      | keyof typeof this.searchEngines
-      | undefined
+			| keyof typeof this.searchEngines
+			| undefined
+
 		const searchEngine = searchArg ? this.searchEngines[searchArg] : "auto"
 
 		args = args.filter((arg) => !(arg in this.searchEngines))
@@ -98,9 +97,12 @@ class PlayCommand implements TextCommand {
 
 		const song = result.tracks[0]
 
+		if (result.tracks.length === 0) {
+			const embed = errorEmbed(null, "No results found")
+			sendEmbed(channel, { embeds: [embed] }, 20000)
+			return
+		}
 		try {
-			if (result.tracks.length === 0) throw new Error("No results found")
-
 			if (!queue.isPlaying() && !queue.dispatcher!.isBuffering()) {
 				await queue.play(song)
 			} else if (!result.playlist) {
@@ -109,11 +111,11 @@ class PlayCommand implements TextCommand {
 				queue.addTrack(result.playlist)
 			}
 		} catch (e) {
-			console.log(e)
-			const embed = errorEmbed(null, "No results found or an error occurred")
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
-			return
+			logger.error(e)
+			const embed = errorEmbed(null, "An error occurred while playing the song")
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 		}
+
 	}
 
 	private createQueue(
@@ -126,6 +128,7 @@ class PlayCommand implements TextCommand {
 			leaveOnEmpty: false,
 			leaveOnEnd: true,
 			leaveOnEndCooldown: 300000,
+			disableHistory: true,
 		})
 		queue.metadata = {
 			voiceChannel: voiceChannel,

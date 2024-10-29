@@ -1,16 +1,15 @@
 import {
 	sendEmbed,
-	updatePlayer,
-	errorEmbed,
-	successEmbed,
-} from "../utils/embeds.ts"
+} from "../../../utils/embeds/channels.ts"
 import {
 	MusicBot,
 	PlayerCommand,
 	QueueMetadata,
-} from "../types.ts"
+} from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
+import {errorEmbed, successEmbed} from "../../../utils/embeds/status.ts"
+import {updatePlayer} from "../../../utils/embeds/player/playing.ts"
 
 class RemoveCommand implements PlayerCommand {
 	public aliases = ["remove"]
@@ -21,7 +20,7 @@ class RemoveCommand implements PlayerCommand {
 	public msg: string | null = null
 	public user: string | null = null
 
-	public async execute(
+	public execute(
 		channel: GuildTextBasedChannel,
 		args: string[],
 		bot: MusicBot,
@@ -30,7 +29,7 @@ class RemoveCommand implements PlayerCommand {
 		const value = parseInt(args[1])
 		if (isNaN(value)) {
 			const embed = errorEmbed(null, "Value must be a number")
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 		const tracks = serverQueue.tracks.toArray()
@@ -39,7 +38,7 @@ class RemoveCommand implements PlayerCommand {
 				null,
 				`Invalid number, must be 1-${tracks.length}`,
 			)
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 		const song = serverQueue.node.remove(tracks[value - 1])
@@ -48,7 +47,7 @@ class RemoveCommand implements PlayerCommand {
 			`Removed [${song!.title}](${song!.url}) from the queue`,
 		)
 		updatePlayer(serverQueue)
-		await sendEmbed(channel, { embeds: [embed] }, 20000)
+		sendEmbed(channel, { embeds: [embed] }, 20000)
 		return
 	}
 }

@@ -1,7 +1,8 @@
-import { MusicBot, PlayerCommand, QueueMetadata } from "../types.ts"
+import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
-import { errorEmbed, sendEmbed, successEmbed } from "../utils/embeds.ts"
+import { sendEmbed } from "../../../utils/embeds/channels.ts"
 import { GuildTextBasedChannel } from "discord.js"
+import {errorEmbed, successEmbed} from "../../../utils/embeds/status.ts"
 
 class FilterCommand implements PlayerCommand {
 	public adminCommand: boolean = false
@@ -27,13 +28,13 @@ class FilterCommand implements PlayerCommand {
 		if (filter === "disableall") {
 			await serverQueue.filters.ffmpeg.setFilters(false)
 			const embed = successEmbed(null, "Disabled all filters")
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
 		if (!serverQueue.filters.ffmpeg.isValidFilter(filter)) {
 			const embed = errorEmbed(null, "Invalid filter")
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
@@ -41,12 +42,12 @@ class FilterCommand implements PlayerCommand {
 
 		if (serverQueue.filters.ffmpeg.isEnabled(filter)) {
 			const embed = successEmbed(null, `Enabled ${filter} filter`)
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
 		const embed = successEmbed(null, `Disabled ${filter} filter`)
-		await sendEmbed(channel, { embeds: [embed] }, 20000)
+		sendEmbed(channel, { embeds: [embed] }, 20000)
 	}
 }
 

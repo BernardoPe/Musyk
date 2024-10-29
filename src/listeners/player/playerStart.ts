@@ -1,8 +1,10 @@
 import {GuildQueue} from "discord-player"
 import {GuildQueueEventHandler, QueueMetadata} from "../../types.ts"
 import {GuildQueueEvent} from "discord-player"
-import {nowPlayingEmbed, createButtons, sendEmbed, updatePlayer} from "../../utils/embeds.ts"
-import {ButtonInteraction, InteractionCollector, Message} from "discord.js"
+import {ButtonInteraction, InteractionCollector} from "discord.js"
+import {createButtons} from "../../utils/embeds/buttons.ts"
+import {nowPlayingEmbed, updatePlayer} from "../../utils/embeds/player/playing.ts"
+import {sendEmbed} from "../../utils/embeds/channels.ts"
 
 class PlayerStartHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.playerStart
@@ -12,7 +14,7 @@ class PlayerStartHandler implements GuildQueueEventHandler {
 			const embed = nowPlayingEmbed(queue)
 			const buttons = createButtons()
 
-			const data: Message | undefined = await sendEmbed(queue.metadata.textChannel!, {
+			const data = await sendEmbed(queue.metadata.textChannel!, {
 				embeds: [embed],
 				components: buttons,
 			})
@@ -28,6 +30,7 @@ class PlayerStartHandler implements GuildQueueEventHandler {
 					updatingPlayer: queue.metadata.updatingPlayer,
 				}
 			)
+			
 		} else { updatePlayer(queue) }
 	}
 }

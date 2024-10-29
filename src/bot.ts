@@ -1,12 +1,14 @@
 import { Player } from "discord-player"
 import { SpotifyExtractor, SoundCloudExtractor } from "@discord-player/extractor"
-import { YoutubeiExtractor} from "discord-player-youtubei"
+import { YoutubeiExtractor } from "discord-player-youtubei"
 import { Client, GatewayIntentBits } from "discord.js"
 import { addEventListeners } from "./handlers/events.ts"
 import { MusicBot } from "./types.ts"
 import "dotenv/config"
+import {logger} from "./utils/logging/logger.ts"
 
 const TOKEN = process.env.TOKEN
+
 const bot: MusicBot = new Client({
 	intents: [
 		GatewayIntentBits.Guilds,
@@ -21,19 +23,28 @@ bot.player = new Player(bot as Client, {
 	skipFFmpeg: true,
 })
 
-// generateOauthTokens() // Run this once to generate the necessary tokens
+addEventListeners(bot).then(async () => {
 
-bot.player.extractors.register(YoutubeiExtractor, {
-	authentication: process.env.ACCESS_TOKEN,
+	await bot.player.extractors.register(YoutubeiExtractor, {
+		authentication: process.env.ACCESS_TOKEN,
+	})
+
+	logger.info("Registered YoutubeiExtractor")
+
+	await bot.player.extractors.register(SpotifyExtractor, {})
+
+	logger.info("Registered SpotifyExtractor")
+
+	await bot.player.extractors.register(SoundCloudExtractor, {})
+
+	logger.info("Registered SoundCloudExtractor")
+
+	await bot.login(TOKEN)
 })
 
-bot.player.extractors.register(SpotifyExtractor, {})
 
-bot.player.extractors.register(SoundCloudExtractor, {})
+// generateOauthTokens() // Run this once to generate the necessary tokens
 
-addEventListeners(bot)
-
-bot.login(TOKEN)
 
 // Handle uncaught exceptions and unhandled promise rejections
 process.on("uncaughtException", (error) => {

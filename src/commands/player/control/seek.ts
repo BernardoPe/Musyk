@@ -1,12 +1,13 @@
-import { sendEmbed, successEmbed } from "../utils/embeds.ts"
-import { validateTimestamp, millisecondsToTimestamp } from "../utils/time"
+import { sendEmbed } from "../../../utils/embeds/channels.ts"
+import { validateTimestamp, millisecondsToTimestamp } from "../../../utils/time.ts"
 import {
 	MusicBot,
 	PlayerCommand,
 	QueueMetadata,
-} from "../types.ts"
+} from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
+import {successEmbed} from "../../../utils/embeds/status.ts"
 
 class SeekCommand implements PlayerCommand {
 	public aliases = ["seek"]
@@ -32,7 +33,7 @@ class SeekCommand implements PlayerCommand {
           args[1] +
           "** is not a valid timestamp format, correct format should be **hh:mm:ss**.",
 			)
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
@@ -43,20 +44,23 @@ class SeekCommand implements PlayerCommand {
           args[1] +
           "** is not a valid timestamp in this track, check this song's total duration.",
 			)
-			await sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
 		const dur = `${serverQueue.currentTrack!.duration.padStart(5, "0")}`
+
 		await serverQueue.node.seek(time as number)
 
 		const timestamp = millisecondsToTimestamp(time as number)
+
 		const embed = successEmbed(
 			null,
 			"Track playback time set to **" + timestamp + "/" + dur + "**",
 		)
 
-		await sendEmbed(channel, { embeds: [embed] }, 20000)
+		sendEmbed(channel, { embeds: [embed] }, 20000)
+
 		return
 	}
 }

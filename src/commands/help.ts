@@ -5,8 +5,9 @@ import {
 	QueueMetadata,
 } from "../types.ts"
 import { GuildQueue } from "discord-player"
-import { helpEmbeds, createLink } from "../utils/embeds.ts"
-import paginate from "../utils/paginator.ts"
+import paginate from "../utils/embeds/paginator.ts"
+import { helpEmbeds } from "../utils/embeds/help.ts"
+import { createLink } from "../utils/embeds/links.ts"
 
 class HelpCommand implements TextCommand {
 	public aliases: string[] = ["help"]
@@ -17,7 +18,7 @@ class HelpCommand implements TextCommand {
 	public guild: string | null = null
 	public msg: string | null = null
 
-	public async execute(
+	public execute(
 		msg: GuildMessage,
 		args: string[],
 		bot: MusicBot,
@@ -25,7 +26,7 @@ class HelpCommand implements TextCommand {
 	) {
 		const embed = helpEmbeds()
 		const link = createLink()
-		await paginate(msg.channel, embed, link.components)
+		paginate(msg.channel, embed, link.components)
 	}
 }
 

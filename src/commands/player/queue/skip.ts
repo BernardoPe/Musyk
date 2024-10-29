@@ -1,4 +1,4 @@
-import { MusicBot, PlayerCommand, QueueMetadata } from "../types.ts"
+import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
 
@@ -11,7 +11,7 @@ class SkipCommand implements PlayerCommand {
 	guild = null
 	msg = null
 
-	async execute(
+	execute(
 		channel: GuildTextBasedChannel,
 		args: string[],
 		bot: MusicBot,

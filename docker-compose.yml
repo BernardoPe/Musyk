@@ -13,4 +13,4 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
-    command: --interval 30
+    command: --interval 300
