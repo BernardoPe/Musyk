@@ -1,13 +1,10 @@
 import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 
-import {
-	sendEmbed
-
-} from "../../../utils/embeds/channels.ts"
+import { sendEmbed } from "../../../utils/embeds/channels.ts"
 import { GuildTextBasedChannel } from "discord.js"
-import {errorEmbed, successEmbed} from "../../../utils/embeds/status.ts"
-import {updatePlayer} from "../../../utils/embeds/player/playing.ts"
+import { errorEmbed, successEmbed } from "../../../utils/embeds/status.ts"
+import { updatePlayer } from "../../../utils/embeds/player/playing.ts"
 
 class SwapCommand implements PlayerCommand {
 	public aliases = ["swap"]
@@ -22,18 +19,26 @@ class SwapCommand implements PlayerCommand {
 		channel: GuildTextBasedChannel,
 		args: string[],
 		bot: MusicBot,
-		serverQueue: GuildQueue<QueueMetadata>,
+		serverQueue: GuildQueue<QueueMetadata>
 	) {
 		const swapPos1 = parseInt(args[1])
 		const swapPos2 = parseInt(args[2])
 
-		if (isNaN(swapPos1) || swapPos1 < 1 || swapPos1 > serverQueue.tracks.size) {
+		if (
+			isNaN(swapPos1) ||
+            swapPos1 < 1 ||
+            swapPos1 > serverQueue.tracks.size
+		) {
 			const embed = errorEmbed(null, "Invalid position 1 provided")
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
-		if (isNaN(swapPos2) || swapPos2 < 1 || swapPos2 > serverQueue.tracks.size) {
+		if (
+			isNaN(swapPos2) ||
+            swapPos2 < 1 ||
+            swapPos2 > serverQueue.tracks.size
+		) {
 			const embed = errorEmbed(null, "Invalid position 2 provided")
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
@@ -47,7 +52,7 @@ class SwapCommand implements PlayerCommand {
 
 		const embed = successEmbed(
 			null,
-			`Swapped **[${song1.cleanTitle}](${song1.url})** with **[${song2.cleanTitle}](${song2.url})**`,
+			`Swapped **[${song1.cleanTitle}](${song1.url})** with **[${song2.cleanTitle}](${song2.url})**`
 		)
 		sendEmbed(channel, { embeds: [embed] }, 20000)
 

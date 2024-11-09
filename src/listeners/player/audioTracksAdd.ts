@@ -1,8 +1,8 @@
-import {GuildQueue, GuildQueueEvent, Track} from "discord-player"
-import {GuildQueueEventHandler, QueueMetadata} from "../../types.ts"
-import {queuePlaylistEmbed} from "../../utils/embeds/player/queue.ts"
-import {sendEmbed} from "../../utils/embeds/channels.ts"
-import {updatePlayer} from "../../utils/embeds/player/playing.ts"
+import { GuildQueue, GuildQueueEvent, Track } from "discord-player"
+import { GuildQueueEventHandler, QueueMetadata } from "../../types.ts"
+import { queuePlaylistEmbed } from "../../utils/embeds/player/queue.ts"
+import { sendEmbed } from "../../utils/embeds/channels.ts"
+import { updatePlayer } from "../../utils/embeds/player/playing.ts"
 
 class AudioTracksAddHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.audioTracksAdd
@@ -12,7 +12,7 @@ class AudioTracksAddHandler implements GuildQueueEventHandler {
 
 		if (queue.isPlaying()) updatePlayer(queue)
 
-		sendEmbed(queue.metadata.textChannel!, {embeds: [embed]}, 60000)
+		sendEmbed(queue.metadata.textChannel!, { embeds: [embed] }, 60000)
 	}
 }
 

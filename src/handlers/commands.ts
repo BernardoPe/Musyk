@@ -28,7 +28,7 @@ commandFiles.forEach(async (file) => {
 export function handleCommand(
 	msg: GuildMessage | ButtonInteraction,
 	args: string[],
-	bot: MusicBot,
+	bot: MusicBot
 ) {
 	const prefix = getServerPrefix(msg.guild!.id)
 
@@ -42,16 +42,18 @@ export function handleCommand(
 
 	if (commands[commandName]) {
 		const command = commands[commandName]
-		const serverQueue: GuildQueue<QueueMetadata> | null = bot.player.nodes.get(
-      msg.guild!.id,
-		)
+		const serverQueue: GuildQueue<QueueMetadata> | null =
+            bot.player.nodes.get(msg.guild!.id)
 
 		if (command.adminCommand) {
 			const admins = getAdmins()
 			if (!admins.includes(user.id)) return
 		}
 
-		if (command.requiresPlayer && (!serverQueue || !serverQueue.isPlaying())) {
+		if (
+			command.requiresPlayer &&
+            (!serverQueue || !serverQueue.isPlaying())
+		) {
 			const embed = errorEmbed(null, "Not currently playing any songs")
 			return sendEmbed(channel, { embeds: [embed] }, 20000)
 		}
@@ -61,17 +63,22 @@ export function handleCommand(
 		command.guild = msg.guild!.name
 
 		logger.info(
-			`[COMMAND]: ${command.name} | ${command.msg} | User: ${command.user} | Guild: ${command.guild}`,
+			`[COMMAND]: ${command.name} | ${command.msg} | User: ${command.user} | Guild: ${command.guild}`
 		)
 
 		if (command.requiresPlayer) {
-			(command as PlayerCommand).execute(channel, args, bot, serverQueue!)
+			;(command as PlayerCommand).execute(
+				channel,
+				args,
+				bot,
+                serverQueue!
+			)
 		} else {
-			(command as TextCommand).execute(
-        msg as GuildMessage,
-        args,
-        bot,
-        serverQueue,
+			;(command as TextCommand).execute(
+                msg as GuildMessage,
+                args,
+                bot,
+                serverQueue
 			)
 		}
 	}

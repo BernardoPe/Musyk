@@ -2,7 +2,7 @@ import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { sendEmbed } from "../../../utils/embeds/channels.ts"
 import { GuildTextBasedChannel } from "discord.js"
-import {errorEmbed, successEmbed} from "../../../utils/embeds/status.ts"
+import { errorEmbed, successEmbed } from "../../../utils/embeds/status.ts"
 
 class FilterCommand implements PlayerCommand {
 	public adminCommand: boolean = false
@@ -17,7 +17,7 @@ class FilterCommand implements PlayerCommand {
 		channel: GuildTextBasedChannel,
 		args: string[],
 		bot: MusicBot,
-		serverQueue: GuildQueue<QueueMetadata>,
+		serverQueue: GuildQueue<QueueMetadata>
 	) {
 		let filter = args[1]
 

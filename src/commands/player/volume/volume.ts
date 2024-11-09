@@ -17,12 +17,12 @@ class VolumeCommand implements PlayerCommand {
 		channel: GuildTextBasedChannel,
 		args: string[],
 		bot: MusicBot,
-		serverQueue: GuildQueue<QueueMetadata>,
+		serverQueue: GuildQueue<QueueMetadata>
 	) {
 		if (!args[1]) {
 			const embed = successEmbed(
 				null,
-				`Volume is at ${serverQueue.node.volume}%`,
+				`Volume is at ${serverQueue.node.volume}%`
 			)
 			return sendEmbed(channel, { embeds: [embed] }, 20000)
 		}

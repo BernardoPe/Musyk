@@ -1,4 +1,4 @@
-import {ActionRowBuilder, ButtonBuilder, ButtonStyle} from "discord.js"
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js"
 
 function createButtons(): ActionRowBuilder<ButtonBuilder>[] {
 	const commands: { [key: string]: string } = {
@@ -19,7 +19,7 @@ function createButtons(): ActionRowBuilder<ButtonBuilder>[] {
 	const commandNames = Object.keys(commands)
 
 	const rows: Array<ActionRowBuilder<ButtonBuilder>> = new Array(
-		Math.ceil(commandNames.length / 5),
+		Math.ceil(commandNames.length / 5)
 	)
 
 	for (let i = 0; i < rows.length; i++) {
@@ -38,4 +38,4 @@ function createButtons(): ActionRowBuilder<ButtonBuilder>[] {
 	return rows
 }
 
-export {createButtons}
+export { createButtons }

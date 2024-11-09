@@ -1,5 +1,5 @@
 import fs from "fs"
-import {logger} from "../logging/logger.ts"
+import { logger } from "../logging/logger.ts"
 import path from "path"
 
 function saveJsonToFile(filename: string, json: string) {
@@ -24,6 +24,5 @@ function getAllFiles(folderPath: string): string[] {
 	}
 	return files
 }
-
 
 export { saveJsonToFile, getAllFiles }

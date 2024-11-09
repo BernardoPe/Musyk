@@ -6,7 +6,7 @@ const logger = winston.createLogger({
 	level: "info",
 	format: winston.format.combine(
 		winston.format.combine(timestamp(), winston.format.simple()),
-		winston.format.printf((info) => `[${info.timestamp}] ${info.message}`),
+		winston.format.printf((info) => `[${info.timestamp}] ${info.message}`)
 	),
 	transports: [
 		new winston.transports.File({
@@ -16,8 +16,9 @@ const logger = winston.createLogger({
 				winston.format.timestamp(),
 				winston.format.simple(),
 				winston.format.printf(
-					(info) => `[${info.timestamp}] ${info.level}: ${info.message}`,
-				),
+					(info) =>
+						`[${info.timestamp}] ${info.level}: ${info.message}`
+				)
 			),
 		}),
 		new winston.transports.Console({
@@ -26,8 +27,9 @@ const logger = winston.createLogger({
 				winston.format.colorize(),
 				winston.format.simple(),
 				winston.format.printf(
-					(info) => `[${info.timestamp}] ${info.level}: ${info.message}`,
-				),
+					(info) =>
+						`[${info.timestamp}] ${info.level}: ${info.message}`
+				)
 			),
 		}),
 	],

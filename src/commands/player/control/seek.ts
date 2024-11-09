@@ -1,13 +1,12 @@
 import { sendEmbed } from "../../../utils/embeds/channels.ts"
-import { validateTimestamp, millisecondsToTimestamp } from "../../../utils/time.ts"
 import {
-	MusicBot,
-	PlayerCommand,
-	QueueMetadata,
-} from "../../../types.ts"
+	validateTimestamp,
+	millisecondsToTimestamp,
+} from "../../../utils/time.ts"
+import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
-import {successEmbed} from "../../../utils/embeds/status.ts"
+import { successEmbed } from "../../../utils/embeds/status.ts"
 
 class SeekCommand implements PlayerCommand {
 	public aliases = ["seek"]
@@ -22,7 +21,7 @@ class SeekCommand implements PlayerCommand {
 		channel: GuildTextBasedChannel,
 		args: string[],
 		bot: MusicBot,
-		serverQueue: GuildQueue<QueueMetadata>,
+		serverQueue: GuildQueue<QueueMetadata>
 	) {
 		const time = validateTimestamp(args[1], serverQueue.node.totalDuration)
 
@@ -30,8 +29,8 @@ class SeekCommand implements PlayerCommand {
 			const embed = successEmbed(
 				null,
 				"**" +
-          args[1] +
-          "** is not a valid timestamp format, correct format should be **hh:mm:ss**.",
+                    args[1] +
+                    "** is not a valid timestamp format, correct format should be **hh:mm:ss**."
 			)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
@@ -41,8 +40,8 @@ class SeekCommand implements PlayerCommand {
 			const embed = successEmbed(
 				null,
 				"**" +
-          args[1] +
-          "** is not a valid timestamp in this track, check this song's total duration.",
+                    args[1] +
+                    "** is not a valid timestamp in this track, check this song's total duration."
 			)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
@@ -56,7 +55,7 @@ class SeekCommand implements PlayerCommand {
 
 		const embed = successEmbed(
 			null,
-			"Track playback time set to **" + timestamp + "/" + dur + "**",
+			"Track playback time set to **" + timestamp + "/" + dur + "**"
 		)
 
 		sendEmbed(channel, { embeds: [embed] }, 20000)

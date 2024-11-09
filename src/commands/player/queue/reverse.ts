@@ -1,12 +1,10 @@
 import { GuildQueue, Track } from "discord-player"
 import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
 
-import {
-	sendEmbed,
-} from "../../../utils/embeds/channels.ts"
+import { sendEmbed } from "../../../utils/embeds/channels.ts"
 import { GuildTextBasedChannel } from "discord.js"
-import {errorEmbed, successEmbed} from "../../../utils/embeds/status.ts"
-import {updatePlayer} from "../../../utils/embeds/player/playing.ts"
+import { errorEmbed, successEmbed } from "../../../utils/embeds/status.ts"
+import { updatePlayer } from "../../../utils/embeds/player/playing.ts"
 
 class ReverseCommand implements PlayerCommand {
 	aliases = ["reverse"]
@@ -21,7 +19,7 @@ class ReverseCommand implements PlayerCommand {
 		channel: GuildTextBasedChannel,
 		args: string[],
 		bot: MusicBot,
-		serverQueue: GuildQueue<QueueMetadata>,
+		serverQueue: GuildQueue<QueueMetadata>
 	) {
 		if (serverQueue.isEmpty()) {
 			const embed = errorEmbed(null, "Queue is empty")

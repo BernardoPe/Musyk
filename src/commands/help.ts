@@ -1,9 +1,4 @@
-import {
-	TextCommand,
-	GuildMessage,
-	MusicBot,
-	QueueMetadata,
-} from "../types.ts"
+import { TextCommand, GuildMessage, MusicBot, QueueMetadata } from "../types.ts"
 import { GuildQueue } from "discord-player"
 import paginate from "../utils/embeds/paginator.ts"
 import { helpEmbeds } from "../utils/embeds/help.ts"
@@ -22,7 +17,7 @@ class HelpCommand implements TextCommand {
 		msg: GuildMessage,
 		args: string[],
 		bot: MusicBot,
-		serverQueue: GuildQueue<QueueMetadata> | null,
+		serverQueue: GuildQueue<QueueMetadata> | null
 	) {
 		const embed = helpEmbeds()
 		const link = createLink()

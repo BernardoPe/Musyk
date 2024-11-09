@@ -1,6 +1,6 @@
-import {Events} from "discord.js"
-import {ClientEventHandler} from "../../types.ts"
-import {logger} from "../../utils/logging/logger.ts"
+import { Events } from "discord.js"
+import { ClientEventHandler } from "../../types.ts"
+import { logger } from "../../utils/logging/logger.ts"
 
 class ShardReconnectingHandler implements ClientEventHandler {
 	public name = Events.ShardReconnecting

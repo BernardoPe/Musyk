@@ -1,7 +1,7 @@
-import {Colors, EmbedBuilder} from "discord.js"
-import {GuildQueue, Playlist, RawTrackData, Track} from "discord-player"
-import {QueueMetadata} from "../../../types.ts"
-import {getEmoji} from "./playing.ts"
+import { Colors, EmbedBuilder } from "discord.js"
+import { GuildQueue, Playlist, RawTrackData, Track } from "discord-player"
+import { QueueMetadata } from "../../../types.ts"
+import { getEmoji } from "./playing.ts"
 
 function leavingEmbed(): EmbedBuilder {
 	return new EmbedBuilder()
@@ -46,7 +46,11 @@ function createQueueEmbed(serverQueue: GuildQueue): EmbedBuilder[] {
 				value: `${serverQueue.durationFormatted}`,
 				inline: true,
 			},
-			{ name: "Songs in Queue", value: `${serverQueue.size}`, inline: true },
+			{
+				name: "Songs in Queue",
+				value: `${serverQueue.size}`,
+				inline: true,
+			}
 		)
 
 		pages.push(embed)
@@ -75,7 +79,7 @@ function queuePlaylistEmbed(playlist: Playlist): EmbedBuilder {
 				name: "Duration",
 				value: `${playlist.durationFormatted}`,
 				inline: true,
-			},
+			}
 		)
 
 	return embed
@@ -83,7 +87,7 @@ function queuePlaylistEmbed(playlist: Playlist): EmbedBuilder {
 
 function songQueuedEmbed(
 	song: Track<RawTrackData>,
-	queue: GuildQueue<QueueMetadata>,
+	queue: GuildQueue<QueueMetadata>
 ): EmbedBuilder {
 	const type = song.source
 	const embed = new EmbedBuilder()
@@ -107,10 +111,10 @@ function songQueuedEmbed(
 				name: "Requested By",
 				value: `${song.requestedBy}`,
 				inline: true,
-			},
+			}
 		)
 
 	return embed
 }
 
-export {createQueueEmbed, queuePlaylistEmbed, songQueuedEmbed, leavingEmbed}
+export { createQueueEmbed, queuePlaylistEmbed, songQueuedEmbed, leavingEmbed }

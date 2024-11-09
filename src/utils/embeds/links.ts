@@ -1,4 +1,4 @@
-import {ActionRowBuilder, ButtonBuilder, ButtonStyle} from "discord.js"
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js"
 import "dotenv/config"
 
 const inviteLink: string = process.env.INVITE_LINK!
@@ -11,4 +11,4 @@ function createLink(): ActionRowBuilder<ButtonBuilder> {
 	return new ActionRowBuilder<ButtonBuilder>().addComponents(link)
 }
 
-export {createLink}
+export { createLink }

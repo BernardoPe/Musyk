@@ -3,8 +3,8 @@ import paginate from "../../../utils/embeds/paginator.ts"
 import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
-import {createQueueEmbed} from "../../../utils/embeds/player/queue.ts"
-import {errorEmbed} from "../../../utils/embeds/status.ts"
+import { createQueueEmbed } from "../../../utils/embeds/player/queue.ts"
+import { errorEmbed } from "../../../utils/embeds/status.ts"
 
 class QueueCommand implements PlayerCommand {
 	public aliases = ["queue"]
@@ -19,7 +19,7 @@ class QueueCommand implements PlayerCommand {
 		channel: GuildTextBasedChannel,
 		args: string[],
 		bot: MusicBot,
-		serverQueue: GuildQueue<QueueMetadata>,
+		serverQueue: GuildQueue<QueueMetadata>
 	) {
 		if (serverQueue.isEmpty()) {
 			const embed = errorEmbed(null, "The queue is empty")

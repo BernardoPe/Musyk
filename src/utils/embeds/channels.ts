@@ -19,15 +19,15 @@ function leftEmbed(): EmbedBuilder {
 function sendEmbed(
 	channel: GuildTextBasedChannel,
 	info: any,
-	timeout: number | null = null,
-)  {
+	timeout: number | null = null
+) {
 	if (!channel) {
 		logger.error("Channel not found")
 		return
 	}
 
 	const members: Collection<Snowflake, GuildMember> =
-    channel.members as Collection<Snowflake, GuildMember>
+        channel.members as Collection<Snowflake, GuildMember>
 	const bot = members.get(botID)
 
 	if (!bot) {
@@ -50,7 +50,4 @@ function sendEmbed(
 	})
 }
 
-export {
-	sendEmbed,
-	leftEmbed,
-}
+export { sendEmbed, leftEmbed }

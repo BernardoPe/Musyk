@@ -6,11 +6,11 @@ import {
 } from "../types.ts"
 import { ClientEvents } from "discord.js"
 import { getAllFiles } from "../utils/configs/json.ts"
-import {logger} from "../utils/logging/logger.ts"
+import { logger } from "../utils/logging/logger.ts"
 
 export async function addEventListeners(
 	bot: MusicBot,
-	folderPath: string = path.join(__dirname, "../listeners"),
+	folderPath: string = path.join(__dirname, "../listeners")
 ) {
 	const files = getAllFiles(folderPath)
 	for (const file of files) {
@@ -28,13 +28,13 @@ export async function addEventListeners(
 
 function addPlayerListener(bot: MusicBot, event: GuildQueueEventHandler) {
 	bot.player.events.on(event.name, (...args: any) =>
-		event.execute(...args, bot),
+		event.execute(...args, bot)
 	)
 }
 
 function addBotListener(bot: MusicBot, event: ClientEventHandler) {
 	bot.on(event.name as keyof ClientEvents, (...args: any) =>
-		event.execute(...args, bot),
+		event.execute(...args, bot)
 	)
 }
 

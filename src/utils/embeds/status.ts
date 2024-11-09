@@ -1,8 +1,8 @@
-import {Colors, EmbedBuilder} from "discord.js"
+import { Colors, EmbedBuilder } from "discord.js"
 
 function successEmbed(
 	title: string | null,
-	description: string | null,
+	description: string | null
 ): EmbedBuilder {
 	return new EmbedBuilder()
 		.setTitle(title)
@@ -12,7 +12,7 @@ function successEmbed(
 
 function errorEmbed(
 	title: string | null,
-	description: string | null,
+	description: string | null
 ): EmbedBuilder {
 	return new EmbedBuilder()
 		.setTitle(title)
@@ -20,4 +20,4 @@ function errorEmbed(
 		.setColor(Colors.Red)
 }
 
-export {successEmbed, errorEmbed}
+export { successEmbed, errorEmbed }

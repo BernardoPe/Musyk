@@ -6,7 +6,7 @@ import {
 } from "../../types.ts"
 
 import { sendEmbed } from "../../utils/embeds/channels.ts"
-import {GuildQueue, SearchQueryType} from "discord-player"
+import { GuildQueue, SearchQueryType } from "discord-player"
 import { GuildTextBasedChannel, VoiceBasedChannel } from "discord.js"
 import { logger } from "../../utils/logging/logger.ts"
 import { errorEmbed } from "../../utils/embeds/status.ts"
@@ -30,7 +30,7 @@ class PlayCommand implements TextCommand {
 		msg: GuildMessage,
 		args: string[],
 		bot: MusicBot,
-		serverQueue: GuildQueue<QueueMetadata> | null,
+		serverQueue: GuildQueue<QueueMetadata> | null
 	) {
 		const channel = msg.channel
 
@@ -45,7 +45,7 @@ class PlayCommand implements TextCommand {
 		if (!voiceChannel) {
 			const embed = errorEmbed(
 				null,
-				"You need to be in a voice channel to play music",
+				"You need to be in a voice channel to play music"
 			)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
@@ -56,16 +56,20 @@ class PlayCommand implements TextCommand {
 		if (!permissions.has("Connect") || !permissions.has("Speak")) {
 			const embed = errorEmbed(
 				null,
-				"I need the permissions to join and speak in your voice channel",
+				"I need the permissions to join and speak in your voice channel"
 			)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
-		const queue: GuildQueue<QueueMetadata> = serverQueue || this.createQueue(bot, channel, voiceChannel)
+		const queue: GuildQueue<QueueMetadata> =
+            serverQueue || this.createQueue(bot, channel, voiceChannel)
 
 		if (queue.connection && queue.channel !== msg.member!.voice.channel) {
-			const embed = errorEmbed(null, "Already connected to a different voice channel")
+			const embed = errorEmbed(
+				null,
+				"Already connected to a different voice channel"
+			)
 			sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 			return
 		}
@@ -81,8 +85,8 @@ class PlayCommand implements TextCommand {
 		args.shift() // Remove the command from the args
 
 		const searchArg = args.find((arg) => arg in this.searchEngines) as
-			| keyof typeof this.searchEngines
-			| undefined
+            | keyof typeof this.searchEngines
+            | undefined
 
 		const searchEngine = searchArg ? this.searchEngines[searchArg] : "auto"
 
@@ -112,16 +116,18 @@ class PlayCommand implements TextCommand {
 			}
 		} catch (e) {
 			logger.error(e)
-			const embed = errorEmbed(null, "An error occurred while playing the song")
+			const embed = errorEmbed(
+				null,
+				"An error occurred while playing the song"
+			)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 		}
-
 	}
 
 	private createQueue(
 		bot: MusicBot,
 		channel: GuildTextBasedChannel,
-		voiceChannel: VoiceBasedChannel,
+		voiceChannel: VoiceBasedChannel
 	): GuildQueue<QueueMetadata> {
 		const queue = bot.player.nodes.create(channel.guild, {
 			bufferingTimeout: 20000,

@@ -9,7 +9,7 @@ import {
 async function paginate(
 	channel: GuildTextBasedChannel,
 	pages: EmbedBuilder[],
-	buttons: ButtonBuilder[] = [],
+	buttons: ButtonBuilder[] = []
 ) {
 	if (!channel || !pages || !(pages.length > 0)) return
 
@@ -35,7 +35,7 @@ async function paginate(
 	const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
 		button1,
 		button2,
-		button3,
+		button3
 	)
 
 	for (let i = 0; i < buttons.length; i++) {

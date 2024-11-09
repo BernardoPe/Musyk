@@ -1,6 +1,6 @@
-import {Snowflake} from "discord.js"
-import {ServerPrefix} from "../../types.ts"
-import {saveJsonToFile} from "./json.ts"
+import { Snowflake } from "discord.js"
+import { ServerPrefix } from "../../types.ts"
+import { saveJsonToFile } from "./json.ts"
 import "dotenv/config"
 
 const defaultPrefix: ServerPrefix = process.env.BOT_PREFIX || "."
@@ -31,4 +31,4 @@ function getAdmins(): Array<Snowflake> {
 	return admins
 }
 
-export {getServerPrefix, getAdmins, setNewPrefix}
+export { getServerPrefix, getAdmins, setNewPrefix }

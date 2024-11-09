@@ -1,6 +1,6 @@
-import {Colors, EmbedBuilder, Snowflake} from "discord.js"
-import {GuildQueue, RawTrackData, Track} from "discord-player"
-import {QueueMetadata} from "../../../types.ts"
+import { Colors, EmbedBuilder, Snowflake } from "discord.js"
+import { GuildQueue, RawTrackData, Track } from "discord-player"
+import { QueueMetadata } from "../../../types.ts"
 
 function getEmoji(source: string, embed: EmbedBuilder): string {
 	let emoji: Snowflake
@@ -22,8 +22,8 @@ function updatePlayer(queue: GuildQueue<QueueMetadata>) {
 
 	if (
 		!queue.metadata.playerEmbed ||
-		queue.metadata.updatingPlayer ||
-		!queue.metadata.playerEmbed.editable
+        queue.metadata.updatingPlayer ||
+        !queue.metadata.playerEmbed.editable
 	) {
 		return
 	}
@@ -32,13 +32,11 @@ function updatePlayer(queue: GuildQueue<QueueMetadata>) {
 
 	const data = queue.metadata.playerEmbed
 
-	data
-		.edit({
-			embeds: [embed],
-		})
-		.then(() => {
-			queue.metadata.updatingPlayer = false
-		})
+	data.edit({
+		embeds: [embed],
+	}).then(() => {
+		queue.metadata.updatingPlayer = false
+	})
 }
 
 function nowPlayingEmbed(queue: GuildQueue): EmbedBuilder {
@@ -56,8 +54,12 @@ function nowPlayingEmbed(queue: GuildQueue): EmbedBuilder {
 				value: `${song.metadata!.live ? "Live" : song.duration.padStart(5, "0")}`,
 				inline: true,
 			},
-			{ name: "Requested By", value: `${song.requestedBy}`, inline: true },
-			{ name: "Volume", value: `${queue.node.volume}%`, inline: true },
+			{
+				name: "Requested By",
+				value: `${song.requestedBy}`,
+				inline: true,
+			},
+			{ name: "Volume", value: `${queue.node.volume}%`, inline: true }
 		)
 
 	if (queue.history.nextTrack) {
@@ -74,10 +76,10 @@ function nowPlayingEmbed(queue: GuildQueue): EmbedBuilder {
 					queue.history.nextTrack.cleanTitle
 				}](${queue.history.nextTrack.url})**`,
 				inline: true,
-			},
+			}
 		)
 	}
 	return embed
 }
 
-export {getEmoji, updatePlayer, nowPlayingEmbed}
+export { getEmoji, updatePlayer, nowPlayingEmbed }
