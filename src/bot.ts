@@ -1,4 +1,4 @@
-import { Player } from "discord-player"
+import { Player, QueryType } from "discord-player"
 import {
 	SpotifyExtractor,
 	SoundCloudExtractor,
@@ -28,9 +28,9 @@ bot.player = new Player(bot as Client, {
 
 addEventListeners(bot).then(async () => {
 	await bot.player.extractors.register(YoutubeiExtractor, {
-		authentication: process.env.ACCESS_TOKEN,
+		cookie: process.env.YOUTUBE_COOKIE,
 		overrideBridgeMode: {
-			SPOTIFY_SEARCH: "yt",
+			[QueryType.SPOTIFY_SEARCH]: "yt",
 			default: "ytmusic",
 		},
 	})
