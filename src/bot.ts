@@ -3,7 +3,7 @@ import {
 	SpotifyExtractor,
 	SoundCloudExtractor,
 } from "@discord-player/extractor"
-import { YoutubeiExtractor } from "discord-player-youtubei"
+import { YoutubeiExtractor, generateOauthTokens } from "discord-player-youtubei"
 import { Client, GatewayIntentBits } from "discord.js"
 import { addEventListeners } from "./handlers/events.ts"
 import { MusicBot } from "./types.ts"
@@ -28,7 +28,7 @@ bot.player = new Player(bot as Client, {
 
 addEventListeners(bot).then(async () => {
 	await bot.player.extractors.register(YoutubeiExtractor, {
-		cookie: process.env.YOUTUBE_COOKIE,
+		cookie: process.env.ACCESS_TOKEN,
 		overrideBridgeMode: {
 			[QueryType.SPOTIFY_SEARCH]: "yt",
 			default: "ytmusic",

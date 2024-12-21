@@ -2,17 +2,17 @@ import { Colors, EmbedBuilder, Snowflake } from "discord.js"
 import { GuildQueue, RawTrackData, Track } from "discord-player"
 import { QueueMetadata } from "../../../types.ts"
 
-function getEmoji(source: string, embed: EmbedBuilder): string {
+function getEmoji(source: string, embed?: EmbedBuilder): string {
 	let emoji: Snowflake
 	if (source.includes("youtube")) {
 		emoji = "<:YouTube1:1124140924876902411>"
-		if (embed) embed.setColor(Colors.Red)
+		embed?.setColor(Colors.Red)
 	} else if (source.includes("spotify")) {
 		emoji = "<:SpotifyLogo:1124141017260634262>"
-		if (embed) embed.setColor(Colors.Green)
+		embed?.setColor(Colors.Green)
 	} else {
 		emoji = "<:4678_SoundCloud:1124303937017745469>"
-		if (embed) embed.setColor(Colors.Orange)
+		embed?.setColor(Colors.Orange)
 	}
 	return emoji
 }
@@ -72,7 +72,7 @@ function nowPlayingEmbed(queue: GuildQueue): EmbedBuilder {
 			},
 			{
 				name: "Next Track",
-				value: `${getEmoji(queue.history.nextTrack.source, embed)} **[${
+				value: `${getEmoji(queue.history.nextTrack.source)} **[${
 					queue.history.nextTrack.cleanTitle
 				}](${queue.history.nextTrack.url})**`,
 				inline: true,
