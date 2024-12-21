@@ -24,21 +24,13 @@ class SwapCommand implements PlayerCommand {
 		const swapPos1 = parseInt(args[1])
 		const swapPos2 = parseInt(args[2])
 
-		if (
-			isNaN(swapPos1) ||
-            swapPos1 < 1 ||
-            swapPos1 > serverQueue.tracks.size
-		) {
+		if (isNaN(swapPos1) || swapPos1 < 1 || swapPos1 > serverQueue.tracks.size) {
 			const embed = errorEmbed(null, "Invalid position 1 provided")
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
-		if (
-			isNaN(swapPos2) ||
-            swapPos2 < 1 ||
-            swapPos2 > serverQueue.tracks.size
-		) {
+		if (isNaN(swapPos2) || swapPos2 < 1 || swapPos2 > serverQueue.tracks.size) {
 			const embed = errorEmbed(null, "Invalid position 2 provided")
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return

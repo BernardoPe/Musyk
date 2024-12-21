@@ -50,9 +50,7 @@ class CycleCommand implements PlayerCommand {
 				md = "off"
 			}
 		}
-		const embed = mode
-			? successEmbed(null, mode)
-			: successEmbed(null, `Current mode: ${md}`)
+		const embed = mode ? successEmbed(null, mode) : successEmbed(null, `Current mode: ${md}`)
 		sendEmbed(channel, { embeds: [embed] }, 20000)
 	}
 }

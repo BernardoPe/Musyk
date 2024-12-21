@@ -1,15 +1,5 @@
-import {
-	BaseInteraction,
-	ButtonInteraction,
-	ChatInputCommandInteraction,
-	Events,
-} from "discord.js"
-import {
-	ClientEventHandler,
-	MusicBot,
-	QueueMetadata,
-	ServerPrefix,
-} from "../../types.ts"
+import { BaseInteraction, ButtonInteraction, ChatInputCommandInteraction, Events } from "discord.js"
+import { ClientEventHandler, MusicBot, QueueMetadata, ServerPrefix } from "../../types.ts"
 import { handleCommand } from "../../handlers/commands.ts"
 import { GuildQueue, QueueRepeatMode } from "discord-player"
 import { logger } from "../../utils/logging/logger.ts"
@@ -23,35 +13,24 @@ type ButtonCommand = (
     bot: MusicBot,
     serverQueue: GuildQueue<QueueMetadata> | null,
     serverPrefix: ServerPrefix
-) => void
+) => void;
 type TextCommand = (
     interaction: ChatInputCommandInteraction,
     bot: MusicBot,
     serverQueue: GuildQueue<QueueMetadata> | null,
     serverPrefix: ServerPrefix
-) => void
+) => void;
 
 class InteractionCreateHandler implements ClientEventHandler {
 	public name: Events.InteractionCreate = Events.InteractionCreate
 
 	public execute(interaction: BaseInteraction, bot: MusicBot) {
 		const serverPrefix = getServerPrefix(interaction.guild!.id)
-		const serverQueue: GuildQueue<QueueMetadata> | null =
-            bot.player.nodes.get(interaction.guild!.id)
+		const serverQueue: GuildQueue<QueueMetadata> | null = bot.player.nodes.get(interaction.guild!.id)
 		if (!interaction.isButton()) {
-			this.handleTextCommands(
-                interaction as ChatInputCommandInteraction,
-                bot,
-                serverQueue,
-                serverPrefix
-			)
+			this.handleTextCommands(interaction as ChatInputCommandInteraction, bot, serverQueue, serverPrefix)
 		} else {
-			this.handleButtonCommands(
-				interaction,
-				bot,
-				serverQueue,
-				serverPrefix
-			)
+			this.handleButtonCommands(interaction, bot, serverQueue, serverPrefix)
 		}
 	}
 
@@ -79,12 +58,7 @@ class InteractionCreateHandler implements ClientEventHandler {
 	) {
 		const { commandName } = interaction as ChatInputCommandInteraction
 		if (this.textCommands[commandName]) {
-			this.textCommands[commandName](
-				interaction,
-				bot,
-				serverQueue,
-				serverPrefix
-			)
+			this.textCommands[commandName](interaction, bot, serverQueue, serverPrefix)
 		}
 	}
 
@@ -98,12 +72,7 @@ class InteractionCreateHandler implements ClientEventHandler {
 
 		interaction.deferUpdate().then(() => {
 			if (this.buttonCommands[customId]) {
-				this.buttonCommands[customId](
-					interaction,
-					bot,
-					serverQueue,
-					serverPrefix
-				)
+				this.buttonCommands[customId](interaction, bot, serverQueue, serverPrefix)
 			} else {
 				handleCommand(interaction, [`${serverPrefix}${customId}`], bot)
 			}
@@ -129,20 +98,14 @@ class InteractionCreateHandler implements ClientEventHandler {
 		const newPrefix = interaction.options.get("prefix")!.value as string
 
 		if (newPrefix === "current" || newPrefix === "curr") {
-			const embed = successEmbed(
-				null,
-				"Current prefix is **" + serverPrefix + "**"
-			)
+			const embed = successEmbed(null, "Current prefix is **" + serverPrefix + "**")
 			await interaction.reply({ embeds: [embed], ephemeral: true })
 		}
 
 		try {
 			setNewPrefix(interaction.guild!.id, newPrefix)
 		} catch (e) {
-			const embed = errorEmbed(
-				null,
-				"An error occurred while setting the prefix"
-			)
+			const embed = errorEmbed(null, "An error occurred while setting the prefix")
 			await interaction.reply({ embeds: [embed], ephemeral: true })
 			logger.error(e)
 		}
@@ -158,10 +121,7 @@ class InteractionCreateHandler implements ClientEventHandler {
 		serverPrefix: ServerPrefix
 	) {
 		if (!serverQueue) return
-		const command =
-            serverQueue.isPlaying() && !serverQueue.dispatcher!.isPaused()
-            	? "pause"
-            	: "resume"
+		const command = serverQueue.isPlaying() && !serverQueue.dispatcher!.isPaused() ? "pause" : "resume"
 		handleCommand(interaction, [`${serverPrefix}${command}`], bot)
 	}
 
@@ -172,8 +132,7 @@ class InteractionCreateHandler implements ClientEventHandler {
 		serverPrefix: ServerPrefix
 	) {
 		if (!serverQueue) return
-		const newVolume =
-            serverQueue.node.volume === 200 ? 200 : serverQueue.node.volume + 20
+		const newVolume = serverQueue.node.volume === 200 ? 200 : serverQueue.node.volume + 20
 		serverQueue.node.setVolume(newVolume)
 	}
 
@@ -184,8 +143,7 @@ class InteractionCreateHandler implements ClientEventHandler {
 		serverPrefix: ServerPrefix
 	) {
 		if (!serverQueue) return
-		const newVolume =
-            serverQueue.node.volume === 0 ? 0 : serverQueue.node.volume - 20
+		const newVolume = serverQueue.node.volume === 0 ? 0 : serverQueue.node.volume - 20
 		serverQueue.node.setVolume(newVolume)
 	}
 
@@ -196,8 +154,7 @@ class InteractionCreateHandler implements ClientEventHandler {
 		serverPrefix: ServerPrefix
 	) {
 		if (!serverQueue) return
-		const repeatMode =
-            serverQueue.repeatMode !== QueueRepeatMode.TRACK ? "track" : "off"
+		const repeatMode = serverQueue.repeatMode !== QueueRepeatMode.TRACK ? "track" : "off"
 		handleCommand(interaction, [`${serverPrefix}cycle`, repeatMode], bot)
 	}
 
@@ -208,10 +165,7 @@ class InteractionCreateHandler implements ClientEventHandler {
 		serverPrefix: ServerPrefix
 	) {
 		if (!serverQueue) return
-		const repeatMode =
-            serverQueue.repeatMode !== QueueRepeatMode.AUTOPLAY
-            	? "autoplay"
-            	: "off"
+		const repeatMode = serverQueue.repeatMode !== QueueRepeatMode.AUTOPLAY ? "autoplay" : "off"
 		handleCommand(interaction, [`${serverPrefix}cycle`, repeatMode], bot)
 	}
 

@@ -1,8 +1,5 @@
 import { sendEmbed } from "../../../utils/embeds/channels.ts"
-import {
-	validateTimestamp,
-	millisecondsToTimestamp,
-} from "../../../utils/time.ts"
+import { validateTimestamp, millisecondsToTimestamp } from "../../../utils/time.ts"
 import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
@@ -28,9 +25,7 @@ class SeekCommand implements PlayerCommand {
 		if (time === false) {
 			const embed = successEmbed(
 				null,
-				"**" +
-                    args[1] +
-                    "** is not a valid timestamp format, correct format should be **hh:mm:ss**."
+				"**" + args[1] + "** is not a valid timestamp format, correct format should be **hh:mm:ss**."
 			)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
@@ -39,9 +34,7 @@ class SeekCommand implements PlayerCommand {
 		if (time === -1) {
 			const embed = successEmbed(
 				null,
-				"**" +
-                    args[1] +
-                    "** is not a valid timestamp in this track, check this song's total duration."
+				"**" + args[1] + "** is not a valid timestamp in this track, check this song's total duration."
 			)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
@@ -53,10 +46,7 @@ class SeekCommand implements PlayerCommand {
 
 		const timestamp = millisecondsToTimestamp(time as number)
 
-		const embed = successEmbed(
-			null,
-			"Track playback time set to **" + timestamp + "/" + dur + "**"
-		)
+		const embed = successEmbed(null, "Track playback time set to **" + timestamp + "/" + dur + "**")
 
 		sendEmbed(channel, { embeds: [embed] }, 20000)
 

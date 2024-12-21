@@ -18,9 +18,7 @@ function createButtons(): ActionRowBuilder<ButtonBuilder>[] {
 
 	const commandNames = Object.keys(commands)
 
-	const rows: Array<ActionRowBuilder<ButtonBuilder>> = new Array(
-		Math.ceil(commandNames.length / 5)
-	)
+	const rows: Array<ActionRowBuilder<ButtonBuilder>> = new Array(Math.ceil(commandNames.length / 5))
 
 	for (let i = 0; i < rows.length; i++) {
 		rows[i] = new ActionRowBuilder()

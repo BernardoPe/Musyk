@@ -21,9 +21,7 @@ class ClientReadyHandler implements ClientEventHandler {
         		}
         	}
         }
-        logger.info(
-        	`Bot is ready, serving ${bot.guilds.cache.size} servers with ${members.size} members`
-        )
+        logger.info(`Bot is ready, serving ${bot.guilds.cache.size} servers with ${members.size} members`)
 	}
 }
 

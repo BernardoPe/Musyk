@@ -15,12 +15,7 @@ class ReverseCommand implements PlayerCommand {
 	msg = null
 	user = null
 
-	execute(
-		channel: GuildTextBasedChannel,
-		args: string[],
-		bot: MusicBot,
-		serverQueue: GuildQueue<QueueMetadata>
-	) {
+	execute(channel: GuildTextBasedChannel, args: string[], bot: MusicBot, serverQueue: GuildQueue<QueueMetadata>) {
 		if (serverQueue.isEmpty()) {
 			const embed = errorEmbed(null, "Queue is empty")
 			sendEmbed(channel, { embeds: [embed] }, 20000)

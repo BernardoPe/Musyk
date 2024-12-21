@@ -3,10 +3,7 @@ import { GuildQueueEventHandler, QueueMetadata } from "../../types.ts"
 import { GuildQueueEvent } from "discord-player"
 import { ButtonInteraction, InteractionCollector } from "discord.js"
 import { createButtons } from "../../utils/embeds/buttons.ts"
-import {
-	nowPlayingEmbed,
-	updatePlayer,
-} from "../../utils/embeds/player/playing.ts"
+import { nowPlayingEmbed, updatePlayer } from "../../utils/embeds/player/playing.ts"
 import { sendEmbed } from "../../utils/embeds/channels.ts"
 
 class PlayerStartHandler implements GuildQueueEventHandler {
@@ -28,8 +25,7 @@ class PlayerStartHandler implements GuildQueueEventHandler {
 				textChannel: queue.metadata.textChannel,
 				voiceChannel: queue.metadata.voiceChannel,
 				playerEmbed: data ? data : null,
-				collector:
-                    col as InteractionCollector<ButtonInteraction> | null,
+				collector: col as InteractionCollector<ButtonInteraction> | null,
 				updatingPlayer: queue.metadata.updatingPlayer,
 			})
 		} else {

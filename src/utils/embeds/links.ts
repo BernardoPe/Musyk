@@ -4,10 +4,7 @@ import "dotenv/config"
 const inviteLink: string = process.env.INVITE_LINK!
 
 function createLink(): ActionRowBuilder<ButtonBuilder> {
-	const link = new ButtonBuilder()
-		.setLabel("Invite Link")
-		.setURL(inviteLink)
-		.setStyle(ButtonStyle.Link)
+	const link = new ButtonBuilder().setLabel("Invite Link").setURL(inviteLink).setStyle(ButtonStyle.Link)
 	return new ActionRowBuilder<ButtonBuilder>().addComponents(link)
 }
 

@@ -11,12 +11,7 @@ class SkipCommand implements PlayerCommand {
 	guild = null
 	msg = null
 
-	execute(
-		channel: GuildTextBasedChannel,
-		args: string[],
-		bot: MusicBot,
-		serverQueue: GuildQueue<QueueMetadata>
-	) {
+	execute(channel: GuildTextBasedChannel, args: string[], bot: MusicBot, serverQueue: GuildQueue<QueueMetadata>) {
 		serverQueue.node.skip()
 		return
 	}

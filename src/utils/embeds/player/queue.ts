@@ -4,9 +4,7 @@ import { QueueMetadata } from "../../../types.ts"
 import { getEmoji } from "./playing.ts"
 
 function leavingEmbed(): EmbedBuilder {
-	return new EmbedBuilder()
-		.setDescription("Queue is empty, leaving in 5 minutes...")
-		.setColor(Colors.Red)
+	return new EmbedBuilder().setDescription("Queue is empty, leaving in 5 minutes...").setColor(Colors.Red)
 }
 
 function createQueueEmbed(serverQueue: GuildQueue): EmbedBuilder[] {
@@ -65,9 +63,7 @@ function queuePlaylistEmbed(playlist: Playlist): EmbedBuilder {
 	const embed = new EmbedBuilder()
 	const emoji = getEmoji(type, embed)
 
-	const thumbnail = playlist.thumbnail.includes("null")
-		? playlist.tracks[0].thumbnail
-		: playlist.thumbnail
+	const thumbnail = playlist.thumbnail.includes("null") ? playlist.tracks[0].thumbnail : playlist.thumbnail
 
 	embed
 		.setTitle("Playlist Queued")
@@ -85,10 +81,7 @@ function queuePlaylistEmbed(playlist: Playlist): EmbedBuilder {
 	return embed
 }
 
-function songQueuedEmbed(
-	song: Track<RawTrackData>,
-	queue: GuildQueue<QueueMetadata>
-): EmbedBuilder {
+function songQueuedEmbed(song: Track<RawTrackData>, queue: GuildQueue<QueueMetadata>): EmbedBuilder {
 	const type = song.source
 	const embed = new EmbedBuilder()
 	const emoji = getEmoji(type, embed)

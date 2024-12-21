@@ -14,17 +14,9 @@ class ShuffleCommand implements PlayerCommand {
 	public msg: string | null = null
 	public user: string | null = null
 
-	execute(
-		channel: GuildTextBasedChannel,
-		args: string[],
-		bot: MusicBot,
-		serverQueue: GuildQueue<QueueMetadata>
-	) {
+	execute(channel: GuildTextBasedChannel, args: string[], bot: MusicBot, serverQueue: GuildQueue<QueueMetadata>) {
 		if (serverQueue.tracks.size < 2) {
-			const embed = errorEmbed(
-				null,
-				"There are not enough songs in the queue to shuffle"
-			)
+			const embed = errorEmbed(null, "There are not enough songs in the queue to shuffle")
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}

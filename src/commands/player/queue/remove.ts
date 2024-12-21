@@ -28,18 +28,12 @@ class RemoveCommand implements PlayerCommand {
 		}
 		const tracks = serverQueue.tracks.toArray()
 		if (value < 1 || value > tracks.length) {
-			const embed = errorEmbed(
-				null,
-				`Invalid number, must be 1-${tracks.length}`
-			)
+			const embed = errorEmbed(null, `Invalid number, must be 1-${tracks.length}`)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 		const song = serverQueue.node.remove(tracks[value - 1])
-		const embed = successEmbed(
-			null,
-			`Removed [${song!.title}](${song!.url}) from the queue`
-		)
+		const embed = successEmbed(null, `Removed [${song!.title}](${song!.url}) from the queue`)
 		updatePlayer(serverQueue)
 		sendEmbed(channel, { embeds: [embed] }, 20000)
 		return

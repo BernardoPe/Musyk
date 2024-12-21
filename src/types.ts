@@ -17,7 +17,7 @@ import { GuildQueue, GuildQueueEvent, Player } from "discord-player"
  * @see {@link https://discord-player.js.org/docs/discord-player/class/Player}
  */
 interface MusicBot extends Client {
-    player: Player
+    player: Player;
 }
 
 /**
@@ -28,8 +28,8 @@ interface MusicBot extends Client {
  * @see {@link https://discord-player.js.org/docs/discord-player/type/GuildQueueEvents}
  */
 interface GuildQueueEventHandler {
-    name: GuildQueueEvent
-    execute: (...args: any) => void
+    name: GuildQueueEvent;
+    execute: (...args: any) => void;
 }
 
 /**
@@ -40,14 +40,14 @@ interface GuildQueueEventHandler {
  * @see {@link https://discord.js.org/docs/packages/discord.js/14.16.3/ClientEvents:Interface}
  */
 interface ClientEventHandler {
-    name: Events
-    execute: (...args: any) => void
+    name: Events;
+    execute: (...args: any) => void;
 }
 
 /**
  * Represents a server prefix, which is used to identify the prefix used by a specific server
  */
-type ServerPrefix = string
+type ServerPrefix = string;
 
 /**
  * Represents a command in the application
@@ -61,13 +61,13 @@ type ServerPrefix = string
  * @param user - The user that triggered the command
  */
 interface BaseCommand {
-    name: string
-    aliases: string[]
-    adminCommand: boolean
-    requiresPlayer: boolean
-    user: string | null
-    msg: string | null
-    guild: string | null
+    name: string;
+    aliases: string[];
+    adminCommand: boolean;
+    requiresPlayer: boolean;
+    user: string | null;
+    msg: string | null;
+    guild: string | null;
 }
 
 /**
@@ -79,19 +79,14 @@ interface PlayerCommand extends BaseCommand {
         args: string[],
         bot: MusicBot,
         serverQueue: GuildQueue<QueueMetadata>
-    ) => void
+    ) => void;
 }
 
 /**
  * Represents a text command, that does not require a player to exist for the server
  */
 interface TextCommand extends BaseCommand {
-    execute: (
-        msg: GuildMessage,
-        args: string[],
-        bot: MusicBot,
-        serverQueue: GuildQueue<QueueMetadata> | null
-    ) => void
+    execute: (msg: GuildMessage, args: string[], bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null) => void;
 }
 
 /**
@@ -104,17 +99,17 @@ interface TextCommand extends BaseCommand {
  * @param updatingPlayer - Whether the player is currently being updated
  */
 type QueueMetadata = {
-    voiceChannel: VoiceBasedChannel | null
-    textChannel: GuildTextBasedChannel | null
-    playerEmbed: Message | null
-    collector: InteractionCollector<ButtonInteraction> | null
-    updatingPlayer: boolean | null
-}
+    voiceChannel: VoiceBasedChannel | null;
+    textChannel: GuildTextBasedChannel | null;
+    playerEmbed: Message | null;
+    collector: InteractionCollector<ButtonInteraction> | null;
+    updatingPlayer: boolean | null;
+};
 
 /**
  * Represents a message in a server
  */
-type GuildMessage = Message<true>
+type GuildMessage = Message<true>;
 
 export {
 	MusicBot,

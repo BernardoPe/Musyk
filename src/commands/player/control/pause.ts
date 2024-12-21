@@ -13,12 +13,7 @@ class PauseCommand implements PlayerCommand {
 	public guild = null
 	public msg = null
 
-	public execute(
-		channel: GuildTextBasedChannel,
-		args: string[],
-		bot: MusicBot,
-		serverQueue: GuildQueue
-	) {
+	public execute(channel: GuildTextBasedChannel, args: string[], bot: MusicBot, serverQueue: GuildQueue) {
 		if (serverQueue.dispatcher!.paused) {
 			const embed = errorEmbed(null, "The player is already paused")
 			sendEmbed(channel, { embeds: [embed] }, 20000)

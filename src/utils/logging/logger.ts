@@ -15,10 +15,7 @@ const logger = winston.createLogger({
 			format: winston.format.combine(
 				winston.format.timestamp(),
 				winston.format.simple(),
-				winston.format.printf(
-					(info) =>
-						`[${info.timestamp}] ${info.level}: ${info.message}`
-				)
+				winston.format.printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`)
 			),
 		}),
 		new winston.transports.Console({
@@ -26,10 +23,7 @@ const logger = winston.createLogger({
 			format: winston.format.combine(
 				winston.format.colorize(),
 				winston.format.simple(),
-				winston.format.printf(
-					(info) =>
-						`[${info.timestamp}] ${info.level}: ${info.message}`
-				)
+				winston.format.printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`)
 			),
 		}),
 	],

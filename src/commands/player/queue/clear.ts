@@ -14,12 +14,7 @@ class ClearCommand implements PlayerCommand {
 	msg = null
 	user = null
 
-	execute(
-		channel: GuildTextBasedChannel,
-		args: string[],
-		bot: MusicBot,
-		serverQueue: GuildQueue<QueueMetadata>
-	) {
+	execute(channel: GuildTextBasedChannel, args: string[], bot: MusicBot, serverQueue: GuildQueue<QueueMetadata>) {
 		if (serverQueue.tracks.size === 0) {
 			const embed = errorEmbed(null, "There are no songs in the queue")
 			sendEmbed(channel, { embeds: [embed] }, 20000)

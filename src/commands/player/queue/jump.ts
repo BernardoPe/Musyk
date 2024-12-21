@@ -21,11 +21,7 @@ class JumpCommand implements PlayerCommand {
 	) {
 		const jumpPosition = parseInt(args[1])
 
-		if (
-			isNaN(jumpPosition) ||
-            jumpPosition < 1 ||
-            jumpPosition > serverQueue.tracks.size
-		) {
+		if (isNaN(jumpPosition) || jumpPosition < 1 || jumpPosition > serverQueue.tracks.size) {
 			const embed = errorEmbed(null, "Invalid position")
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return

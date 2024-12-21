@@ -5,8 +5,7 @@ function helpEmbeds(): EmbedBuilder[] {
 		.setAuthor({
 			name: "Syken",
 			url: "https://discord.com/users/259810801219534849",
-			iconURL:
-                "https://cdn.discordapp.com/avatars/259810801219534849/9a98973995330392dd7ed83feac84106.webp",
+			iconURL: "https://cdn.discordapp.com/avatars/259810801219534849/9a98973995330392dd7ed83feac84106.webp",
 		})
 		.setTitle("Musyk - A Music Bot")
 		.setDescription(

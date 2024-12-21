@@ -20,11 +20,7 @@ function getEmoji(source: string, embed?: EmbedBuilder): string {
 function updatePlayer(queue: GuildQueue<QueueMetadata>) {
 	const embed = nowPlayingEmbed(queue)
 
-	if (
-		!queue.metadata.playerEmbed ||
-        queue.metadata.updatingPlayer ||
-        !queue.metadata.playerEmbed.editable
-	) {
+	if (!queue.metadata.playerEmbed || queue.metadata.updatingPlayer || !queue.metadata.playerEmbed.editable) {
 		return
 	}
 

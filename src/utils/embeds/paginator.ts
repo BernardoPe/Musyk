@@ -1,25 +1,11 @@
-import {
-	ActionRowBuilder,
-	ButtonBuilder,
-	ButtonStyle,
-	EmbedBuilder,
-	GuildTextBasedChannel,
-} from "discord.js"
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, GuildTextBasedChannel } from "discord.js"
 
-async function paginate(
-	channel: GuildTextBasedChannel,
-	pages: EmbedBuilder[],
-	buttons: ButtonBuilder[] = []
-) {
+async function paginate(channel: GuildTextBasedChannel, pages: EmbedBuilder[], buttons: ButtonBuilder[] = []) {
 	if (!channel || !pages || !(pages.length > 0)) return
 
 	let index = 0
 
-	const button1 = new ButtonBuilder()
-		.setCustomId("1")
-		.setEmoji("◀️")
-		.setStyle(ButtonStyle.Primary)
-		.setDisabled(true)
+	const button1 = new ButtonBuilder().setCustomId("1").setEmoji("◀️").setStyle(ButtonStyle.Primary).setDisabled(true)
 
 	const button2 = new ButtonBuilder()
 		.setCustomId("2")
@@ -27,16 +13,9 @@ async function paginate(
 		.setStyle(ButtonStyle.Primary)
 		.setDisabled(pages.length <= index + 1)
 
-	const button3 = new ButtonBuilder()
-		.setCustomId("3")
-		.setEmoji("❌")
-		.setStyle(ButtonStyle.Secondary)
+	const button3 = new ButtonBuilder().setCustomId("3").setEmoji("❌").setStyle(ButtonStyle.Secondary)
 
-	const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-		button1,
-		button2,
-		button3
-	)
+	const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button1, button2, button3)
 
 	for (let i = 0; i < buttons.length; i++) {
 		row.addComponents(buttons[i])

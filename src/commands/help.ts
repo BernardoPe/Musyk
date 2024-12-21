@@ -13,12 +13,7 @@ class HelpCommand implements TextCommand {
 	public guild: string | null = null
 	public msg: string | null = null
 
-	public execute(
-		msg: GuildMessage,
-		args: string[],
-		bot: MusicBot,
-		serverQueue: GuildQueue<QueueMetadata> | null
-	) {
+	public execute(msg: GuildMessage, args: string[], bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null) {
 		const embed = helpEmbeds()
 		const link = createLink()
 		paginate(msg.channel, embed, link.components)

@@ -12,14 +12,8 @@ class StopCommand implements PlayerCommand {
 	public msg = null
 	public user = null
 
-	execute(
-		channel: GuildTextBasedChannel,
-		args: string[],
-		bot: MusicBot,
-		serverQueue: GuildQueue<QueueMetadata>
-	) {
-		if (serverQueue.repeatMode != QueueRepeatMode.OFF)
-			serverQueue.setRepeatMode(QueueRepeatMode.OFF)
+	execute(channel: GuildTextBasedChannel, args: string[], bot: MusicBot, serverQueue: GuildQueue<QueueMetadata>) {
+		if (serverQueue.repeatMode != QueueRepeatMode.OFF) serverQueue.setRepeatMode(QueueRepeatMode.OFF)
 		serverQueue.node.stop()
 	}
 }

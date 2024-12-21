@@ -21,11 +21,7 @@ class SkipToCommand implements PlayerCommand {
 	) {
 		const skipPos = parseInt(args[1])
 
-		if (
-			isNaN(skipPos) ||
-            skipPos < 1 ||
-            skipPos > serverQueue!.tracks.size
-		) {
+		if (isNaN(skipPos) || skipPos < 1 || skipPos > serverQueue!.tracks.size) {
 			const embed = errorEmbed(null, "Invalid position")
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return

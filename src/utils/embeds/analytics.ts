@@ -38,23 +38,17 @@ function queuesInfoEmbed(queues: GuildQueueStatisticsMetadata[]) {
 			},
 			{
 				name: "Rss (MB)",
-				value: (queue.memoryUsage.rss / (1024 * 1024))
-					.toFixed(2)
-					.toString(),
+				value: (queue.memoryUsage.rss / (1024 * 1024)).toFixed(2).toString(),
 				inline: true,
 			},
 			{
 				name: "Heap Total (MB)",
-				value: (queue.memoryUsage.heapTotal / (1024 * 1024))
-					.toFixed(2)
-					.toString(),
+				value: (queue.memoryUsage.heapTotal / (1024 * 1024)).toFixed(2).toString(),
 				inline: true,
 			},
 			{
 				name: "Heap Used (MB)",
-				value: (queue.memoryUsage.heapUsed / (1024 * 1024))
-					.toFixed(2)
-					.toString(),
+				value: (queue.memoryUsage.heapUsed / (1024 * 1024)).toFixed(2).toString(),
 				inline: true,
 			}
 		)
