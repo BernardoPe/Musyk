@@ -1,5 +1,4 @@
-# Use the official Node.js image based on Debian
-FROM node:20-slim
+FROM node:22.11.0-slim
 
 RUN apt-get update && apt-get install -y \
     python3 \
@@ -13,7 +12,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install --verbose
+RUN npm install --verbose --legacy-peer-deps
 
 # Copy the rest of the application code to the working directory
 COPY . .
