@@ -3,7 +3,7 @@ import { logger } from "../../utils/logging/logger.ts"
 import { GuildQueueEventHandler } from "../../types.ts"
 
 class DebugHandler implements GuildQueueEventHandler {
-	public name = GuildQueueEvent.debug
+	public name = GuildQueueEvent.Debug
 
 	public execute(queue: GuildQueue, message: string) {
 		const date = new Date()

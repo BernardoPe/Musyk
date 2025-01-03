@@ -1,9 +1,8 @@
-import { GuildMessage, MusicBot, QueueMetadata, TextCommand } from "../../../types.ts"
-import { GuildQueue } from "discord-player"
+import { GuildMessage, BotCommand, MusicBot } from "../../../types.ts"
 import paginate from "../../../utils/embeds/paginator.ts"
 import { playerAnalyticsEmbed } from "../../../utils/embeds/analytics.ts"
 
-class AnalyticsCommand implements TextCommand {
+class AnalyticsCommand implements BotCommand {
 	public aliases = ["analytics", "stats"]
 	public name = "analytics"
 	public requiresPlayer = false
@@ -12,9 +11,8 @@ class AnalyticsCommand implements TextCommand {
 	public guild = null
 	public msg = null
 
-	public execute(msg: GuildMessage, args: string[], bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null) {
-		paginate(msg.channel, playerAnalyticsEmbed(bot.player.generateStatistics()), [])
-		return
+	public async execute(bot: MusicBot, msg: GuildMessage) {
+		await paginate(msg.channel, playerAnalyticsEmbed(bot.player.generateStatistics()), [])
 	}
 }
 

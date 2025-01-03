@@ -1,8 +1,8 @@
 import { GuildQueue, QueueRepeatMode } from "discord-player"
 import { sendEmbed } from "../../../utils/embeds/channels.ts"
-import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
-import { GuildTextBasedChannel } from "discord.js"
+import { PlayerCommand, QueueMetadata } from "../../../types.ts"
 import { successEmbed } from "../../../utils/embeds/status.ts"
+import { GuildTextBasedChannel } from "discord.js"
 
 class CycleCommand implements PlayerCommand {
 	public aliases = ["cycle"]
@@ -13,12 +13,7 @@ class CycleCommand implements PlayerCommand {
 	public guild = null
 	public msg = null
 
-	public execute(
-		channel: GuildTextBasedChannel,
-		args: string[],
-		bot: MusicBot,
-		serverQueue: GuildQueue<QueueMetadata>
-	) {
+	public execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel, args: string[]) {
 		let md = "none"
 		let mode = undefined
 

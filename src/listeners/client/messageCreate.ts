@@ -7,9 +7,7 @@ class MessageCreateHandler implements ClientEventHandler {
 
 	public execute(msg: GuildMessage, bot: MusicBot) {
 		if (msg.author.bot) return
-
-		const args = msg.content.split(" ")
-
+		const args = msg.content.split(/ +/)
 		handleCommand(msg, args, bot)
 	}
 }

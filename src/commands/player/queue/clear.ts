@@ -1,5 +1,5 @@
 import { sendEmbed } from "../../../utils/embeds/channels.ts"
-import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
+import { QueueMetadata, PlayerCommand } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
 import { errorEmbed, successEmbed } from "../../../utils/embeds/status.ts"
@@ -14,7 +14,7 @@ class ClearCommand implements PlayerCommand {
 	msg = null
 	user = null
 
-	execute(channel: GuildTextBasedChannel, args: string[], bot: MusicBot, serverQueue: GuildQueue<QueueMetadata>) {
+	execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel) {
 		if (serverQueue.tracks.size === 0) {
 			const embed = errorEmbed(null, "There are no songs in the queue")
 			sendEmbed(channel, { embeds: [embed] }, 20000)

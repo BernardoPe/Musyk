@@ -1,6 +1,6 @@
 import { Player, QueryType } from "discord-player"
 import { SpotifyExtractor, SoundCloudExtractor } from "@discord-player/extractor"
-import { YoutubeiExtractor, generateOauthTokens } from "discord-player-youtubei"
+import { YoutubeiExtractor } from "discord-player-youtubei"
 import { Client, GatewayIntentBits } from "discord.js"
 import { addEventListeners } from "./handlers/events.ts"
 import { MusicBot } from "./types.ts"

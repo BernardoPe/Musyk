@@ -5,7 +5,7 @@ import { sendEmbed } from "../../utils/embeds/channels.ts"
 import { updatePlayer } from "../../utils/embeds/player/playing.ts"
 
 class AudioTracksAddHandler implements GuildQueueEventHandler {
-	public name = GuildQueueEvent.audioTracksAdd
+	public name = GuildQueueEvent.AudioTracksAdd
 
 	public execute(queue: GuildQueue<QueueMetadata>, tracks: Track[]) {
 		const embed = queuePlaylistEmbed(tracks[0].playlist!)

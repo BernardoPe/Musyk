@@ -3,7 +3,7 @@ import { GuildQueue } from "discord-player"
 import { GuildQueueEvent } from "discord-player"
 
 class EmptyChannelHandler implements GuildQueueEventHandler {
-	public name = GuildQueueEvent.emptyChannel
+	public name = GuildQueueEvent.EmptyChannel
 
 	execute(queue: GuildQueue) {
 		queue.delete()

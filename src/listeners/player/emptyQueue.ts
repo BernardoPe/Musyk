@@ -6,7 +6,7 @@ import { sendEmbed } from "../../utils/embeds/channels.ts"
 import { leavingEmbed } from "../../utils/embeds/player/queue.ts"
 
 class EmptyQueueHandler implements GuildQueueEventHandler {
-	public name = GuildQueueEvent.emptyQueue
+	public name = GuildQueueEvent.EmptyQueue
 
 	public async execute(queue: GuildQueue<QueueMetadata>) {
 		const channel = queue.metadata.textChannel!

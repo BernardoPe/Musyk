@@ -1,4 +1,4 @@
-import { TextCommand, GuildMessage, MusicBot, QueueMetadata } from "../../types.ts"
+import { MusicBot, QueueMetadata, BotCommand, GuildMessage } from "../../types.ts"
 
 import { sendEmbed } from "../../utils/embeds/channels.ts"
 import { GuildQueue, SearchQueryType } from "discord-player"
@@ -6,7 +6,7 @@ import { GuildTextBasedChannel, VoiceBasedChannel } from "discord.js"
 import { logger } from "../../utils/logging/logger.ts"
 import { errorEmbed } from "../../utils/embeds/status.ts"
 
-class PlayCommand implements TextCommand {
+class PlayCommand implements BotCommand {
 	adminCommand: boolean = false
 	aliases: string[] = ["p", "play"]
 	name: string = "play"
@@ -21,13 +21,8 @@ class PlayCommand implements TextCommand {
 		"-sc": "soundcloudSearch",
 	}
 
-	public async execute(
-		msg: GuildMessage,
-		args: string[],
-		bot: MusicBot,
-		serverQueue: GuildQueue<QueueMetadata> | null
-	) {
-		const channel = msg.channel
+	public async execute(bot: MusicBot, msg: GuildMessage, args: string[]) {
+		const { channel } = msg
 
 		if (args.length === 1) {
 			const embed = errorEmbed(null, "Please provide a search query")
@@ -51,13 +46,15 @@ class PlayCommand implements TextCommand {
 			return
 		}
 
-		const queue: GuildQueue<QueueMetadata> = serverQueue || this.createQueue(bot, channel, voiceChannel)
+		const queue: GuildQueue<QueueMetadata> =
+            bot.player.queues.get(msg.guild.id) || this.createQueue(bot, channel, voiceChannel)
 
 		if (queue.connection && queue.channel !== msg.member!.voice.channel) {
 			const embed = errorEmbed(null, "Already connected to a different voice channel")
 			sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 			return
 		}
+
 		if (!queue.connection) {
 			try {
 				await queue.connect(voiceChannel)

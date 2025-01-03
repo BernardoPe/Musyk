@@ -1,5 +1,5 @@
 import { sendEmbed } from "../../../utils/embeds/channels.ts"
-import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
+import { QueueMetadata, PlayerCommand } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
 import { errorEmbed, successEmbed } from "../../../utils/embeds/status.ts"
@@ -14,12 +14,7 @@ class RemoveCommand implements PlayerCommand {
 	public msg: string | null = null
 	public user: string | null = null
 
-	public execute(
-		channel: GuildTextBasedChannel,
-		args: string[],
-		bot: MusicBot,
-		serverQueue: GuildQueue<QueueMetadata>
-	) {
+	public execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel, args: string[]) {
 		const value = parseInt(args[1])
 		if (isNaN(value)) {
 			const embed = errorEmbed(null, "Value must be a number")

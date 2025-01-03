@@ -1,4 +1,4 @@
-import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
+import { QueueMetadata, PlayerCommand } from "../../../types.ts"
 import { sendEmbed } from "../../../utils/embeds/channels.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
@@ -13,7 +13,7 @@ class VolumeCommand implements PlayerCommand {
 	public msg: string | null = null
 	public user: string | null = null
 
-	execute(channel: GuildTextBasedChannel, args: string[], bot: MusicBot, serverQueue: GuildQueue<QueueMetadata>) {
+	execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel, args: string[]) {
 		if (!args[1]) {
 			const embed = successEmbed(null, `Volume is at ${serverQueue.node.volume}%`)
 			return sendEmbed(channel, { embeds: [embed] }, 20000)

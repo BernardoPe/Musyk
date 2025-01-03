@@ -50,7 +50,7 @@ interface ClientEventHandler {
 type ServerPrefix = string;
 
 /**
- * Represents a command in the application
+ * Represents a base command, which is used to define the properties of a command
  *
  * @param name - The name of the command
  * @param aliases - The aliases of the command, allowing the command to be executed using different names
@@ -70,23 +70,12 @@ interface BaseCommand {
     guild: string | null;
 }
 
-/**
- * Represents a command that requires a player to exist for the server
- */
 interface PlayerCommand extends BaseCommand {
-    execute: (
-        channel: GuildTextBasedChannel,
-        args: string[],
-        bot: MusicBot,
-        serverQueue: GuildQueue<QueueMetadata>
-    ) => void;
+    execute(serverQueue: GuildQueue<QueueMetadata> | null, channel: GuildTextBasedChannel, args: string[]): void;
 }
 
-/**
- * Represents a text command, that does not require a player to exist for the server
- */
-interface TextCommand extends BaseCommand {
-    execute: (msg: GuildMessage, args: string[], bot: MusicBot, serverQueue: GuildQueue<QueueMetadata> | null) => void;
+interface BotCommand extends BaseCommand {
+    execute(bot: MusicBot, msg: GuildMessage, args: string[]): void;
 }
 
 /**
@@ -120,5 +109,5 @@ export {
 	QueueMetadata,
 	GuildMessage,
 	PlayerCommand,
-	TextCommand,
+	BotCommand,
 }

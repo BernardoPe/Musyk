@@ -7,7 +7,7 @@ import { nowPlayingEmbed, updatePlayer } from "../../utils/embeds/player/playing
 import { sendEmbed } from "../../utils/embeds/channels.ts"
 
 class PlayerStartHandler implements GuildQueueEventHandler {
-	public name = GuildQueueEvent.playerStart
+	public name = GuildQueueEvent.PlayerStart
 
 	public async execute(queue: GuildQueue<QueueMetadata>) {
 		if (!queue.metadata.playerEmbed) {

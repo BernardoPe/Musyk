@@ -1,6 +1,5 @@
 import { GuildQueue } from "discord-player"
-import { MusicBot, PlayerCommand, QueueMetadata } from "../types.ts"
-import { GuildTextBasedChannel } from "discord.js"
+import { QueueMetadata, PlayerCommand } from "../types.ts"
 
 class DisconnectCommand implements PlayerCommand {
 	public aliases = ["dc", "disconnect", "leave"]
@@ -11,12 +10,7 @@ class DisconnectCommand implements PlayerCommand {
 	public guild = null
 	public msg = null
 
-	public execute(
-		channel: GuildTextBasedChannel,
-		args: string[],
-		bot: MusicBot,
-		serverQueue: GuildQueue<QueueMetadata>
-	) {
+	public execute(serverQueue: GuildQueue<QueueMetadata>) {
 		serverQueue.delete()
 	}
 }

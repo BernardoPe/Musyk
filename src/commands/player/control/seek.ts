@@ -1,6 +1,6 @@
 import { sendEmbed } from "../../../utils/embeds/channels.ts"
 import { validateTimestamp, millisecondsToTimestamp } from "../../../utils/time.ts"
-import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
+import { QueueMetadata, PlayerCommand } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
 import { successEmbed } from "../../../utils/embeds/status.ts"
@@ -14,12 +14,7 @@ class SeekCommand implements PlayerCommand {
 	public guild = null
 	public msg = null
 
-	public async execute(
-		channel: GuildTextBasedChannel,
-		args: string[],
-		bot: MusicBot,
-		serverQueue: GuildQueue<QueueMetadata>
-	) {
+	public async execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel, args: string[]) {
 		const time = validateTimestamp(args[1], serverQueue.node.totalDuration)
 
 		if (time === false) {
@@ -49,8 +44,6 @@ class SeekCommand implements PlayerCommand {
 		const embed = successEmbed(null, "Track playback time set to **" + timestamp + "/" + dur + "**")
 
 		sendEmbed(channel, { embeds: [embed] }, 20000)
-
-		return
 	}
 }
 

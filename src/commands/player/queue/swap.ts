@@ -1,4 +1,4 @@
-import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
+import { QueueMetadata, PlayerCommand } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 
 import { sendEmbed } from "../../../utils/embeds/channels.ts"
@@ -15,12 +15,7 @@ class SwapCommand implements PlayerCommand {
 	public guild = null
 	public msg = null
 
-	public execute(
-		channel: GuildTextBasedChannel,
-		args: string[],
-		bot: MusicBot,
-		serverQueue: GuildQueue<QueueMetadata>
-	) {
+	public execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel, args: string[]) {
 		const swapPos1 = parseInt(args[1])
 		const swapPos2 = parseInt(args[2])
 

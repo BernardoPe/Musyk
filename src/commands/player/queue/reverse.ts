@@ -1,5 +1,5 @@
 import { GuildQueue, Track } from "discord-player"
-import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
+import { QueueMetadata, PlayerCommand } from "../../../types.ts"
 
 import { sendEmbed } from "../../../utils/embeds/channels.ts"
 import { GuildTextBasedChannel } from "discord.js"
@@ -15,7 +15,7 @@ class ReverseCommand implements PlayerCommand {
 	msg = null
 	user = null
 
-	execute(channel: GuildTextBasedChannel, args: string[], bot: MusicBot, serverQueue: GuildQueue<QueueMetadata>) {
+	execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel) {
 		if (serverQueue.isEmpty()) {
 			const embed = errorEmbed(null, "Queue is empty")
 			sendEmbed(channel, { embeds: [embed] }, 20000)

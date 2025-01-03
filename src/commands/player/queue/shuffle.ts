@@ -1,5 +1,5 @@
 import { sendEmbed } from "../../../utils/embeds/channels.ts"
-import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
+import { QueueMetadata, PlayerCommand } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
 import { errorEmbed, successEmbed } from "../../../utils/embeds/status.ts"
@@ -14,7 +14,7 @@ class ShuffleCommand implements PlayerCommand {
 	public msg: string | null = null
 	public user: string | null = null
 
-	execute(channel: GuildTextBasedChannel, args: string[], bot: MusicBot, serverQueue: GuildQueue<QueueMetadata>) {
+	execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel) {
 		if (serverQueue.tracks.size < 2) {
 			const embed = errorEmbed(null, "There are not enough songs in the queue to shuffle")
 			sendEmbed(channel, { embeds: [embed] }, 20000)
@@ -28,7 +28,6 @@ class ShuffleCommand implements PlayerCommand {
 		const embed = successEmbed(null, "Shuffled the queue")
 
 		sendEmbed(channel, { embeds: [embed] }, 20000)
-		return
 	}
 }
 

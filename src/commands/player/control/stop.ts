@@ -1,7 +1,6 @@
 import { GuildQueue } from "discord-player"
 import { QueueRepeatMode } from "discord-player"
-import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
-import { GuildTextBasedChannel } from "discord.js"
+import { QueueMetadata, PlayerCommand } from "../../../types.ts"
 
 class StopCommand implements PlayerCommand {
 	public aliases = ["stop"]
@@ -12,7 +11,7 @@ class StopCommand implements PlayerCommand {
 	public msg = null
 	public user = null
 
-	execute(channel: GuildTextBasedChannel, args: string[], bot: MusicBot, serverQueue: GuildQueue<QueueMetadata>) {
+	execute(serverQueue: GuildQueue<QueueMetadata>) {
 		if (serverQueue.repeatMode != QueueRepeatMode.OFF) serverQueue.setRepeatMode(QueueRepeatMode.OFF)
 		serverQueue.node.stop()
 	}

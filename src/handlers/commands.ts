@@ -2,8 +2,8 @@ import { sendEmbed } from "../utils/embeds/channels.ts"
 import * as path from "path"
 import { logger } from "../utils/logging/logger.ts"
 import { ButtonInteraction, GuildTextBasedChannel, Message } from "discord.js"
-import { TextCommand, BaseCommand, GuildMessage, MusicBot, PlayerCommand, QueueMetadata } from "../types.ts"
-import { GuildQueue } from "discord-player"
+import { BaseCommand, BotCommand, GuildMessage, MusicBot, PlayerCommand, QueueMetadata } from "../types.ts"
+import { GuildQueue, useQueue } from "discord-player"
 import { errorEmbed } from "../utils/embeds/status.ts"
 import { getAdmins, getServerPrefix } from "../utils/configs/server.ts"
 import { getAllFiles } from "../utils/configs/json.ts"
@@ -18,7 +18,7 @@ commandFiles.forEach(async (file) => {
 	logger.info(`[COMMAND]: ${command.name} loaded`)
 })
 
-export function handleCommand(msg: GuildMessage | ButtonInteraction, args: string[], bot: MusicBot) {
+export function handleCommand(msg: GuildMessage | ButtonInteraction, args: string[], bot?: MusicBot) {
 	const prefix = getServerPrefix(msg.guild!.id)
 
 	const messageContent = msg instanceof Message ? msg.content : msg.customId
@@ -31,16 +31,11 @@ export function handleCommand(msg: GuildMessage | ButtonInteraction, args: strin
 
 	if (commands[commandName]) {
 		const command = commands[commandName]
-		const serverQueue: GuildQueue<QueueMetadata> | null = bot.player.nodes.get(msg.guild!.id)
+		const serverQueue: GuildQueue<QueueMetadata> | null = useQueue(msg.guild!.id)
 
 		if (command.adminCommand) {
 			const admins = getAdmins()
 			if (!admins.includes(user.id)) return
-		}
-
-		if (command.requiresPlayer && (!serverQueue || !serverQueue.isPlaying())) {
-			const embed = errorEmbed(null, "Not currently playing any songs")
-			return sendEmbed(channel, { embeds: [embed] }, 20000)
 		}
 
 		command.msg = messageContent
@@ -50,9 +45,13 @@ export function handleCommand(msg: GuildMessage | ButtonInteraction, args: strin
 		logger.info(`[COMMAND]: ${command.name} | ${command.msg} | User: ${command.user} | Guild: ${command.guild}`)
 
 		if (command.requiresPlayer) {
-			(command as PlayerCommand).execute(channel, args, bot, serverQueue!)
+			if (!serverQueue || !serverQueue.isPlaying()) {
+				const embed = errorEmbed(null, "Not currently playing any songs")
+				return sendEmbed(channel, { embeds: [embed] }, 20000)
+			}
+			(command as PlayerCommand).execute(serverQueue!, channel, args)
 		} else {
-			(command as TextCommand).execute(msg as GuildMessage, args, bot, serverQueue)
+			(command as BotCommand).execute(bot!, msg as GuildMessage, args)
 		}
 	}
 }

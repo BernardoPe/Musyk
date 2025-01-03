@@ -1,7 +1,6 @@
 import { sendEmbed } from "../../../utils/embeds/channels.ts"
-import { MusicBot, PlayerCommand } from "../../../types.ts"
+import { QueueMetadata, PlayerCommand } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
-import { GuildTextBasedChannel } from "discord.js"
 import { errorEmbed, successEmbed } from "../../../utils/embeds/status.ts"
 
 class PauseCommand implements PlayerCommand {
@@ -13,7 +12,8 @@ class PauseCommand implements PlayerCommand {
 	public guild = null
 	public msg = null
 
-	public execute(channel: GuildTextBasedChannel, args: string[], bot: MusicBot, serverQueue: GuildQueue) {
+	public execute(serverQueue: GuildQueue<QueueMetadata>) {
+		const channel = serverQueue.metadata.textChannel!
 		if (serverQueue.dispatcher!.paused) {
 			const embed = errorEmbed(null, "The player is already paused")
 			sendEmbed(channel, { embeds: [embed] }, 20000)

@@ -1,4 +1,4 @@
-import { MusicBot, PlayerCommand, QueueMetadata } from "../../../types.ts"
+import { QueueMetadata, PlayerCommand } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { sendEmbed } from "../../../utils/embeds/channels.ts"
 import { GuildTextBasedChannel } from "discord.js"
@@ -13,12 +13,7 @@ class FilterCommand implements PlayerCommand {
 	public guild: string | null = null
 	public msg: string | null = null
 
-	public async execute(
-		channel: GuildTextBasedChannel,
-		args: string[],
-		bot: MusicBot,
-		serverQueue: GuildQueue<QueueMetadata>
-	) {
+	public async execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel, args: string[]) {
 		let filter = args[1]
 
 		if (!filter.includes("bassboost")) {

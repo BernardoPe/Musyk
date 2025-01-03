@@ -4,7 +4,7 @@ import { GuildQueue, GuildQueueEvent } from "discord-player"
 import { Util } from "discord-player"
 
 class QueueDeleteHandler implements GuildQueueEventHandler {
-	public name = GuildQueueEvent.queueDelete
+	public name = GuildQueueEvent.QueueDelete
 
 	public async execute(queue: GuildQueue<QueueMetadata>) {
 		const channel = queue.metadata.textChannel
