@@ -25,7 +25,6 @@ bot.player = new Player(bot as Client, {
 
 addEventListeners(bot).then(async () => {
 	await bot.player.extractors.register(YoutubeiExtractor, {
-		authentication: process.env.ACCESS_TOKEN,
 		overrideBridgeMode: {
 			[QueryType.SPOTIFY_SEARCH]: "yt",
 			default: "ytmusic",
