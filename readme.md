@@ -3,9 +3,6 @@
 
 Musyk is a discord bot developed using the [discord-player](https://github.com/androz2091/discord-player) framework to play music on discord servers.
 
-You can add my bot to your discord server using this [link](https://discord.com/api/oauth2/authorize?client_id=1104836508944445551&permissions=2184465408&scope=bot)
-
-
 ## Features :bulb:
 
 
