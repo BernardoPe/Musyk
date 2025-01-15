@@ -1,5 +1,5 @@
-import { Player, QueryType } from "discord-player"
-import { SpotifyExtractor, SoundCloudExtractor } from "@discord-player/extractor"
+import { Player } from "discord-player"
+import { DefaultExtractors } from "@discord-player/extractor"
 import { YoutubeiExtractor } from "discord-player-youtubei"
 import { Client, GatewayIntentBits } from "discord.js"
 import { addEventListeners } from "./handlers/events.ts"
@@ -25,21 +25,14 @@ bot.player = new Player(bot as Client, {
 
 addEventListeners(bot).then(async () => {
 	await bot.player.extractors.register(YoutubeiExtractor, {
-		overrideBridgeMode: {
-			[QueryType.SPOTIFY_SEARCH]: "yt",
-			default: "ytmusic",
-		},
+		overrideBridgeMode: "yt",
 	})
 
 	logger.info("Registered YoutubeiExtractor")
 
-	await bot.player.extractors.register(SpotifyExtractor, {})
+	await bot.player.extractors.loadMulti(DefaultExtractors)
 
-	logger.info("Registered SpotifyExtractor")
-
-	await bot.player.extractors.register(SoundCloudExtractor, {})
-
-	logger.info("Registered SoundCloudExtractor")
+	logger.info("Registered DefaultExtractors")
 
 	await bot.login(TOKEN)
 })
