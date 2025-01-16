@@ -12,6 +12,7 @@
         "discord.js": "^14.17.2",
         "dotenv": "^16.4.5",
         "ffmpeg-static": "^5.2.0",
+        "mediaplex": "^1.0.0",
         "ts-node": "^10.9.2",
         "winston": "^3.13.0"
     },

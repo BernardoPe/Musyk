@@ -87,6 +87,7 @@ class PlayCommand implements BotCommand {
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
+
 		try {
 			if (!queue.isPlaying() && !queue.dispatcher!.isBuffering()) {
 				await queue.play(song)
@@ -96,6 +97,7 @@ class PlayCommand implements BotCommand {
 				queue.addTrack(result.playlist)
 			}
 		} catch (e) {
+			console.log(e)
 			logger.error(e)
 			const embed = errorEmbed(null, langs.en.commands.play.error)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
