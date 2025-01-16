@@ -1,24 +1,13 @@
 import { sendEmbed } from "../utils/embeds/channels.ts"
-import * as path from "path"
 import { logger } from "../utils/logging/logger.ts"
 import { ButtonInteraction, GuildTextBasedChannel, Message } from "discord.js"
-import { BaseCommand, BotCommand, GuildMessage, MusicBot, PlayerCommand, QueueMetadata } from "../types.ts"
+import { BotCommand, GuildMessage, MusicBot, PlayerCommand, QueueMetadata } from "../types.ts"
 import { GuildQueue, useQueue } from "discord-player"
 import { errorEmbed } from "../utils/embeds/status.ts"
 import { getAdmins, getServerPrefix } from "../utils/configs/server.ts"
-import { getAllFiles } from "../utils/configs/json.ts"
+import langs from "../langs"
 
-const commands: { [key: string]: BaseCommand } = {}
-const commandFiles: string[] = getAllFiles(path.join(__dirname, "../commands"))
-
-commandFiles.forEach(async (file) => {
-	const module = await import(file)
-	const command: BaseCommand = module.default
-	command.aliases.forEach((alias) => (commands[alias] = command))
-	logger.info(`[COMMAND]: ${command.name} loaded`)
-})
-
-export function handleCommand(msg: GuildMessage | ButtonInteraction, args: string[], bot?: MusicBot) {
+export function handleCommand(msg: GuildMessage | ButtonInteraction, args: string[], bot: MusicBot) {
 	const prefix = getServerPrefix(msg.guild!.id)
 
 	const messageContent = msg instanceof Message ? msg.content : msg.customId
@@ -29,8 +18,8 @@ export function handleCommand(msg: GuildMessage | ButtonInteraction, args: strin
 
 	const commandName = args[0].slice(prefix.length).toLowerCase()
 
-	if (commands[commandName]) {
-		const command = commands[commandName]
+	if (bot.commands[commandName]) {
+		const command = bot.commands[commandName]
 		const serverQueue: GuildQueue<QueueMetadata> | null = useQueue(msg.guild!.id)
 
 		if (command.adminCommand) {
@@ -46,7 +35,7 @@ export function handleCommand(msg: GuildMessage | ButtonInteraction, args: strin
 
 		if (command.requiresPlayer) {
 			if (!serverQueue || !serverQueue.isPlaying()) {
-				const embed = errorEmbed(null, "Not currently playing any songs")
+				const embed = errorEmbed(null, langs.en.shared.not_playing)
 				return sendEmbed(channel, { embeds: [embed] }, 20000)
 			}
 			(command as PlayerCommand).execute(serverQueue!, channel, args)

@@ -4,6 +4,7 @@ import { QueueMetadata, PlayerCommand } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
 import { successEmbed } from "../../../utils/embeds/status.ts"
+import langs from "../../../langs"
 
 class SeekCommand implements PlayerCommand {
 	public aliases = ["seek"]
@@ -18,19 +19,13 @@ class SeekCommand implements PlayerCommand {
 		const time = validateTimestamp(args[1], serverQueue.node.totalDuration)
 
 		if (time === false) {
-			const embed = successEmbed(
-				null,
-				"**" + args[1] + "** is not a valid timestamp format, correct format should be **hh:mm:ss**."
-			)
+			const embed = successEmbed(null, langs.en.commands.seek.invalid_time_format.replace("{time}", args[1]))
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
 		if (time === -1) {
-			const embed = successEmbed(
-				null,
-				"**" + args[1] + "** is not a valid timestamp in this track, check this song's total duration."
-			)
+			const embed = successEmbed(null, langs.en.commands.seek.invalid_time.replace("{time}", args[1]))
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
@@ -41,7 +36,7 @@ class SeekCommand implements PlayerCommand {
 
 		const timestamp = millisecondsToTimestamp(time as number)
 
-		const embed = successEmbed(null, "Track playback time set to **" + timestamp + "/" + dur + "**")
+		const embed = successEmbed(null, langs.en.commands.seek.seeked.replace("{time}", timestamp + "/" + dur))
 
 		sendEmbed(channel, { embeds: [embed] }, 20000)
 	}

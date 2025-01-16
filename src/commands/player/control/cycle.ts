@@ -3,6 +3,7 @@ import { sendEmbed } from "../../../utils/embeds/channels.ts"
 import { PlayerCommand, QueueMetadata } from "../../../types.ts"
 import { successEmbed } from "../../../utils/embeds/status.ts"
 import { GuildTextBasedChannel } from "discord.js"
+import langs from "../../../langs/index.ts"
 
 class CycleCommand implements PlayerCommand {
 	public aliases = ["cycle"]
@@ -20,19 +21,19 @@ class CycleCommand implements PlayerCommand {
 		switch (args[1]) {
 		case "off":
 			serverQueue.setRepeatMode(QueueRepeatMode.OFF)
-			mode = "Turned off loop mode."
+			mode = langs.en.commands.cycle.loop_mode_off
 			break
 		case "track":
 			serverQueue.setRepeatMode(QueueRepeatMode.TRACK)
-			mode = "Repeating track activated"
+			mode = langs.en.commands.cycle.repeat_mode_on
 			break
 		case "queue":
 			serverQueue.setRepeatMode(QueueRepeatMode.QUEUE)
-			mode = "Looping queue enabled."
+			mode = langs.en.commands.cycle.looping_queue_on
 			break
 		case "autoplay":
 			serverQueue.setRepeatMode(QueueRepeatMode.AUTOPLAY)
-			mode = "Autoplay mode activated."
+			mode = langs.en.commands.cycle.autoplay_on
 			break
 		default:
 			if (serverQueue.repeatMode === QueueRepeatMode.AUTOPLAY) {
@@ -45,7 +46,9 @@ class CycleCommand implements PlayerCommand {
 				md = "off"
 			}
 		}
-		const embed = mode ? successEmbed(null, mode) : successEmbed(null, `Current mode: ${md}`)
+		const embed = mode
+			? successEmbed(null, mode)
+			: successEmbed(null, langs.en.commands.cycle.current_mode.replace("{mode}", md))
 		sendEmbed(channel, { embeds: [embed] }, 20000)
 	}
 }

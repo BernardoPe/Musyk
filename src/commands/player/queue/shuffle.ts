@@ -4,6 +4,7 @@ import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
 import { errorEmbed, successEmbed } from "../../../utils/embeds/status.ts"
 import { updatePlayer } from "../../../utils/embeds/player/playing.ts"
+import langs from "../../../langs"
 
 class ShuffleCommand implements PlayerCommand {
 	public aliases = ["shuffle"]
@@ -16,7 +17,7 @@ class ShuffleCommand implements PlayerCommand {
 
 	execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel) {
 		if (serverQueue.tracks.size < 2) {
-			const embed = errorEmbed(null, "There are not enough songs in the queue to shuffle")
+			const embed = errorEmbed(null, langs.en.commands.shuffle.not_enough_songs)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
@@ -25,7 +26,7 @@ class ShuffleCommand implements PlayerCommand {
 
 		updatePlayer(serverQueue)
 
-		const embed = successEmbed(null, "Shuffled the queue")
+		const embed = successEmbed(null, langs.en.commands.shuffle.shuffled)
 
 		sendEmbed(channel, { embeds: [embed] }, 20000)
 	}

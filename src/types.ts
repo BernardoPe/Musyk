@@ -16,8 +16,10 @@ import { GuildQueue, GuildQueueEvent, Player } from "discord-player"
  *
  * @see {@link https://discord-player.js.org/docs/discord-player/class/Player}
  */
-interface MusicBot extends Client {
+interface MusicBot {
+    client: Client;
     player: Player;
+    commands: { [key: string]: BaseCommand };
 }
 
 /**

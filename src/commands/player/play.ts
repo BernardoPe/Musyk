@@ -5,6 +5,7 @@ import { GuildQueue, SearchQueryType } from "discord-player"
 import { GuildTextBasedChannel, VoiceBasedChannel } from "discord.js"
 import { logger } from "../../utils/logging/logger.ts"
 import { errorEmbed } from "../../utils/embeds/status.ts"
+import langs from "../../langs"
 
 class PlayCommand implements BotCommand {
 	adminCommand: boolean = false
@@ -25,7 +26,7 @@ class PlayCommand implements BotCommand {
 		const { channel } = msg
 
 		if (args.length === 1) {
-			const embed = errorEmbed(null, "Please provide a search query")
+			const embed = errorEmbed(null, langs.en.commands.play.provide_search)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
@@ -33,7 +34,7 @@ class PlayCommand implements BotCommand {
 		const voiceChannel = msg.member!.voice.channel
 
 		if (!voiceChannel) {
-			const embed = errorEmbed(null, "You need to be in a voice channel to play music")
+			const embed = errorEmbed(null, langs.en.commands.play.need_to_be_in_voice)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
@@ -41,7 +42,7 @@ class PlayCommand implements BotCommand {
 		const permissions = voiceChannel.permissionsFor(msg.client.user)!
 
 		if (!permissions.has("Connect") || !permissions.has("Speak")) {
-			const embed = errorEmbed(null, "I need the permissions to join and speak in your voice channel")
+			const embed = errorEmbed(null, langs.en.commands.play.need_permissions)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
@@ -50,7 +51,7 @@ class PlayCommand implements BotCommand {
             bot.player.queues.get(msg.guild.id) || this.createQueue(bot, channel, voiceChannel)
 
 		if (queue.connection && queue.channel !== msg.member!.voice.channel) {
-			const embed = errorEmbed(null, "Already connected to a different voice channel")
+			const embed = errorEmbed(null, langs.en.commands.play.already_connected)
 			sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 			return
 		}
@@ -82,7 +83,7 @@ class PlayCommand implements BotCommand {
 		const song = result.tracks[0]
 
 		if (result.tracks.length === 0) {
-			const embed = errorEmbed(null, "No results found")
+			const embed = errorEmbed(null, langs.en.commands.play.no_results)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
@@ -96,7 +97,7 @@ class PlayCommand implements BotCommand {
 			}
 		} catch (e) {
 			logger.error(e)
-			const embed = errorEmbed(null, "An error occurred while playing the song")
+			const embed = errorEmbed(null, langs.en.commands.play.error)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 		}
 	}

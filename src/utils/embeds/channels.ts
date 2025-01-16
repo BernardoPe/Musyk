@@ -1,10 +1,11 @@
 import { Collection, Colors, EmbedBuilder, GuildMember, GuildTextBasedChannel, Snowflake } from "discord.js"
 import { logger } from "../logging/logger.ts"
+import langs from "../../langs"
 
 const botID: string = process.env.BOT_ID!
 
 function leftEmbed(): EmbedBuilder {
-	return new EmbedBuilder().setDescription("Leaving the channel...").setColor(Colors.Red)
+	return new EmbedBuilder().setDescription(langs.en.embeds.left.description).setColor(Colors.Red)
 }
 
 function sendEmbed(channel: GuildTextBasedChannel, info: any, timeout: number | null = null) {

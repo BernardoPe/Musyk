@@ -3,6 +3,7 @@ import { GuildQueue } from "discord-player"
 import { sendEmbed } from "../../../utils/embeds/channels.ts"
 import { GuildTextBasedChannel } from "discord.js"
 import { errorEmbed, successEmbed } from "../../../utils/embeds/status.ts"
+import langs from "../../../langs"
 
 class FilterCommand implements PlayerCommand {
 	public adminCommand: boolean = false
@@ -22,13 +23,13 @@ class FilterCommand implements PlayerCommand {
 
 		if (filter === "disableall") {
 			await serverQueue.filters.ffmpeg.setFilters(false)
-			const embed = successEmbed(null, "Disabled all filters")
+			const embed = successEmbed(null, langs.en.commands.filter.disabled_all)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
 		if (!serverQueue.filters.ffmpeg.isValidFilter(filter)) {
-			const embed = errorEmbed(null, "Invalid filter")
+			const embed = errorEmbed(null, langs.en.commands.filter.invalid_filter)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
@@ -36,12 +37,12 @@ class FilterCommand implements PlayerCommand {
 		await serverQueue.filters.ffmpeg.toggle([filter])
 
 		if (serverQueue.filters.ffmpeg.isEnabled(filter)) {
-			const embed = successEmbed(null, `Enabled ${filter} filter`)
+			const embed = successEmbed(null, langs.en.commands.filter.enabled_single.replace("{filter}", filter))
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
-		const embed = successEmbed(null, `Disabled ${filter} filter`)
+		const embed = successEmbed(null, langs.en.commands.filter.disabled_single.replace("{filter}", filter))
 		sendEmbed(channel, { embeds: [embed] }, 20000)
 	}
 }

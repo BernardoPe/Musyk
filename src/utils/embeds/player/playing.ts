@@ -1,6 +1,7 @@
 import { Colors, EmbedBuilder, Snowflake } from "discord.js"
 import { GuildQueue, RawTrackData, Track } from "discord-player"
 import { QueueMetadata } from "../../../types.ts"
+import langs from "../../../langs"
 
 function getEmoji(source: string, embed?: EmbedBuilder): string {
 	let emoji: Snowflake
@@ -41,33 +42,41 @@ function nowPlayingEmbed(queue: GuildQueue): EmbedBuilder {
 	const song: Track<RawTrackData> = queue.currentTrack as Track<RawTrackData>
 
 	embed
-		.setTitle("Now Playing")
+		.setTitle(langs.en.embeds.now_playing.title)
 		.setDescription(`${emoji} **[${song.cleanTitle}](${song.url})**`)
 		.setThumbnail(`${song.thumbnail}`)
 		.addFields(
 			{
-				name: "Duration",
+				name: langs.en.embeds.now_playing.fields.duration,
 				value: `${song.metadata!.live ? "Live" : song.duration.padStart(5, "0")}`,
 				inline: true,
 			},
 			{
-				name: "Requested By",
+				name: langs.en.embeds.now_playing.fields.requested_by,
 				value: `${song.requestedBy}`,
 				inline: true,
 			},
-			{ name: "Volume", value: `${queue.node.volume}%`, inline: true }
+			{
+				name: langs.en.embeds.now_playing.fields.volume,
+				value: `${queue.node.volume}%`,
+				inline: true,
+			}
 		)
 
 	if (queue.history.nextTrack) {
 		embed.addFields(
-			{ name: "Songs in queue", value: `${queue.size}`, inline: true },
 			{
-				name: "Total queue duration",
+				name: langs.en.embeds.now_playing.fields.songs_in_queue,
+				value: `${queue.size}`,
+				inline: true,
+			},
+			{
+				name: langs.en.embeds.now_playing.fields.duration,
 				value: `${queue.durationFormatted}`,
 				inline: true,
 			},
 			{
-				name: "Next Track",
+				name: langs.en.embeds.now_playing.fields.next_track,
 				value: `${getEmoji(queue.history.nextTrack.source)} **[${
 					queue.history.nextTrack.cleanTitle
 				}](${queue.history.nextTrack.url})**`,

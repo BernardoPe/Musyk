@@ -1,14 +1,20 @@
 import { EmbedBuilder } from "discord.js"
 import { GuildQueueStatisticsMetadata } from "discord-player"
+import langs from "../../langs"
 
-function playerAnalyticsEmbed(stats: any): EmbedBuilder[] {
+function playerAnalyticsEmbed(stats: {
+    queuesCount: number;
+    queryCacheEnabled: boolean;
+    queues: GuildQueueStatisticsMetadata[];
+}): EmbedBuilder[] {
 	const globalInfo = new EmbedBuilder()
-	globalInfo.setTitle("Player Analytics")
-	globalInfo.setDescription("Player statistics")
-	globalInfo.addFields(
-		{ name: "Instances", value: stats.instances.toString(), inline: true },
-		{ name: "Players", value: stats.queuesCount.toString(), inline: true }
-	)
+	globalInfo.setTitle(langs.en.embeds.analytics.global_title)
+	globalInfo.setDescription(langs.en.embeds.analytics.global_description)
+	globalInfo.addFields({
+		name: langs.en.embeds.analytics.fields.players,
+		value: stats.queuesCount.toString(),
+		inline: true,
+	})
 	const queuesInfo = queuesInfoEmbed(stats.queues)
 	return [globalInfo, ...queuesInfo]
 }
@@ -18,36 +24,36 @@ function queuesInfoEmbed(queues: GuildQueueStatisticsMetadata[]) {
 	let count = 1
 	for (const queue of queues) {
 		const queueInfo = new EmbedBuilder()
-		queueInfo.setTitle("Queue Analytics")
-		queueInfo.setDescription(`Queue statistics for guild ${count++}`)
+		queueInfo.setTitle(langs.en.embeds.analytics.title)
+		queueInfo.setDescription(langs.en.embeds.analytics.description.replace("{guild}", `${count++}`))
 		queueInfo.addFields(
 			{
-				name: "Event Loop Lag (ms)",
+				name: langs.en.embeds.analytics.fields.event_loop_lag,
 				value: queue.latency.eventLoop.toPrecision(2).toString(),
 				inline: true,
 			},
 			{
-				name: "Tracks Count",
+				name: langs.en.embeds.analytics.fields.tracks_count,
 				value: queue.tracksCount.toString(),
 				inline: true,
 			},
 			{
-				name: "History Size",
+				name: langs.en.embeds.analytics.fields.history_size,
 				value: queue.historySize.toString(),
 				inline: true,
 			},
 			{
-				name: "Rss (MB)",
+				name: langs.en.embeds.analytics.fields.rss,
 				value: (queue.memoryUsage.rss / (1024 * 1024)).toFixed(2).toString(),
 				inline: true,
 			},
 			{
-				name: "Heap Total (MB)",
+				name: langs.en.embeds.analytics.fields.heap_total,
 				value: (queue.memoryUsage.heapTotal / (1024 * 1024)).toFixed(2).toString(),
 				inline: true,
 			},
 			{
-				name: "Heap Used (MB)",
+				name: langs.en.embeds.analytics.fields.heap_used,
 				value: (queue.memoryUsage.heapUsed / (1024 * 1024)).toFixed(2).toString(),
 				inline: true,
 			}

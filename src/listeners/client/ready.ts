@@ -1,11 +1,11 @@
-import { ClientEventHandler, MusicBot } from "../../types.ts"
-import { Events, ActivityType } from "discord.js"
+import { ClientEventHandler } from "../../types.ts"
+import { Events, ActivityType, Client } from "discord.js"
 import { logger } from "../../utils/logging/logger.ts"
 
 class ClientReadyHandler implements ClientEventHandler {
 	public name = Events.ClientReady
 
-	public async execute(bot: MusicBot) {
+	public async execute(bot: Client) {
         bot.user!.setActivity({
         	name: ".help | /help",
         	type: ActivityType.Listening,

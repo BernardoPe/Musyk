@@ -1,0 +1,172 @@
+{
+  "shared": {
+    "not_playing": "Not currently playing any songs",
+    "current_prefix": "Current prefix is **{prefix}**",
+    "set_prefix": "Prefix set to **{prefix}**",
+    "set_prefix_error": "An error occurred while setting the prefix."
+  },
+  "embeds": {
+    "analytics": {
+      "global_title": "Player Analytics",
+      "global_description": "Player statistics",
+      "title": "Queue Analytics",
+      "description": "Queue statistics for guild **{guild}**",
+      "fields": {
+        "instances": "Instances",
+        "players": "Players",
+        "event_loop_lag": "Event Loop Lag (ms)",
+        "tracks_count": "Tracks Count",
+        "history_size": "History Size",
+        "rss": "Rss (MB)",
+        "heap_total": "Heap Total (MB)",
+        "heap_used": "Heap Used (MB)"
+      }
+    },
+    "left": {
+      "description": "Leaving the channel..."
+    },
+    "leaving": {
+      "description": "Queue is empty, leaving in 5 minutes..."
+    },
+    "create_link": {
+      "label": "Invite Link"
+    },
+    "now_playing": {
+        "title": "Now Playing",
+        "description": "Now playing in guild **{guild}**",
+        "fields": {
+            "duration": "Duration",
+            "author": "Requested by",
+            "requested_by": "Requested by",
+            "volume": "Volume",
+            "songs_in_queue": "Songs in Queue",
+            "total_queue_duration": "Total Queue Duration",
+            "next_track": "Next Track"
+        }
+    },
+    "queue": {
+      "title": "Queue page {page}",
+      "fields": {
+          "currently_playing": "Currently Playing",
+          "position": "Position {position}:",
+          "total_queue_duration": "Total Queue Duration",
+          "songs_in_queue": "Songs in Queue"
+      }
+    },
+    "playlist_queued": {
+        "title": "Playlist Queued",
+        "fields": {
+          "songs": "Songs",
+          "duration": "Duration"
+        }
+    },
+    "song_queued": {
+      "title": "Song Queued",
+      "duration": "Duration",
+      "position": "Queue Position",
+      "requested_by": "Requested by"
+    },
+    "help": {
+      "intro": {
+        "title": "Musyk - A Music Bot",
+        "description": "Musyk is a Discord bot that allows you to play music on your server.\n\n With Musyk, you can play music from Youtube, Spotify, and SoundCloud."
+      },
+      "playing_music": {
+        "title": "Playing Music",
+        "description": "To play music, use the command '.play <song name / url>'. Musyk will join your voice channel and start playing the requested song.\n\nMusyk will automatically search for the requested song on Youtube if no URL is provided. If you want to search on a specific platform, use the following parameters:\n\n**-yt** : Search on Youtube\n**-sp** : Search on Spotify\n**-sc** : Search on SoundCloud\n\nFor instance, '.play -yt Never Gonna Give You Up ' will search for 'Never Gonna Give You Up' on Youtube."
+      },
+      "commands": {
+        "title": "Commands",
+        "description": "Musyk commands start with the default prefix '.'. This prefix can be changed with the slash command '/prefix'. Available commands are listed below.\n\n**/prefix <new prefix> ** : Set a new command prefix for this server. If 'current' or 'curr' is provided this command will display the current prefix. \n\n**.play/.p <song name / url>** : Play a song/playlist or add it to the music queue.\n\n**.stop**: Stop the current playback and clear the music queue.\n\n**.clear**: Clear the music queue.\n\n**.disconnect/.leave/.dc**: Disconnect the bot from the voice channel.\n\n**.skip**: Skip the currently playing song and play the next song in the queue.\n\n**.swap <Queue Position 1> <Queue Position 2>**: Swap the position of two songs in the queue.\n\n**.progress**: Show the progress bar of the current song.\n\n**.pause**: Pause the current playback.\n\n**.resume**: Resume the paused playback.\n\n**.queue**: Shows the current song queue.\n\n**.seek <timestamp>**: skip or rewind to a timestamp in the song. Format is hh:mm:ss, (zero values before first non-zero value can be omitted)\n\n**.volume <volume>**: Adjust the volume of the playback. If no arguments are provided shows current volume \n\n**.remove <Queue Position>**: Remove a specific song from the music queue.\n\n**.shuffle**: Shuffle the order of songs in the music queue.\n\n**.skipto <Queue Position>**: Skip to a specific song in the music queue. Removes all the songs between the current one and the specified one from the queue.\n\n**.reverse**: Reverses the queue priority.\n\n**.jump <Queue Position>**: Jump to a specific position in the queue. Keeps all the songs between the current one and the specified one from the queue.\n\n**.cycle <mode>**: Toggle the repeat mode for the music queue. Available options are 'off' for no repetition, 'track' for current track repetition, 'queue' for queue cycling, and 'autoplay' for auto-search after the queue ends."
+      },
+      "buttons": {
+        "title": "Play Buttons",
+        "fields": {
+          "skip": "Skips the current song.",
+          "pause": "Pauses/Ressumes the player.",
+          "stop": "Stops the player.",
+          "increase_volume": "Increases the volume by 20%.",
+          "decrease_volume": "Decreases the volume by 20%.",
+          "shuffle": "Shuffles the queue.",
+          "queue": "Shows the current queue.",
+          "reverse": "Reverses the queue.",
+          "clear": "Clears the queue.",
+          "loop": "Toggles current track cycling.",
+          "autoplay": "Toggles autoplay mode.",
+          "dc": "Disconnects the bot from the voice channel."
+        }
+      },
+      "filters": {
+        "title": "Play Filters",
+        "description": "Through the **.filter <filter>** command, you can set filters for the audio player.\n\nAvailable filters are: bassboost, 8D, vaporwave, nightcore, phaser, tremolo, vibrato, reverse, treble, normalizer, normalizer2, surrounding, pulsator, subboost, karaoke, flanger, gate, hass, mcompand, mono, mstlr, mstrr, compress, expander, softlimiter, chorus, chorus2d, chorus3d, fadein, dim, and lofi.\n\nIf you pass 'disableall' as the argument, all filters will be disabled."
+      },
+      "additional_info": {
+        "title": "Additional Information",
+        "description": "Make sure Musyk has the necessary permissions to join voice channels and manage music playback.\n\nIf you find any bugs, you can open an issue in my [GitHub repository](https://github.com/BernardoPe/Musyk)."
+      }
+    }
+  },
+  "commands": {
+    "shared": {
+      "empty_queue": "The queue is empty.",
+      "queue_has_only_one_song": "The queue has only one song.",
+      "invalid_position": "Invalid position.",
+      "value_must_be_number": "Value must be a number."
+    },
+    "cycle": {
+      "loop_mode_off": "Loop mode is now off.",
+      "repeat_mode_on": "Repeating track activated.",
+      "looping_queue_on": "Looping queue enabled.",
+      "autoplay_on": "Autoplay mode activated.",
+      "current_mode": "Current mode: {mode}."
+    },
+    "pause": {
+      "already_paused": "The player is already paused.",
+      "paused": "Paused the player."
+    },
+    "resume": {
+      "already_resumed": "The player is already playing.",
+      "resumed": "Resumed the player."
+    },
+    "seek": {
+      "invalid_time": "**{time}** is not a valid timestamp in this track.",
+      "invalid_time_format": "**{time}** is not a valid timestamp format. Please use `hh:mm:ss`.",
+      "seeked": "Track playback time set to **{time}**."
+    },
+    "filter": {
+      "disabled_all": "Disabled all filters.",
+      "disabled_single": "Disabled **{filter}** filter.",
+      "enabled_single": "Enabled **{filter}** filter.",
+      "invalid_filter": "Invalid filter."
+    },
+    "remove": {
+        "invalid_index": "Invalid index, must be 1-{queueLength}.",
+        "removed": "Removed {song} from the queue."
+    },
+    "reverse": {
+        "reversed": "Reversed the queue."
+    },
+    "shuffle": {
+        "not_enough_songs": "Not enough songs to shuffle.",
+        "shuffled": "Shuffled the queue."
+    },
+    "swap": {
+      "invalid_position_1": "Invalid position 1 provided.",
+      "invalid_position_2": "Invalid position 2 provided.",
+      "swapped": "Swapped **{song1}** with **{song2}**."
+    },
+    "volume": {
+      "current_volume": "Volume is at {volume}%.",
+      "invalid_volume": "Invalid volume, must be 0-200.",
+      "volume_set": "Volume set to {volume}%."
+    },
+    "play": {
+      "provide_search": "Please provide a search query.",
+      "need_to_be_in_voice": "You need to be in a voice channel to play music.",
+      "need_permissions": "I need the permissions to join and speak in your voice channel.",
+      "already_connected": "I'm already connected to a different voice channel.",
+      "no_results": "No results found.",
+      "error": "An error occurred while playing the song."
+    }
+  }
+}

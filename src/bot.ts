@@ -1,45 +1,72 @@
 import { Player } from "discord-player"
 import { DefaultExtractors } from "@discord-player/extractor"
 import { YoutubeiExtractor } from "discord-player-youtubei"
-import { Client, GatewayIntentBits } from "discord.js"
-import { addEventListeners } from "./handlers/events.ts"
-import { MusicBot } from "./types.ts"
+import { Client, ClientEvents, GatewayIntentBits } from "discord.js"
 import "dotenv/config"
+import { BaseCommand } from "./types.ts"
+import { getAllFiles } from "./utils/configs/json.ts"
+import path from "path"
 import { logger } from "./utils/logging/logger.ts"
 
-const TOKEN = process.env.TOKEN
+class MusicBot {
+	client: Client
+	player: Player
+	commands: { [key: string]: BaseCommand } = {}
 
-const bot: MusicBot = new Client({
-	intents: [
-		GatewayIntentBits.Guilds,
-		GatewayIntentBits.GuildMessages,
-		GatewayIntentBits.MessageContent,
-		GatewayIntentBits.GuildMembers,
-		GatewayIntentBits.GuildVoiceStates,
-	],
-}) as MusicBot
+	constructor(token?: string) {
+		this.client = new Client({
+			intents: [
+				GatewayIntentBits.Guilds,
+				GatewayIntentBits.GuildMessages,
+				GatewayIntentBits.MessageContent,
+				GatewayIntentBits.GuildMembers,
+				GatewayIntentBits.GuildVoiceStates,
+			],
+		})
+		this.player = new Player(this.client, { skipFFmpeg: true })
+		this.registerCommands()
+			.then(() => this.registerExtractors())
+			.then(() => this.addEventListeners())
+			.then(() => this.client.login(token || process.env.TOKEN))
+	}
 
-bot.player = new Player(bot as Client, {
-	skipFFmpeg: true,
-})
+	private async addEventListeners() {
+		const files = getAllFiles(path.join(__dirname, "listeners"))
+		for (const file of files) {
+			const module = await import(file)
+			const event = module.default
+			if (file.includes("player")) {
+				this.player.events.on(event.name, (...args: any) => event.execute(...args, this))
+				logger.info(`[LISTENER]: ${event.name} registered`)
+			} else {
+				this.client.on(event.name as keyof ClientEvents, (...args: any) => event.execute(...args, this))
+				logger.info(`[LISTENER]: ${event.name} registered`)
+			}
+		}
+	}
 
-addEventListeners(bot).then(async () => {
-	await bot.player.extractors.register(YoutubeiExtractor, {
-		overrideBridgeMode: "yt",
-	})
+	private async registerCommands() {
+		const commands: { [key: string]: BaseCommand } = {}
+		const commandFiles: string[] = getAllFiles(path.join(__dirname, "commands"))
+		for (const file of commandFiles) {
+			const module = await import(file)
+			const command: BaseCommand = module.default
+			command.aliases.forEach((alias) => (commands[alias] = command))
+			logger.info(`[COMMAND]: ${command.name} registered`)
+		}
+		this.commands = commands
+	}
 
-	logger.info("Registered YoutubeiExtractor")
+	private async registerExtractors() {
+		await this.player.extractors.register(YoutubeiExtractor, {
+			overrideBridgeMode: "yt",
+		})
+		logger.info("[EXTRACTORS]: Youtubei extractor registered")
+		await this.player.extractors.loadMulti(DefaultExtractors)
+		logger.info("[EXTRACTORS]: Default extractors registered")
+	}
+}
 
-	await bot.player.extractors.loadMulti(DefaultExtractors)
-
-	logger.info("Registered DefaultExtractors")
-
-	await bot.login(TOKEN)
-})
-
-// generateOauthTokens() // Run this once to generate the necessary tokens
-
-// Handle uncaught exceptions and unhandled promise rejections
 process.on("uncaughtException", (error) => {
 	console.error("There was an uncaught error", error, error.stack)
 })
@@ -47,3 +74,5 @@ process.on("uncaughtException", (error) => {
 process.on("unhandledRejection", (reason, promise) => {
 	console.error("Unhandled Rejection at:", promise)
 })
+
+export default new MusicBot()

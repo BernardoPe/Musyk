@@ -5,6 +5,7 @@ import { sendEmbed } from "../../../utils/embeds/channels.ts"
 import { GuildTextBasedChannel } from "discord.js"
 import { errorEmbed, successEmbed } from "../../../utils/embeds/status.ts"
 import { updatePlayer } from "../../../utils/embeds/player/playing.ts"
+import langs from "../../../langs"
 
 class ReverseCommand implements PlayerCommand {
 	aliases = ["reverse"]
@@ -17,7 +18,7 @@ class ReverseCommand implements PlayerCommand {
 
 	execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel) {
 		if (serverQueue.isEmpty()) {
-			const embed = errorEmbed(null, "Queue is empty")
+			const embed = errorEmbed(null, langs.en.commands.shared.empty_queue)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}

@@ -5,6 +5,7 @@ import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
 import { createQueueEmbed } from "../../../utils/embeds/player/queue.ts"
 import { errorEmbed } from "../../../utils/embeds/status.ts"
+import langs from "../../../langs"
 
 class QueueCommand implements QueueCommand {
 	public aliases = ["queue"]
@@ -17,7 +18,7 @@ class QueueCommand implements QueueCommand {
 
 	public execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel) {
 		if (serverQueue.isEmpty()) {
-			const embed = errorEmbed(null, "The queue is empty")
+			const embed = errorEmbed(null, langs.en.commands.shared.empty_queue)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}

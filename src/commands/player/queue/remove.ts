@@ -4,6 +4,7 @@ import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
 import { errorEmbed, successEmbed } from "../../../utils/embeds/status.ts"
 import { updatePlayer } from "../../../utils/embeds/player/playing.ts"
+import langs from "../../../langs"
 
 class RemoveCommand implements PlayerCommand {
 	public aliases = ["remove"]
@@ -17,18 +18,24 @@ class RemoveCommand implements PlayerCommand {
 	public execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel, args: string[]) {
 		const value = parseInt(args[1])
 		if (isNaN(value)) {
-			const embed = errorEmbed(null, "Value must be a number")
+			const embed = errorEmbed(null, langs.en.commands.shared.value_must_be_number)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 		const tracks = serverQueue.tracks.toArray()
 		if (value < 1 || value > tracks.length) {
-			const embed = errorEmbed(null, `Invalid number, must be 1-${tracks.length}`)
+			const embed = errorEmbed(
+				null,
+				langs.en.commands.remove.invalid_index.replace("{queueLength}", tracks.length.toString())
+			)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 		const song = serverQueue.node.remove(tracks[value - 1])
-		const embed = successEmbed(null, `Removed [${song!.title}](${song!.url}) from the queue`)
+		const embed = successEmbed(
+			null,
+			langs.en.commands.remove.invalid_index.replace("{songTitle}", `[${song!.title}](${song!.url})`)
+		)
 		updatePlayer(serverQueue)
 		sendEmbed(channel, { embeds: [embed] }, 20000)
 		return
