@@ -31,7 +31,7 @@ function updatePlayer(queue: GuildQueue<QueueMetadata>) {
 
 	data.edit({
 		embeds: [embed],
-	}).then(() => {
+	}).finally(() => {
 		queue.metadata.updatingPlayer = false
 	})
 }
