@@ -4,7 +4,7 @@ import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
 import { errorEmbed, successEmbed } from "../../../utils/embeds/status.ts"
 import { updatePlayer } from "../../../utils/embeds/player/playing.ts"
-import langs from "../../../langs"
+import { Language } from "../../../langs"
 
 class RemoveCommand implements PlayerCommand {
 	public aliases = ["remove"]
@@ -15,10 +15,15 @@ class RemoveCommand implements PlayerCommand {
 	public msg: string | null = null
 	public user: string | null = null
 
-	public execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel, args: string[]) {
+	public execute(
+		serverQueue: GuildQueue<QueueMetadata>,
+		channel: GuildTextBasedChannel,
+		args: string[],
+		lang: Language
+	) {
 		const value = parseInt(args[1])
 		if (isNaN(value)) {
-			const embed = errorEmbed(null, langs.en.commands.shared.value_must_be_number)
+			const embed = errorEmbed(null, lang.commands.shared.value_must_be_number)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
@@ -26,7 +31,7 @@ class RemoveCommand implements PlayerCommand {
 		if (value < 1 || value > tracks.length) {
 			const embed = errorEmbed(
 				null,
-				langs.en.commands.remove.invalid_index.replace("{queueLength}", tracks.length.toString())
+				lang.commands.remove.invalid_index.replace("{queueLength}", tracks.length.toString())
 			)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
@@ -34,9 +39,9 @@ class RemoveCommand implements PlayerCommand {
 		const song = serverQueue.node.remove(tracks[value - 1])
 		const embed = successEmbed(
 			null,
-			langs.en.commands.remove.invalid_index.replace("{songTitle}", `[${song!.title}](${song!.url})`)
+			lang.commands.remove.invalid_index.replace("{songTitle}", `[${song!.title}](${song!.url})`)
 		)
-		updatePlayer(serverQueue)
+		updatePlayer(serverQueue, lang)
 		sendEmbed(channel, { embeds: [embed] }, 20000)
 		return
 	}

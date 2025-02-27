@@ -1,50 +1,61 @@
 import { Snowflake } from "discord.js"
 import { ServerPrefix } from "../../types.ts"
-import { saveJsonToFile } from "./json.ts"
 import "dotenv/config"
-import { Util } from "discord-player"
 import fs from "fs"
 import path from "path"
+import { Language } from "../../langs"
 
 const defaultPrefix: ServerPrefix = process.env.BOT_PREFIX || "."
+const defaultLang: string = process.env.DEFAULT_LANG || "en"
 const admins: Array<Snowflake> = (process.env.ADMINS || "").split(",")
 
+const serverConfigsPath = path.join(__dirname, "../../servers.json")
+const langsPath = path.join(__dirname, "../../langs")
+
+type ServerConfig = {
+    prefix: ServerPrefix;
+    lang: string;
+};
+
+type ServerConfigs = {
+    [serverId: string]: ServerConfig;
+};
+
 function getServerPrefix(serverID: Snowflake): ServerPrefix {
-	const serverConfigs = require("../../servers.json")
-	for (const i in serverConfigs) {
-		if (serverID === serverConfigs[i].id) return serverConfigs[i].prefix
-	}
-	return defaultPrefix
+	const serverConfigs: ServerConfigs = JSON.parse(fs.readFileSync(serverConfigsPath, "utf-8"))
+	return serverConfigs[serverID]?.prefix || defaultPrefix
 }
 
 async function setNewPrefix(serverID: Snowflake, prefix: ServerPrefix) {
-	const filePath = path.resolve(__dirname, "../../servers.json")
-	const lockFilePath = `${filePath}.lock`
+	await doFileTransaction(serverConfigsPath, (serverConfigs) => {
+		serverConfigs[serverID] = { ...serverConfigs[serverID], prefix: prefix }
+		return serverConfigs
+	})
+}
 
-	while (fs.existsSync(lockFilePath)) {
-		await Util.wait(1)
-	}
+function getLang(serverId: Snowflake): Language {
+	const serverConfigs = JSON.parse(fs.readFileSync(serverConfigsPath, "utf-8"))
+	const lang = serverConfigs[serverId]?.lang || defaultLang
+	return require(`${langsPath}/${lang}.json`)
+}
 
-	fs.writeFileSync(lockFilePath, "locked")
+async function setNewLang(serverId: Snowflake, lang: string) {
+	await doFileTransaction(serverConfigsPath, (serverConfigs) => {
+		serverConfigs[serverId] = { ...serverConfigs[serverId], lang: lang }
+		return serverConfigs
+	})
+}
 
-	try {
-		const serverConfigs = require(filePath)
-		for (const i in serverConfigs) {
-			if (serverID === serverConfigs[i].id) {
-				serverConfigs[i].prefix = prefix
-				saveJsonToFile(filePath, JSON.stringify(serverConfigs))
-				return
-			}
-		}
-		serverConfigs.push({ id: serverID, prefix: prefix })
-		saveJsonToFile(filePath, JSON.stringify(serverConfigs))
-	} finally {
-		fs.unlinkSync(lockFilePath)
-	}
+type FileTransactionCallback = (file: any) => any;
+
+async function doFileTransaction(path: string, callback: FileTransactionCallback) {
+	const file = JSON.parse(fs.readFileSync(path, "utf-8"))
+	const res = callback(file)
+	fs.writeFileSync(path, JSON.stringify(res, null, 2))
 }
 
 function getAdmins(): Array<Snowflake> {
 	return admins
 }
 
-export { getServerPrefix, getAdmins, setNewPrefix }
+export { getServerPrefix, getAdmins, setNewPrefix, getLang, setNewLang }

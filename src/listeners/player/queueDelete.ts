@@ -2,6 +2,7 @@ import { GuildQueueEventHandler, QueueMetadata } from "../../types.ts"
 import { sendEmbed, leftEmbed } from "../../utils/embeds/channels.ts"
 import { GuildQueue, GuildQueueEvent } from "discord-player"
 import { Util } from "discord-player"
+import { getLang } from "../../utils/configs/server.ts"
 
 class QueueDeleteHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.QueueDelete
@@ -10,6 +11,7 @@ class QueueDeleteHandler implements GuildQueueEventHandler {
 		const channel = queue.metadata.textChannel
 		const col = queue.metadata.collector
 		const message = queue.metadata.playerEmbed
+		const lang = getLang(queue.guild.id)
 
 		while (queue.metadata.updatingPlayer) await Util.wait(5)
 
@@ -23,7 +25,7 @@ class QueueDeleteHandler implements GuildQueueEventHandler {
 			queue.metadata.playerEmbed = null
 		}
 
-		const embed = leftEmbed()
+		const embed = leftEmbed(lang)
 
 		sendEmbed(channel!, { embeds: [embed] }, 20000)
 	}

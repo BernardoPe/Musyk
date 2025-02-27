@@ -1,7 +1,7 @@
 import { Colors, EmbedBuilder, Snowflake } from "discord.js"
 import { GuildQueue, RawTrackData, Track } from "discord-player"
 import { QueueMetadata } from "../../../types.ts"
-import langs from "../../../langs"
+import { Language } from "../../../langs"
 
 function getEmoji(source: string, embed?: EmbedBuilder): string {
 	let emoji: Snowflake
@@ -18,8 +18,8 @@ function getEmoji(source: string, embed?: EmbedBuilder): string {
 	return emoji
 }
 
-function updatePlayer(queue: GuildQueue<QueueMetadata>) {
-	const embed = nowPlayingEmbed(queue)
+function updatePlayer(queue: GuildQueue<QueueMetadata>, lang: Language) {
+	const embed = nowPlayingEmbed(queue, lang)
 
 	if (!queue.metadata.playerEmbed || queue.metadata.updatingPlayer || !queue.metadata.playerEmbed.editable) {
 		return
@@ -36,28 +36,28 @@ function updatePlayer(queue: GuildQueue<QueueMetadata>) {
 	})
 }
 
-function nowPlayingEmbed(queue: GuildQueue): EmbedBuilder {
+function nowPlayingEmbed(queue: GuildQueue, lang: Language): EmbedBuilder {
 	const embed = new EmbedBuilder()
 	const emoji = getEmoji(queue.currentTrack!.source, embed)
 	const song: Track<RawTrackData> = queue.currentTrack as Track<RawTrackData>
 
 	embed
-		.setTitle(langs.en.embeds.now_playing.title)
+		.setTitle(lang.embeds.now_playing.title)
 		.setDescription(`${emoji} **[${song.cleanTitle}](${song.url})**`)
 		.setThumbnail(`${song.thumbnail}`)
 		.addFields(
 			{
-				name: langs.en.embeds.now_playing.fields.duration,
+				name: lang.embeds.now_playing.fields.duration,
 				value: `${song.metadata!.live ? "Live" : song.duration.padStart(5, "0")}`,
 				inline: true,
 			},
 			{
-				name: langs.en.embeds.now_playing.fields.requested_by,
+				name: lang.embeds.now_playing.fields.requested_by,
 				value: `${song.requestedBy}`,
 				inline: true,
 			},
 			{
-				name: langs.en.embeds.now_playing.fields.volume,
+				name: lang.embeds.now_playing.fields.volume,
 				value: `${queue.node.volume}%`,
 				inline: true,
 			}
@@ -66,17 +66,17 @@ function nowPlayingEmbed(queue: GuildQueue): EmbedBuilder {
 	if (queue.history.nextTrack) {
 		embed.addFields(
 			{
-				name: langs.en.embeds.now_playing.fields.songs_in_queue,
+				name: lang.embeds.now_playing.fields.songs_in_queue,
 				value: `${queue.size}`,
 				inline: true,
 			},
 			{
-				name: langs.en.embeds.now_playing.fields.duration,
+				name: lang.embeds.now_playing.fields.duration,
 				value: `${queue.durationFormatted}`,
 				inline: true,
 			},
 			{
-				name: langs.en.embeds.now_playing.fields.next_track,
+				name: lang.embeds.now_playing.fields.next_track,
 				value: `${getEmoji(queue.history.nextTrack.source)} **[${
 					queue.history.nextTrack.cleanTitle
 				}](${queue.history.nextTrack.url})**`,

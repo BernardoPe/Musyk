@@ -4,7 +4,7 @@ import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
 import { errorEmbed, successEmbed } from "../../../utils/embeds/status.ts"
 import { updatePlayer } from "../../../utils/embeds/player/playing.ts"
-import langs from "../../../langs"
+import { Language } from "../../../langs"
 
 class ShuffleCommand implements PlayerCommand {
 	public aliases = ["shuffle"]
@@ -15,18 +15,18 @@ class ShuffleCommand implements PlayerCommand {
 	public msg: string | null = null
 	public user: string | null = null
 
-	execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel) {
+	execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel, _args: string[], lang: Language) {
 		if (serverQueue.tracks.size < 2) {
-			const embed = errorEmbed(null, langs.en.commands.shuffle.not_enough_songs)
+			const embed = errorEmbed(null, lang.commands.shuffle.not_enough_songs)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
 		serverQueue.tracks.shuffle()
 
-		updatePlayer(serverQueue)
+		updatePlayer(serverQueue, lang)
 
-		const embed = successEmbed(null, langs.en.commands.shuffle.shuffled)
+		const embed = successEmbed(null, lang.commands.shuffle.shuffled)
 
 		sendEmbed(channel, { embeds: [embed] }, 20000)
 	}

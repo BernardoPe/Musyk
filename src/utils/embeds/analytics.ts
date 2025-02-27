@@ -1,59 +1,62 @@
 import { EmbedBuilder } from "discord.js"
 import { GuildQueueStatisticsMetadata } from "discord-player"
-import langs from "../../langs"
+import { Language } from "../../langs"
 
-function playerAnalyticsEmbed(stats: {
-    queuesCount: number;
-    queryCacheEnabled: boolean;
-    queues: GuildQueueStatisticsMetadata[];
-}): EmbedBuilder[] {
+function playerAnalyticsEmbed(
+	stats: {
+        queuesCount: number;
+        queryCacheEnabled: boolean;
+        queues: GuildQueueStatisticsMetadata[];
+    },
+	lang: Language
+): EmbedBuilder[] {
 	const globalInfo = new EmbedBuilder()
-	globalInfo.setTitle(langs.en.embeds.analytics.global_title)
-	globalInfo.setDescription(langs.en.embeds.analytics.global_description)
+	globalInfo.setTitle(lang.embeds.analytics.global_title)
+	globalInfo.setDescription(lang.embeds.analytics.global_description)
 	globalInfo.addFields({
-		name: langs.en.embeds.analytics.fields.players,
+		name: lang.embeds.analytics.fields.players,
 		value: stats.queuesCount.toString(),
 		inline: true,
 	})
-	const queuesInfo = queuesInfoEmbed(stats.queues)
+	const queuesInfo = queuesInfoEmbed(stats.queues, lang)
 	return [globalInfo, ...queuesInfo]
 }
 
-function queuesInfoEmbed(queues: GuildQueueStatisticsMetadata[]) {
+function queuesInfoEmbed(queues: GuildQueueStatisticsMetadata[], lang: Language) {
 	const embeds = []
 	let count = 1
 	for (const queue of queues) {
 		const queueInfo = new EmbedBuilder()
-		queueInfo.setTitle(langs.en.embeds.analytics.title)
-		queueInfo.setDescription(langs.en.embeds.analytics.description.replace("{guild}", `${count++}`))
+		queueInfo.setTitle(lang.embeds.analytics.title)
+		queueInfo.setDescription(lang.embeds.analytics.description.replace("{guild}", `${count++}`))
 		queueInfo.addFields(
 			{
-				name: langs.en.embeds.analytics.fields.event_loop_lag,
+				name: lang.embeds.analytics.fields.event_loop_lag,
 				value: queue.latency.eventLoop.toPrecision(2).toString(),
 				inline: true,
 			},
 			{
-				name: langs.en.embeds.analytics.fields.tracks_count,
+				name: lang.embeds.analytics.fields.tracks_count,
 				value: queue.tracksCount.toString(),
 				inline: true,
 			},
 			{
-				name: langs.en.embeds.analytics.fields.history_size,
+				name: lang.embeds.analytics.fields.history_size,
 				value: queue.historySize.toString(),
 				inline: true,
 			},
 			{
-				name: langs.en.embeds.analytics.fields.rss,
+				name: lang.embeds.analytics.fields.rss,
 				value: (queue.memoryUsage.rss / (1024 * 1024)).toFixed(2).toString(),
 				inline: true,
 			},
 			{
-				name: langs.en.embeds.analytics.fields.heap_total,
+				name: lang.embeds.analytics.fields.heap_total,
 				value: (queue.memoryUsage.heapTotal / (1024 * 1024)).toFixed(2).toString(),
 				inline: true,
 			},
 			{
-				name: langs.en.embeds.analytics.fields.heap_used,
+				name: lang.embeds.analytics.fields.heap_used,
 				value: (queue.memoryUsage.heapUsed / (1024 * 1024)).toFixed(2).toString(),
 				inline: true,
 			}

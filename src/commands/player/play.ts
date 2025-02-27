@@ -5,7 +5,7 @@ import { GuildQueue, SearchQueryType } from "discord-player"
 import { GuildTextBasedChannel, VoiceBasedChannel } from "discord.js"
 import { logger } from "../../utils/logging/logger.ts"
 import { errorEmbed } from "../../utils/embeds/status.ts"
-import langs from "../../langs"
+import { Language } from "../../langs"
 
 class PlayCommand implements BotCommand {
 	adminCommand: boolean = false
@@ -22,11 +22,11 @@ class PlayCommand implements BotCommand {
 		"-sc": "soundcloudSearch",
 	}
 
-	public async execute(bot: MusicBot, msg: GuildMessage, args: string[]) {
+	public async execute(bot: MusicBot, msg: GuildMessage, args: string[], lang: Language) {
 		const { channel } = msg
 
 		if (args.length === 1) {
-			const embed = errorEmbed(null, langs.en.commands.play.provide_search)
+			const embed = errorEmbed(null, lang.commands.play.provide_search)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
@@ -34,7 +34,7 @@ class PlayCommand implements BotCommand {
 		const voiceChannel = msg.member!.voice.channel
 
 		if (!voiceChannel) {
-			const embed = errorEmbed(null, langs.en.commands.play.need_to_be_in_voice)
+			const embed = errorEmbed(null, lang.commands.play.need_to_be_in_voice)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
@@ -42,7 +42,7 @@ class PlayCommand implements BotCommand {
 		const permissions = voiceChannel.permissionsFor(msg.client.user)!
 
 		if (!permissions.has("Connect") || !permissions.has("Speak")) {
-			const embed = errorEmbed(null, langs.en.commands.play.need_permissions)
+			const embed = errorEmbed(null, lang.commands.play.need_permissions)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
@@ -51,7 +51,7 @@ class PlayCommand implements BotCommand {
             bot.player.queues.get(msg.guild.id) || this.createQueue(bot, channel, voiceChannel)
 
 		if (queue.connection && queue.channel !== msg.member!.voice.channel) {
-			const embed = errorEmbed(null, langs.en.commands.play.already_connected)
+			const embed = errorEmbed(null, lang.commands.play.already_connected)
 			sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 			return
 		}
@@ -83,7 +83,7 @@ class PlayCommand implements BotCommand {
 		const song = result.tracks[0]
 
 		if (result.tracks.length === 0) {
-			const embed = errorEmbed(null, langs.en.commands.play.no_results)
+			const embed = errorEmbed(null, lang.commands.play.no_results)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
@@ -97,9 +97,8 @@ class PlayCommand implements BotCommand {
 				queue.addTrack(result.playlist)
 			}
 		} catch (e) {
-			console.log(e)
 			logger.error(e)
-			const embed = errorEmbed(null, langs.en.commands.play.error)
+			const embed = errorEmbed(null, lang.commands.play.error)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 		}
 	}

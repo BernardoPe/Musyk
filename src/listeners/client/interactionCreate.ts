@@ -2,12 +2,11 @@ import { BaseInteraction, ButtonInteraction, ChatInputCommandInteraction, Events
 import { ClientEventHandler, MusicBot, QueueMetadata, ServerPrefix } from "../../types.ts"
 import { handleCommand } from "../../handlers/commands.ts"
 import { GuildQueue, QueueRepeatMode, useQueue } from "discord-player"
-import { logger } from "../../utils/logging/logger.ts"
 import { errorEmbed, successEmbed } from "../../utils/embeds/status.ts"
 import { helpEmbeds } from "../../utils/embeds/help.ts"
 import { createLink } from "../../utils/embeds/links.ts"
-import { getServerPrefix, setNewPrefix } from "../../utils/configs/server.ts"
-import langs from "../../langs"
+import { getServerPrefix, setNewPrefix, getLang, setNewLang } from "../../utils/configs/server.ts"
+import { Language } from "../../langs"
 
 type ButtonCommand = (
     interaction: ButtonInteraction,
@@ -18,9 +17,9 @@ type ButtonCommand = (
 
 type TextCommand = (
     interaction: ChatInputCommandInteraction,
-    serverQueue: GuildQueue<QueueMetadata>,
     serverPrefix: ServerPrefix,
-    bot: MusicBot
+    bot: MusicBot,
+    lang: Language
 ) => void;
 
 class InteractionCreateHandler implements ClientEventHandler {
@@ -29,10 +28,11 @@ class InteractionCreateHandler implements ClientEventHandler {
 	public execute(interaction: BaseInteraction, bot: MusicBot) {
 		const serverPrefix = getServerPrefix(interaction.guild!.id)
 		const serverQueue: GuildQueue<QueueMetadata> | null = useQueue(interaction.guild!.id)
-		if (!serverQueue) return
+		const lang = getLang(interaction.guild!.id)
 		if (!interaction.isButton()) {
-			this.handleTextCommands(interaction as ChatInputCommandInteraction, serverQueue, serverPrefix, bot)
+			this.handleTextCommands(interaction as ChatInputCommandInteraction, serverPrefix, bot, lang)
 		} else {
+			if (!serverQueue) return
 			this.handleButtonCommands(interaction, serverQueue, serverPrefix, bot)
 		}
 	}
@@ -40,6 +40,7 @@ class InteractionCreateHandler implements ClientEventHandler {
 	private textCommands: { [key: string]: TextCommand } = {
 		help: this.helpCommand,
 		prefix: this.prefixCommand,
+		language: this.langCommand,
 	}
 
 	private buttonCommands: { [key: string]: ButtonCommand } = {
@@ -55,13 +56,13 @@ class InteractionCreateHandler implements ClientEventHandler {
 
 	private handleTextCommands(
 		interaction: ChatInputCommandInteraction,
-		serverQueue: GuildQueue<QueueMetadata>,
 		serverPrefix: ServerPrefix,
-		bot: MusicBot
+		bot: MusicBot,
+		lang: Language
 	) {
 		const { commandName } = interaction as ChatInputCommandInteraction
 		if (this.textCommands[commandName]) {
-			this.textCommands[commandName](interaction, serverQueue, serverPrefix, bot)
+			this.textCommands[commandName](interaction, serverPrefix, bot, lang)
 		}
 	}
 
@@ -82,9 +83,14 @@ class InteractionCreateHandler implements ClientEventHandler {
 		})
 	}
 
-	private async helpCommand(interaction: ChatInputCommandInteraction) {
-		const embed = helpEmbeds()
-		const link = createLink()
+	private async helpCommand(
+		interaction: ChatInputCommandInteraction,
+		_serverPrefix: ServerPrefix,
+		_bot: MusicBot,
+		lang: Language
+	) {
+		const embed = helpEmbeds(lang)
+		const link = createLink(lang)
 		await interaction.reply({
 			embeds: embed,
 			components: [link],
@@ -94,25 +100,52 @@ class InteractionCreateHandler implements ClientEventHandler {
 
 	private async prefixCommand(
 		interaction: ChatInputCommandInteraction,
-		serverQueue: GuildQueue<QueueMetadata>,
-		serverPrefix: ServerPrefix
+		serverPrefix: ServerPrefix,
+		_bot: MusicBot,
+		lang: Language
 	) {
 		const newPrefix = interaction.options.get("prefix")!.value as string
 
 		if (newPrefix === "current" || newPrefix === "curr") {
-			const embed = successEmbed(null, langs.en.shared.current_prefix.replace("{prefix}", serverPrefix))
-			await interaction.reply({ embeds: [embed], flags: "Ephemeral" })
+			const embed = successEmbed(null, lang.shared.current_prefix.replace("{prefix}", serverPrefix))
+			return await interaction.reply({ embeds: [embed], flags: "Ephemeral" })
 		}
 
 		try {
-			setNewPrefix(interaction.guild!.id, newPrefix)
+			await setNewPrefix(interaction.guild!.id, newPrefix)
 		} catch (e) {
-			const embed = errorEmbed(null, langs.en.shared.set_prefix_error)
+			const embed = errorEmbed(null, lang.shared.set_prefix_error)
 			await interaction.reply({ embeds: [embed], flags: "Ephemeral" })
-			logger.error(e)
+			return console.error(e)
 		}
 
-		const embed = successEmbed(null, langs.en.shared.set_prefix.replace("{prefix}", newPrefix))
+		const embed = successEmbed(null, lang.shared.set_prefix.replace("{prefix}", newPrefix))
+		await interaction.reply({ embeds: [embed] })
+	}
+
+	private async langCommand(
+		interaction: ChatInputCommandInteraction,
+		_serverPrefix: ServerPrefix,
+		_bot: MusicBot,
+		lang: Language
+	) {
+		const newLang = interaction.options.getString("language")!
+
+		if (newLang === "current" || newLang === "curr") {
+			const currentLang = getLang(interaction.guild!.id)
+			const embed = successEmbed(null, lang.shared.current_lang.replace("{lang}", currentLang.tag))
+			return await interaction.reply({ embeds: [embed], flags: "Ephemeral" })
+		}
+
+		try {
+			await setNewLang(interaction.guild!.id, newLang)
+		} catch (e) {
+			const embed = errorEmbed(null, lang.shared.set_lang_error)
+			await interaction.reply({ embeds: [embed], flags: "Ephemeral" })
+			return console.error(e)
+		}
+
+		const embed = successEmbed(null, lang.shared.set_lang.replace("{lang}", newLang))
 		await interaction.reply({ embeds: [embed] })
 	}
 
@@ -126,12 +159,12 @@ class InteractionCreateHandler implements ClientEventHandler {
 		handleCommand(interaction, [`${serverPrefix}${command}`], bot)
 	}
 
-	private increaseVolumeCommand(interaction: ButtonInteraction, serverQueue: GuildQueue<QueueMetadata>) {
+	private increaseVolumeCommand(_interaction: ButtonInteraction, serverQueue: GuildQueue<QueueMetadata>) {
 		const newVolume = serverQueue.node.volume === 200 ? 200 : serverQueue.node.volume + 20
 		serverQueue.node.setVolume(newVolume)
 	}
 
-	private decreaseVolumeCommand(interaction: ButtonInteraction, serverQueue: GuildQueue<QueueMetadata>) {
+	private decreaseVolumeCommand(_interaction: ButtonInteraction, serverQueue: GuildQueue<QueueMetadata>) {
 		const newVolume = serverQueue.node.volume === 0 ? 0 : serverQueue.node.volume - 20
 		serverQueue.node.setVolume(newVolume)
 	}
@@ -158,7 +191,7 @@ class InteractionCreateHandler implements ClientEventHandler {
 
 	private clearCommand(
 		interaction: ButtonInteraction,
-		serverQueue: GuildQueue<QueueMetadata> | null,
+		_serverQueue: GuildQueue<QueueMetadata> | null,
 		serverPrefix: ServerPrefix,
 		bot: MusicBot
 	) {
@@ -167,7 +200,7 @@ class InteractionCreateHandler implements ClientEventHandler {
 
 	private disconnectCommand(
 		interaction: ButtonInteraction,
-		serverQueue: GuildQueue<QueueMetadata> | null,
+		_serverQueue: GuildQueue<QueueMetadata> | null,
 		serverPrefix: ServerPrefix,
 		bot: MusicBot
 	) {

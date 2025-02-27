@@ -8,6 +8,7 @@ import {
 	VoiceBasedChannel,
 } from "discord.js"
 import { GuildQueue, GuildQueueEvent, Player } from "discord-player"
+import { Language } from "./langs"
 
 /**
  * Represents the discord bot client, extended with the discord-player player
@@ -73,11 +74,16 @@ interface BaseCommand {
 }
 
 interface PlayerCommand extends BaseCommand {
-    execute(serverQueue: GuildQueue<QueueMetadata> | null, channel: GuildTextBasedChannel, args: string[]): void;
+    execute(
+        serverQueue: GuildQueue<QueueMetadata> | null,
+        channel: GuildTextBasedChannel,
+        args: string[],
+        lang: Language
+    ): void;
 }
 
 interface BotCommand extends BaseCommand {
-    execute(bot: MusicBot, msg: GuildMessage, args: string[]): void;
+    execute(bot: MusicBot, msg: GuildMessage, args: string[], lang: Language): void;
 }
 
 /**

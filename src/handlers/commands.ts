@@ -4,8 +4,7 @@ import { ButtonInteraction, GuildTextBasedChannel, Message } from "discord.js"
 import { BotCommand, GuildMessage, MusicBot, PlayerCommand, QueueMetadata } from "../types.ts"
 import { GuildQueue, useQueue } from "discord-player"
 import { errorEmbed } from "../utils/embeds/status.ts"
-import { getAdmins, getServerPrefix } from "../utils/configs/server.ts"
-import langs from "../langs"
+import { getAdmins, getLang, getServerPrefix } from "../utils/configs/server.ts"
 
 export function handleCommand(msg: GuildMessage | ButtonInteraction, args: string[], bot: MusicBot) {
 	const prefix = getServerPrefix(msg.guild!.id)
@@ -33,14 +32,16 @@ export function handleCommand(msg: GuildMessage | ButtonInteraction, args: strin
 
 		logger.info(`[COMMAND]: ${command.name} | ${command.msg} | User: ${command.user} | Guild: ${command.guild}`)
 
+		const lang = getLang(msg.guild!.id)
+
 		if (command.requiresPlayer) {
 			if (!serverQueue || !serverQueue.isPlaying()) {
-				const embed = errorEmbed(null, langs.en.shared.not_playing)
+				const embed = errorEmbed(null, lang.shared.not_playing)
 				return sendEmbed(channel, { embeds: [embed] }, 20000)
 			}
-			(command as PlayerCommand).execute(serverQueue!, channel, args)
+			(command as PlayerCommand).execute(serverQueue!, channel, args, lang)
 		} else {
-			(command as BotCommand).execute(bot!, msg as GuildMessage, args)
+			(command as BotCommand).execute(bot!, msg as GuildMessage, args, lang)
 		}
 	}
 }

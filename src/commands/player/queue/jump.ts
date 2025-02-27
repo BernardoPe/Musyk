@@ -3,7 +3,7 @@ import { QueueMetadata, PlayerCommand } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
 import { errorEmbed } from "../../../utils/embeds/status.ts"
-import langs from "../../../langs"
+import { Language } from "../../../langs"
 
 class JumpCommand implements PlayerCommand {
 	public aliases = ["jump"]
@@ -14,11 +14,16 @@ class JumpCommand implements PlayerCommand {
 	public guild = null
 	public msg = null
 
-	public execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel, args: string[]) {
+	public execute(
+		serverQueue: GuildQueue<QueueMetadata>,
+		channel: GuildTextBasedChannel,
+		args: string[],
+		lang: Language
+	) {
 		const jumpPosition = parseInt(args[1])
 
 		if (isNaN(jumpPosition) || jumpPosition < 1 || jumpPosition > serverQueue.tracks.size) {
-			const embed = errorEmbed(null, langs.en.commands.jump.invalid_index)
+			const embed = errorEmbed(null, lang.commands.jump.invalid_index)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}

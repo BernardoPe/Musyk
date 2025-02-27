@@ -1,11 +1,8 @@
 import fs from "fs"
-import { logger } from "../logging/logger.ts"
 import path from "path"
 
 function saveJsonToFile(filename: string, json: string) {
-	fs.writeFile(filename, json, function (err) {
-		if (err) logger.error(err)
-	})
+	fs.writeFileSync(filename, json)
 }
 
 function getAllFiles(folderPath: string): string[] {

@@ -5,7 +5,7 @@ import { sendEmbed } from "../../../utils/embeds/channels.ts"
 import { GuildTextBasedChannel } from "discord.js"
 import { errorEmbed, successEmbed } from "../../../utils/embeds/status.ts"
 import { updatePlayer } from "../../../utils/embeds/player/playing.ts"
-import langs from "../../../langs"
+import { Language } from "../../../langs"
 
 class SwapCommand implements PlayerCommand {
 	public aliases = ["swap"]
@@ -16,18 +16,23 @@ class SwapCommand implements PlayerCommand {
 	public guild = null
 	public msg = null
 
-	public execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel, args: string[]) {
+	public execute(
+		serverQueue: GuildQueue<QueueMetadata>,
+		channel: GuildTextBasedChannel,
+		args: string[],
+		lang: Language
+	) {
 		const swapPos1 = parseInt(args[1])
 		const swapPos2 = parseInt(args[2])
 
 		if (isNaN(swapPos1) || swapPos1 < 1 || swapPos1 > serverQueue.tracks.size) {
-			const embed = errorEmbed(null, langs.en.commands.swap.invalid_position_1)
+			const embed = errorEmbed(null, lang.commands.swap.invalid_position_1)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
 		if (isNaN(swapPos2) || swapPos2 < 1 || swapPos2 > serverQueue.tracks.size) {
-			const embed = errorEmbed(null, langs.en.commands.swap.invalid_position_2)
+			const embed = errorEmbed(null, lang.commands.swap.invalid_position_2)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
@@ -40,13 +45,13 @@ class SwapCommand implements PlayerCommand {
 
 		const embed = successEmbed(
 			null,
-			langs.en.commands.swap.swapped
+			lang.commands.swap.swapped
 				.replace("{song1}", `[${song1.cleanTitle}](${song1.url})`)
 				.replace("{song2}", `[${song2.cleanTitle}](${song2.url})`)
 		)
 		sendEmbed(channel, { embeds: [embed] }, 20000)
 
-		if (swapPos1 === 1 || swapPos2 === 1) updatePlayer(serverQueue)
+		if (swapPos1 === 1 || swapPos2 === 1) updatePlayer(serverQueue, lang)
 	}
 }
 

@@ -5,7 +5,7 @@ import { sendEmbed } from "../../../utils/embeds/channels.ts"
 import { GuildTextBasedChannel } from "discord.js"
 import { errorEmbed, successEmbed } from "../../../utils/embeds/status.ts"
 import { updatePlayer } from "../../../utils/embeds/player/playing.ts"
-import langs from "../../../langs"
+import { Language } from "../../../langs"
 
 class ReverseCommand implements PlayerCommand {
 	aliases = ["reverse"]
@@ -16,9 +16,9 @@ class ReverseCommand implements PlayerCommand {
 	msg = null
 	user = null
 
-	execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel) {
+	execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel, _args: string[], lang: Language) {
 		if (serverQueue.isEmpty()) {
-			const embed = errorEmbed(null, langs.en.commands.shared.empty_queue)
+			const embed = errorEmbed(null, lang.commands.shared.empty_queue)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
@@ -28,7 +28,7 @@ class ReverseCommand implements PlayerCommand {
 			return
 		}
 		this.reverse(serverQueue, serverQueue.tracks.toArray())
-		updatePlayer(serverQueue)
+		updatePlayer(serverQueue, lang)
 		const embed = successEmbed(null, "Reversed the queue")
 		sendEmbed(channel, { embeds: [embed] }, 20000)
 		return

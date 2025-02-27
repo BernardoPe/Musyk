@@ -1,6 +1,7 @@
 {
     "scripts": {
         "start": "ts-node src/bot.ts",
+        "deploy-commands": "ts-node src/slash-command-deployment.ts",
         "lint": "eslint src/**/*.ts",
         "lint:fix": "eslint src/**/*.ts --fix",
         "prettier": "prettier --write src/**/*.ts",

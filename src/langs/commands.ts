@@ -19,6 +19,8 @@ interface SharedCommandLangConfig {
     empty_queue: string;
     invalid_position: string;
     value_must_be_number: string;
+    current_prefix: string;
+    current_lang: string;
 }
 
 interface CycleLangConfig {
