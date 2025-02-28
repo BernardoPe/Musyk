@@ -145,7 +145,7 @@
     },
     "remove": {
       "invalid_index": "Índice inválido, deve ser 1-{queueLength}.",
-      "removed": "Removido {song} da fila."
+      "removed": "{song} removida da fila."
     },
     "reverse": {
       "reversed": "Fila invertida."
@@ -157,7 +157,7 @@
     "swap": {
       "invalid_position_1": "Posição 1 fornecida inválida.",
       "invalid_position_2": "Posição 2 fornecida inválida.",
-      "swapped": "Trocado **{song1}** com **{song2}**."
+      "swapped": "**{song1}** e **{song2}** trocadas na fila."
     },
     "volume": {
       "current_volume": "O volume está em {volume}%.",
@@ -166,7 +166,7 @@
     },
     "play": {
       "provide_search": "Por favor forneça argumentos de pesquisa.",
-      "need_to_be_in_voice": "Precisa estar num canal de voz para tocar música.",
+      "need_to_be_in_voice": "Precisa de estar num canal de voz para tocar música.",
       "need_permissions": "Preciso de permissões para entrar e falar no seu canal de voz.",
       "already_connected": "Já estou conectado a um canal de voz diferente.",
       "no_results": "Nenhum resultado encontrado.",

@@ -1,10 +1,6 @@
 import fs from "fs"
 import path from "path"
 
-function saveJsonToFile(filename: string, json: string) {
-	fs.writeFileSync(filename, json)
-}
-
 function getAllFiles(folderPath: string): string[] {
 	let files: string[] = []
 	const items = fs.readdirSync(folderPath)
@@ -22,4 +18,4 @@ function getAllFiles(folderPath: string): string[] {
 	return files
 }
 
-export { saveJsonToFile, getAllFiles }
+export { getAllFiles }

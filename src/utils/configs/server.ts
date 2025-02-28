@@ -4,13 +4,23 @@ import "dotenv/config"
 import fs from "fs"
 import path from "path"
 import { Language } from "../../langs"
+import { getAllFiles } from "./json.ts"
 
 const defaultPrefix: ServerPrefix = process.env.BOT_PREFIX || "."
 const defaultLang: string = process.env.DEFAULT_LANG || "en"
 const admins: Array<Snowflake> = (process.env.ADMINS || "").split(",")
 
 const serverConfigsPath = path.join(__dirname, "../../servers.json")
-const langsPath = path.join(__dirname, "../../langs")
+const langs: { [key: string]: Language } = {};
+
+(async () => {
+	getAllFiles(path.join(__dirname, "../../langs"))
+		.filter((file) => file.endsWith(".json"))
+		.map((file) => require(file))
+		.forEach((lang) => {
+			langs[lang.tag] = lang
+		})
+})()
 
 type ServerConfig = {
     prefix: ServerPrefix;
@@ -36,7 +46,7 @@ async function setNewPrefix(serverID: Snowflake, prefix: ServerPrefix) {
 function getLang(serverId: Snowflake): Language {
 	const serverConfigs = JSON.parse(fs.readFileSync(serverConfigsPath, "utf-8"))
 	const lang = serverConfigs[serverId]?.lang || defaultLang
-	return require(`${langsPath}/${lang}.json`)
+	return langs[lang]
 }
 
 async function setNewLang(serverId: Snowflake, lang: string) {
