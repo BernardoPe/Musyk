@@ -9,7 +9,7 @@ datasource db {
 
 model Server {
   serverId    String   @id
-  prefix      String   @default("!")
+  prefix      String   @default(".")
   lang        String   @default("en")
   playerConfig PlayerConfig?
 }
