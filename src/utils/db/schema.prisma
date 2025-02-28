@@ -25,7 +25,7 @@ model PlayerConfig {
   serverId    String?  @unique
   user        User?    @relation(fields: [userId], references: [userId])
   userId      String?  @unique
-  searchEngine String  @default("youtube")
+  searchEngine String  @default("auto")
   volume      Int      @default(100)
   leaveOnEnd  Boolean  @default(true)
   leaveOnEndCooldown Int @default(300)

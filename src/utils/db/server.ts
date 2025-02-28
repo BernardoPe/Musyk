@@ -7,7 +7,7 @@ import { Language } from "../../langs"
 import { getAllFiles } from "../configs/json.ts"
 
 const defaultPlayerConfig = {
-	searchEngine: "youtube",
+	searchEngine: "auto",
 	volume: 100,
 	leaveOnEnd: false,
 	leaveOnEndCooldown: 300000,
