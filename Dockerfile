@@ -17,6 +17,9 @@ RUN npm install --verbose
 # Copy the rest of the application code to the working directory
 COPY . .
 
+# Generate Prisma client
+RUN npx prisma generate --no-engine --schema ./src/utils/db/schema.prisma
+
 # Command to run the application
 CMD ["npm", "start"]
 

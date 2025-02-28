@@ -5,15 +5,15 @@ import { ButtonInteraction, InteractionCollector } from "discord.js"
 import { createButtons } from "../../utils/embeds/buttons.ts"
 import { nowPlayingEmbed, updatePlayer } from "../../utils/embeds/player/playing.ts"
 import { sendEmbed } from "../../utils/embeds/channels.ts"
-import { getLang } from "../../utils/configs/server.ts"
+import { getOrCreateServerInfo } from "../../utils/db/server.ts"
 
 class PlayerStartHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.PlayerStart
 
 	public async execute(queue: GuildQueue<QueueMetadata>) {
-		const lang = getLang(queue.guild.id)
+		const server = await getOrCreateServerInfo(queue.guild)
 		if (!queue.metadata.playerEmbed) {
-			const embed = nowPlayingEmbed(queue, lang)
+			const embed = nowPlayingEmbed(queue, server.lang)
 			const buttons = createButtons()
 
 			const data = await sendEmbed(queue.metadata.textChannel!, {
@@ -31,7 +31,7 @@ class PlayerStartHandler implements GuildQueueEventHandler {
 				updatingPlayer: queue.metadata.updatingPlayer,
 			})
 		} else {
-			updatePlayer(queue, lang)
+			updatePlayer(queue, server.lang)
 		}
 	}
 }

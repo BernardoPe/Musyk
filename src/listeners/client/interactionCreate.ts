@@ -5,8 +5,8 @@ import { GuildQueue, QueueRepeatMode, useQueue } from "discord-player"
 import { errorEmbed, successEmbed } from "../../utils/embeds/status.ts"
 import { helpEmbeds } from "../../utils/embeds/help.ts"
 import { createLink } from "../../utils/embeds/links.ts"
-import { getServerPrefix, setNewPrefix, getLang, setNewLang } from "../../utils/configs/server.ts"
 import { Language } from "../../langs"
+import { getOrCreateServerInfo, updateServerLang, updateServerPrefix } from "../../utils/db/server.ts"
 
 type ButtonCommand = (
     interaction: ButtonInteraction,
@@ -25,15 +25,14 @@ type TextCommand = (
 class InteractionCreateHandler implements ClientEventHandler {
 	public name: Events.InteractionCreate = Events.InteractionCreate
 
-	public execute(interaction: BaseInteraction, bot: MusicBot) {
-		const serverPrefix = getServerPrefix(interaction.guild!.id)
+	public async execute(interaction: BaseInteraction, bot: MusicBot) {
+		const server = await getOrCreateServerInfo(interaction.guild!)
 		const serverQueue: GuildQueue<QueueMetadata> | null = useQueue(interaction.guild!.id)
-		const lang = getLang(interaction.guild!.id)
 		if (!interaction.isButton()) {
-			this.handleTextCommands(interaction as ChatInputCommandInteraction, serverPrefix, bot, lang)
+			this.handleTextCommands(interaction as ChatInputCommandInteraction, server.prefix, bot, server.lang)
 		} else {
 			if (!serverQueue) return
-			this.handleButtonCommands(interaction, serverQueue, serverPrefix, bot)
+			this.handleButtonCommands(interaction, serverQueue, server.prefix, bot)
 		}
 	}
 
@@ -112,7 +111,7 @@ class InteractionCreateHandler implements ClientEventHandler {
 		}
 
 		try {
-			await setNewPrefix(interaction.guild!.id, newPrefix)
+			await updateServerPrefix(interaction.guild!, newPrefix)
 		} catch (e) {
 			const embed = errorEmbed(null, lang.shared.set_prefix_error)
 			await interaction.reply({ embeds: [embed], flags: "Ephemeral" })
@@ -132,13 +131,12 @@ class InteractionCreateHandler implements ClientEventHandler {
 		const newLang = interaction.options.getString("language")!
 
 		if (newLang === "current" || newLang === "curr") {
-			const currentLang = getLang(interaction.guild!.id)
-			const embed = successEmbed(null, lang.shared.current_lang.replace("{lang}", currentLang.tag))
+			const embed = successEmbed(null, lang.shared.current_lang.replace("{lang}", lang.tag))
 			return await interaction.reply({ embeds: [embed], flags: "Ephemeral" })
 		}
 
 		try {
-			await setNewLang(interaction.guild!.id, newLang)
+			await updateServerLang(interaction.guild!, newLang)
 		} catch (e) {
 			const embed = errorEmbed(null, lang.shared.set_lang_error)
 			await interaction.reply({ embeds: [embed], flags: "Ephemeral" })

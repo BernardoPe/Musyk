@@ -1,10 +1,9 @@
 import { sendEmbed } from "../../../utils/embeds/channels.ts"
-import { QueueMetadata, PlayerCommand } from "../../../types.ts"
+import { QueueMetadata, PlayerCommand, Config } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
 import { errorEmbed, successEmbed } from "../../../utils/embeds/status.ts"
 import { updatePlayer } from "../../../utils/embeds/player/playing.ts"
-import { Language } from "../../../langs"
 
 class ShuffleCommand implements PlayerCommand {
 	public aliases = ["shuffle"]
@@ -15,18 +14,18 @@ class ShuffleCommand implements PlayerCommand {
 	public msg: string | null = null
 	public user: string | null = null
 
-	execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel, _args: string[], lang: Language) {
+	execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel, _args: string[], config: Config) {
 		if (serverQueue.tracks.size < 2) {
-			const embed = errorEmbed(null, lang.commands.shuffle.not_enough_songs)
+			const embed = errorEmbed(null, config.lang.commands.shuffle.not_enough_songs)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
 		serverQueue.tracks.shuffle()
 
-		updatePlayer(serverQueue, lang)
+		updatePlayer(serverQueue, config.lang)
 
-		const embed = successEmbed(null, lang.commands.shuffle.shuffled)
+		const embed = successEmbed(null, config.lang.commands.shuffle.shuffled)
 
 		sendEmbed(channel, { embeds: [embed] }, 20000)
 	}

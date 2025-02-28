@@ -1,11 +1,10 @@
-import { MusicBot, QueueMetadata, BotCommand, GuildMessage } from "../../types.ts"
+import { MusicBot, QueueMetadata, BotCommand, GuildMessage, Config } from "../../types.ts"
 
 import { sendEmbed } from "../../utils/embeds/channels.ts"
 import { GuildQueue, SearchQueryType } from "discord-player"
 import { GuildTextBasedChannel, VoiceBasedChannel } from "discord.js"
 import { logger } from "../../utils/logging/logger.ts"
 import { errorEmbed } from "../../utils/embeds/status.ts"
-import { Language } from "../../langs"
 
 class PlayCommand implements BotCommand {
 	adminCommand: boolean = false
@@ -22,11 +21,11 @@ class PlayCommand implements BotCommand {
 		"-sc": "soundcloudSearch",
 	}
 
-	public async execute(bot: MusicBot, msg: GuildMessage, args: string[], lang: Language) {
+	public async execute(bot: MusicBot, msg: GuildMessage, args: string[], config: Config) {
 		const { channel } = msg
 
 		if (args.length === 1) {
-			const embed = errorEmbed(null, lang.commands.play.provide_search)
+			const embed = errorEmbed(null, config.lang.commands.play.provide_search)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
@@ -34,7 +33,7 @@ class PlayCommand implements BotCommand {
 		const voiceChannel = msg.member!.voice.channel
 
 		if (!voiceChannel) {
-			const embed = errorEmbed(null, lang.commands.play.need_to_be_in_voice)
+			const embed = errorEmbed(null, config.lang.commands.play.need_to_be_in_voice)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
@@ -42,16 +41,16 @@ class PlayCommand implements BotCommand {
 		const permissions = voiceChannel.permissionsFor(msg.client.user)!
 
 		if (!permissions.has("Connect") || !permissions.has("Speak")) {
-			const embed = errorEmbed(null, lang.commands.play.need_permissions)
+			const embed = errorEmbed(null, config.lang.commands.play.need_permissions)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
 		const queue: GuildQueue<QueueMetadata> =
-            bot.player.queues.get(msg.guild.id) || this.createQueue(bot, channel, voiceChannel)
+            bot.player.queues.get(msg.guild.id) || this.createQueue(bot, channel, voiceChannel, config)
 
 		if (queue.connection && queue.channel !== msg.member!.voice.channel) {
-			const embed = errorEmbed(null, lang.commands.play.already_connected)
+			const embed = errorEmbed(null, config.lang.commands.play.already_connected)
 			sendEmbed(msg.channel, { embeds: [embed] }, 20000)
 			return
 		}
@@ -69,7 +68,7 @@ class PlayCommand implements BotCommand {
 
 		const searchArg = args.find((arg) => arg in this.searchEngines) as keyof typeof this.searchEngines | undefined
 
-		const searchEngine = searchArg ? this.searchEngines[searchArg] : "auto"
+		const searchEngine = searchArg ? this.searchEngines[searchArg] : config.playerConfig.searchEngine
 
 		args = args.filter((arg) => !(arg in this.searchEngines))
 
@@ -83,7 +82,7 @@ class PlayCommand implements BotCommand {
 		const song = result.tracks[0]
 
 		if (result.tracks.length === 0) {
-			const embed = errorEmbed(null, lang.commands.play.no_results)
+			const embed = errorEmbed(null, config.lang.commands.play.no_results)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
@@ -98,7 +97,7 @@ class PlayCommand implements BotCommand {
 			}
 		} catch (e) {
 			logger.error(e)
-			const embed = errorEmbed(null, lang.commands.play.error)
+			const embed = errorEmbed(null, config.lang.commands.play.error)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 		}
 	}
@@ -106,13 +105,15 @@ class PlayCommand implements BotCommand {
 	private createQueue(
 		bot: MusicBot,
 		channel: GuildTextBasedChannel,
-		voiceChannel: VoiceBasedChannel
+		voiceChannel: VoiceBasedChannel,
+		config: Config
 	): GuildQueue<QueueMetadata> {
 		const queue = bot.player.nodes.create(channel.guild, {
 			bufferingTimeout: 20000,
 			leaveOnEmpty: false,
-			leaveOnEnd: true,
-			leaveOnEndCooldown: 300000,
+			volume: config.playerConfig.volume,
+			leaveOnEnd: config.playerConfig.leaveOnEnd,
+			leaveOnEndCooldown: config.playerConfig.leaveOnEndCooldown,
 			disableHistory: true,
 		})
 		queue.metadata = {

@@ -3,19 +3,19 @@ import { GuildQueueEventHandler, QueueMetadata } from "../../types.ts"
 import { songQueuedEmbed } from "../../utils/embeds/player/queue.ts"
 import { sendEmbed } from "../../utils/embeds/channels.ts"
 import { updatePlayer } from "../../utils/embeds/player/playing.ts"
-import { getLang } from "../../utils/configs/server.ts"
+import { getOrCreateServerInfo } from "../../utils/db/server.ts"
 
 class AudioTrackAddHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.AudioTrackAdd
 
-	public execute(queue: GuildQueue<QueueMetadata>, track: Track<RawTrackData>) {
+	public async execute(queue: GuildQueue<QueueMetadata>, track: Track<RawTrackData>) {
 		if (!queue.isPlaying()) return
 
-		const lang = getLang(queue.guild.id)
+		const server = await getOrCreateServerInfo(queue.guild)
 
-		if (queue.isPlaying()) updatePlayer(queue, lang)
+		if (queue.isPlaying()) updatePlayer(queue, server.lang)
 
-		const embed = songQueuedEmbed(track, queue, lang)
+		const embed = songQueuedEmbed(track, queue, server.lang)
 
 		sendEmbed(queue.metadata.textChannel!, { embeds: [embed] }, 60000)
 	}

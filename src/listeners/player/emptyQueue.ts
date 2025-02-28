@@ -4,7 +4,7 @@ import { GuildQueueEventHandler, QueueMetadata } from "../../types.ts"
 import { GuildQueueEvent } from "discord-player"
 import { sendEmbed } from "../../utils/embeds/channels.ts"
 import { leavingEmbed } from "../../utils/embeds/player/queue.ts"
-import { getLang } from "../../utils/configs/server.ts"
+import { getOrCreateServerInfo } from "../../utils/db/server.ts"
 
 class EmptyQueueHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.EmptyQueue
@@ -13,7 +13,7 @@ class EmptyQueueHandler implements GuildQueueEventHandler {
 		const channel = queue.metadata.textChannel!
 		const col = queue.metadata.collector
 		const data = queue.metadata.playerEmbed
-		const lang = getLang(queue.guild.id)
+		const server = await getOrCreateServerInfo(queue.guild)
 
 		while (queue.metadata.updatingPlayer) await Util.wait(5)
 
@@ -27,7 +27,7 @@ class EmptyQueueHandler implements GuildQueueEventHandler {
 			queue.metadata.playerEmbed = null
 		}
 
-		const embed = leavingEmbed(lang)
+		const embed = leavingEmbed(server.lang)
 
 		sendEmbed(channel, { embeds: [embed] }, 60000)
 	}

@@ -1,9 +1,8 @@
 import { sendEmbed } from "../../../utils/embeds/channels.ts"
-import { QueueMetadata, PlayerCommand } from "../../../types.ts"
+import { QueueMetadata, PlayerCommand, Config } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
 import { errorEmbed } from "../../../utils/embeds/status.ts"
-import { Language } from "../../../langs"
 
 class SkipToCommand implements PlayerCommand {
 	public aliases = ["skipto"]
@@ -18,12 +17,12 @@ class SkipToCommand implements PlayerCommand {
 		serverQueue: GuildQueue<QueueMetadata>,
 		channel: GuildTextBasedChannel,
 		args: string[],
-		lang: Language
+		config: Config
 	) {
 		const skipPos = parseInt(args[1])
 
 		if (isNaN(skipPos) || skipPos < 1 || skipPos > serverQueue!.tracks.size) {
-			const embed = errorEmbed(null, lang.commands.shared.invalid_position)
+			const embed = errorEmbed(null, config.lang.commands.shared.invalid_position)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}

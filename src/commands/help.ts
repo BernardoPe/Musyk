@@ -1,8 +1,7 @@
-import { GuildMessage, BotCommand, MusicBot } from "../types.ts"
+import { GuildMessage, BotCommand, MusicBot, Config } from "../types.ts"
 import paginate from "../utils/embeds/paginator.ts"
 import { helpEmbeds } from "../utils/embeds/help.ts"
 import { createLink } from "../utils/embeds/links.ts"
-import { Language } from "../langs"
 
 class HelpCommand implements BotCommand {
 	public aliases: string[] = ["help"]
@@ -13,9 +12,9 @@ class HelpCommand implements BotCommand {
 	public guild: string | null = null
 	public msg: string | null = null
 
-	public async execute(bot: MusicBot, msg: GuildMessage, _args: string[], lang: Language) {
-		const embed = helpEmbeds(lang)
-		const link = createLink(lang)
+	public async execute(bot: MusicBot, msg: GuildMessage, _args: string[], config: Config) {
+		const embed = helpEmbeds(config.lang)
+		const link = createLink(config.lang)
 		await paginate(msg.channel, embed, link.components)
 	}
 }

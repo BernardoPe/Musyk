@@ -78,12 +78,12 @@ interface PlayerCommand extends BaseCommand {
         serverQueue: GuildQueue<QueueMetadata> | null,
         channel: GuildTextBasedChannel,
         args: string[],
-        lang: Language
+        config: Config
     ): void;
 }
 
 interface BotCommand extends BaseCommand {
-    execute(bot: MusicBot, msg: GuildMessage, args: string[], lang: Language): void;
+    execute(bot: MusicBot, msg: GuildMessage, args: string[], config: Config): void;
 }
 
 /**
@@ -104,6 +104,34 @@ type QueueMetadata = {
 };
 
 /**
+ * Represents the configuration for the player in a server
+ *
+ * @param searchEngine - The search engine used to search for tracks
+ * @param volume - The volume of the player
+ * @param leaveOnEnd - Whether the player should leave the voice channel when the queue ends
+ * @param leaveOnEndCooldown - The cooldown before the player leaves the voice channel when the queue ends
+ */
+type PlayerConfig = {
+    searchEngine: string;
+    volume: number;
+    leaveOnEnd: boolean;
+    leaveOnEndCooldown: number;
+};
+
+/**
+ * Represents the configuration information for a server
+ *
+ * @param prefix - The command prefix used by the server
+ * @param lang - The language used in the server
+ * @param playerConfig - The player configuration used in the server
+ */
+type Config = {
+    prefix: ServerPrefix;
+    lang: Language;
+    playerConfig: PlayerConfig;
+};
+
+/**
  * Represents a message in a server
  */
 type GuildMessage = Message<true>;
@@ -118,4 +146,6 @@ export {
 	GuildMessage,
 	PlayerCommand,
 	BotCommand,
+	Config,
+	PlayerConfig,
 }
