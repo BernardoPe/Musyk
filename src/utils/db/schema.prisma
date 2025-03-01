@@ -28,6 +28,6 @@ model PlayerConfig {
   searchEngine String  @default("auto")
   volume      Int      @default(100)
   leaveOnEnd  Boolean  @default(true)
-  leaveOnEndCooldown Int @default(300)
+  leaveOnEndCooldown Int @default(300000)
 }
 

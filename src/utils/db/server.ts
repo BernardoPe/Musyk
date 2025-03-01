@@ -9,7 +9,7 @@ import { getAllFiles } from "../configs/json.ts"
 const defaultPlayerConfig = {
 	searchEngine: "auto",
 	volume: 100,
-	leaveOnEnd: false,
+	leaveOnEnd: true,
 	leaveOnEndCooldown: 300000,
 }
 
