@@ -5,6 +5,7 @@ import { ServerPrefix } from "../../types.ts"
 import path from "path"
 import { Language } from "../../langs"
 import { getAllFiles } from "../configs/json.ts"
+import { CacheType, doCachedQuery, invalidateCache } from "./cache.ts"
 
 const defaultPlayerConfig = {
 	searchEngine: "auto",
@@ -14,23 +15,25 @@ const defaultPlayerConfig = {
 }
 
 async function getOrCreateServerInfo(server: Guild) {
-	const res = await prisma.server.findUnique({
-		where: { serverId: server.id },
-		select: { serverId: true, prefix: true, lang: true, playerConfig: true },
+	return await doCachedQuery(server.id, CacheType.Server, 86400, async () => {
+		const res = await prisma.server.findUnique({
+			where: { serverId: server.id },
+			select: { serverId: true, prefix: true, lang: true, playerConfig: true },
+		})
+
+		if (res) {
+			return { ...res, lang: getLang(res.lang) }
+		}
+
+		const res2 = await prisma.server.create({
+			data: {
+				serverId: server.id,
+				playerConfig: { create: { ...defaultPlayerConfig } },
+			},
+		})
+
+		return { ...res2, lang: getLang(res2.lang), playerConfig: defaultPlayerConfig }
 	})
-
-	if (res) {
-		return { ...res, lang: getLang(res.lang) }
-	}
-
-	const res2 = await prisma.server.create({
-		data: {
-			serverId: server.id,
-			playerConfig: { create: { ...defaultPlayerConfig } },
-		},
-	})
-
-	return { ...res2, lang: getLang(res2.lang), playerConfig: defaultPlayerConfig }
 }
 
 async function updateServerPrefix(server: Guild, prefix: ServerPrefix) {
@@ -42,6 +45,7 @@ async function updateServerPrefix(server: Guild, prefix: ServerPrefix) {
 			prefix,
 		},
 	})
+	invalidateCache(server.id, CacheType.Server)
 }
 
 async function updateServerLang(server: Guild, lang: string) {
@@ -53,6 +57,7 @@ async function updateServerLang(server: Guild, lang: string) {
 			lang,
 		},
 	})
+	invalidateCache(server.id, CacheType.Server)
 }
 
 async function updateServerSearchEngine(server: Guild, searchEngine: SearchQueryType) {
@@ -68,6 +73,7 @@ async function updateServerSearchEngine(server: Guild, searchEngine: SearchQuery
 			},
 		},
 	})
+	invalidateCache(server.id, CacheType.Server)
 }
 
 async function updateServerVolume(server: Guild, volume: number) {
@@ -83,6 +89,7 @@ async function updateServerVolume(server: Guild, volume: number) {
 			},
 		},
 	})
+	invalidateCache(server.id, CacheType.Server)
 }
 
 async function updateServerLeaveOnEnd(server: Guild, leaveOnEnd: boolean) {
@@ -98,6 +105,7 @@ async function updateServerLeaveOnEnd(server: Guild, leaveOnEnd: boolean) {
 			},
 		},
 	})
+	invalidateCache(server.id, CacheType.Server)
 }
 
 async function updateServerLeaveOnEndCooldown(server: Guild, leaveOnEndCooldown: number) {
@@ -113,6 +121,7 @@ async function updateServerLeaveOnEndCooldown(server: Guild, leaveOnEndCooldown:
 			},
 		},
 	})
+	invalidateCache(server.id, CacheType.Server)
 }
 
 const admins: Array<Snowflake> = (process.env.ADMINS || "").split(",")

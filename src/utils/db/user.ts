@@ -2,32 +2,35 @@ import { PrismaClient } from "@prisma/client"
 import { withAccelerate } from "@prisma/extension-accelerate"
 import { User } from "discord.js"
 import { SearchQueryType } from "discord-player"
+import { CacheType, doCachedQuery, invalidateCache } from "./cache.ts"
 
 const prisma = new PrismaClient().$extends(withAccelerate())
 
 async function getOrCreateUserInfo(user: User) {
-	const res = await prisma.user.findUnique({
-		where: {
-			userId: user.id,
-		},
-		select: {
-			userId: true,
-			playerConfig: true,
-		},
+	return await doCachedQuery(user.id, CacheType.User, 86400, async () => {
+		const res = await prisma.user.findUnique({
+			where: {
+				userId: user.id,
+			},
+			select: {
+				userId: true,
+				playerConfig: true,
+			},
+		})
+
+		if (res) return res
+
+		const res2 = await prisma.user.create({
+			data: {
+				userId: user.id,
+			},
+		})
+
+		return {
+			userId: res2.userId,
+			playerConfig: null,
+		}
 	})
-
-	if (res) return res
-
-	const res2 = await prisma.user.create({
-		data: {
-			userId: user.id,
-		},
-	})
-
-	return {
-		userId: res2.userId,
-		playerConfig: null,
-	}
 }
 
 async function updateUserSearchEngine(user: User, searchEngine: SearchQueryType) {
@@ -43,6 +46,7 @@ async function updateUserSearchEngine(user: User, searchEngine: SearchQueryType)
 			},
 		},
 	})
+	invalidateCache(user.id, CacheType.User)
 }
 
 async function updateUserVolume(user: User, volume: number) {
@@ -58,6 +62,7 @@ async function updateUserVolume(user: User, volume: number) {
 			},
 		},
 	})
+	invalidateCache(user.id, CacheType.User)
 }
 
 async function updateUserLeaveOnEnd(user: User, leaveOnEnd: boolean) {
@@ -73,6 +78,7 @@ async function updateUserLeaveOnEnd(user: User, leaveOnEnd: boolean) {
 			},
 		},
 	})
+	invalidateCache(user.id, CacheType.User)
 }
 
 async function updateUserLeaveOnEndCooldown(user: User, leaveOnEndCooldown: number) {
@@ -88,6 +94,7 @@ async function updateUserLeaveOnEndCooldown(user: User, leaveOnEndCooldown: numb
 			},
 		},
 	})
+	invalidateCache(user.id, CacheType.User)
 }
 
 export { prisma, getOrCreateUserInfo, updateUserSearchEngine, updateUserVolume }
