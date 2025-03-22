@@ -60,6 +60,10 @@ class MusicBot {
 	private async registerExtractors() {
 		await this.player.extractors.register(YoutubeiExtractor, {
 			overrideBridgeMode: "yt",
+			generateWithPoToken: true,
+			streamOptions: {
+				useClient: "WEB",
+			}
 		})
 		logger.info("[EXTRACTORS]: Youtubei extractor registered")
 		await this.player.extractors.loadMulti(DefaultExtractors)
