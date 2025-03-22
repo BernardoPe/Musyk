@@ -37,6 +37,7 @@
     },
     "now_playing": {
       "title": "A Tocar Agora",
+      "paused_title": "Em pausa",
       "description": "A tocar agora em **{guild}**",
       "fields": {
         "duration": "Duração",

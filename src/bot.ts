@@ -59,7 +59,12 @@ class MusicBot {
 
 	private async registerExtractors() {
 		await this.player.extractors.register(YoutubeiExtractor, {
-			overrideBridgeMode: "yt",
+			overrideBridgeMode: {
+				spotifySong: "ytmusic",
+				spotifyAlbum: "ytmusic",
+				spotifySearch: "yt",
+				default: "yt",
+			},
 			generateWithPoToken: true,
 			streamOptions: {
 				useClient: "WEB",

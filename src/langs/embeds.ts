@@ -43,6 +43,7 @@ interface CreateLinkLangConfig {
 
 interface NowPlayingLangConfig {
     title: string;
+    paused_title: string;
     description: string;
     fields: NowPlayingFieldsLangConfig;
 }

@@ -37,6 +37,7 @@
     },
     "now_playing": {
         "title": "Now Playing",
+        "paused_title": "Paused",
         "description": "Now playing in guild **{guild}**",
         "fields": {
             "duration": "Duration",

@@ -19,15 +19,14 @@ function getEmoji(source: string, embed?: EmbedBuilder): string {
 }
 
 function updatePlayer(queue: GuildQueue<QueueMetadata>, lang: Language) {
-	const embed = nowPlayingEmbed(queue, lang)
-
 	if (!queue.metadata.playerEmbed || queue.metadata.updatingPlayer || !queue.metadata.playerEmbed.editable) {
 		return
 	}
 
-	queue.metadata.updatingPlayer = true // Prevents unnecessary concurrent updates
+	queue.metadata.updatingPlayer = true // Prevents unnecessary concurrent upda
 
 	const data = queue.metadata.playerEmbed
+	const embed = nowPlayingEmbed(queue, lang)// tes
 
 	data.edit({
 		embeds: [embed],
@@ -40,9 +39,8 @@ function nowPlayingEmbed(queue: GuildQueue, lang: Language): EmbedBuilder {
 	const embed = new EmbedBuilder()
 	const emoji = getEmoji(queue.currentTrack!.source, embed)
 	const song: Track<RawTrackData> = queue.currentTrack as Track<RawTrackData>
-
 	embed
-		.setTitle(lang.embeds.now_playing.title)
+		.setTitle(!queue.dispatcher?.paused ? lang.embeds.now_playing.title : lang.embeds.now_playing.paused_title)
 		.setDescription(`${emoji} **[${song.cleanTitle}](${song.url})**`)
 		.setThumbnail(`${song.thumbnail}`)
 		.addFields(
