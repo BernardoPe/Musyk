@@ -1,8 +1,7 @@
 import { Collection, Colors, EmbedBuilder, GuildMember, GuildTextBasedChannel, Snowflake } from "discord.js"
 import { logger } from "../logging/logger.ts"
 import { Language } from "../../langs"
-
-const botID: string = process.env.BOT_ID!
+import bot from "../../bot.ts"
 
 function leftEmbed(lang: Language): EmbedBuilder {
 	return new EmbedBuilder().setDescription(lang.embeds.left.description).setColor(Colors.Red)
@@ -15,14 +14,14 @@ function sendEmbed(channel: GuildTextBasedChannel, info: any, timeout: number | 
 	}
 
 	const members: Collection<Snowflake, GuildMember> = channel.members as Collection<Snowflake, GuildMember>
-	const bot = members.get(botID)
+	const botPresent = members.get(bot.client.application?.id as Snowflake)
 
-	if (!bot) {
+	if (!botPresent) {
 		logger.error("Bot not found in the channel")
 		return
 	}
 
-	if (!channel.permissionsFor(bot).has("SendMessages")) {
+	if (!channel.permissionsFor(botPresent).has("SendMessages")) {
 		logger.error("Bot doesn't have permission to send messages")
 		return
 	}

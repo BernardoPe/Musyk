@@ -66,9 +66,6 @@ class MusicBot {
 				default: "yt",
 			},
 			generateWithPoToken: true,
-			streamOptions: {
-				useClient: "WEB",
-			}
 		})
 		logger.info("[EXTRACTORS]: Youtubei extractor registered")
 		await this.player.extractors.loadMulti(DefaultExtractors)

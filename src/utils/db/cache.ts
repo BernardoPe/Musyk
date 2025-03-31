@@ -13,7 +13,9 @@ async function doCachedQuery<T>(id: string, cacheType: CacheType, ttl: number, r
 	}
 	const data = await request()
 	cache.set(id, data)
-	setTimeout(() => cache.delete(id), ttl * 1000)
+	if (ttl > 0) {
+		setTimeout(() => cache.delete(id), ttl)
+	}
 	return data
 }
 

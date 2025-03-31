@@ -7,7 +7,7 @@ import { CacheType, doCachedQuery, invalidateCache } from "./cache.ts"
 const prisma = new PrismaClient().$extends(withAccelerate())
 
 async function getOrCreateUserInfo(user: User) {
-	return await doCachedQuery(user.id, CacheType.User, 86400, async () => {
+	return await doCachedQuery(user.id, CacheType.User, -1, async () => {
 		const res = await prisma.user.findUnique({
 			where: {
 				userId: user.id,

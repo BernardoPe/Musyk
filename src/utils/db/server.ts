@@ -15,7 +15,7 @@ const defaultPlayerConfig = {
 }
 
 async function getOrCreateServerInfo(server: Guild) {
-	return await doCachedQuery(server.id, CacheType.Server, 86400, async () => {
+	return await doCachedQuery(server.id, CacheType.Server, -1, async () => {
 		const res = await prisma.server.findUnique({
 			where: { serverId: server.id },
 			select: { serverId: true, prefix: true, lang: true, playerConfig: true },
