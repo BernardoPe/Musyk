@@ -1,7 +1,7 @@
 {
     "scripts": {
-        "start": "ts-node src/bot.ts",
-        "deploy-commands": "ts-node src/slash-command-deployment.ts",
+        "start": "tsx src/bot.ts",
+        "deploy-commands": "tsx src/slash-command-deployment.ts",
         "lint": "eslint src/**/*.ts",
         "lint:fix": "eslint src/**/*.ts --fix",
         "prettier": "prettier --write src/**/*.ts",
@@ -18,7 +18,7 @@
         "ffmpeg-static": "^5.2.0",
         "mediaplex": "^1.0.0",
         "prisma": "^6.4.1",
-        "ts-node": "^10.9.2",
+        "tsx": "^4.19.3",
         "winston": "^3.13.0"
     },
     "devDependencies": {
