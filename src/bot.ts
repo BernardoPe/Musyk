@@ -4,7 +4,7 @@ import { YoutubeiExtractor } from "discord-player-youtubei"
 import { Client, ClientEvents, GatewayIntentBits } from "discord.js"
 import "dotenv/config"
 import { BaseCommand } from "./types.ts"
-import { getAllFiles } from "./utils/configs/json.ts"
+import { getAllFiles } from "./utils/files/json.ts"
 import path from "path"
 import { logger } from "./utils/logging/logger.ts"
 

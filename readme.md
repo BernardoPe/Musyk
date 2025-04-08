@@ -81,8 +81,6 @@ Don't forget to fill in the `.env` file with all the required information.
 
 ## Support :rocket:
 
-
-
 If you find any bugs or issues with the bot, feel free to open an issue on the [repository](https://github.com/BernardoPe/Musyk/issues/new) :thumbsup:
 
 If you find this bot useful, consider giving it a :star:!

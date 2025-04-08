@@ -1,10 +1,7 @@
-import { PrismaClient } from "@prisma/client"
-import { withAccelerate } from "@prisma/extension-accelerate"
 import { User } from "discord.js"
 import { SearchQueryType } from "discord-player"
 import { CacheType, doCachedQuery, invalidateCache } from "./cache.ts"
-
-const prisma = new PrismaClient().$extends(withAccelerate())
+import prisma from "./source.ts"
 
 async function getOrCreateUserInfo(user: User) {
 	return await doCachedQuery(user.id, CacheType.User, -1, async () => {

@@ -4,7 +4,7 @@ import { SearchQueryType } from "discord-player"
 import { ServerPrefix } from "../../types.ts"
 import path from "path"
 import { Language } from "../../langs"
-import { getAllFiles } from "../configs/json.ts"
+import { getAllFiles } from "../files/json.ts"
 import { CacheType, doCachedQuery, invalidateCache } from "./cache.ts"
 
 const defaultPlayerConfig = {

@@ -3,7 +3,7 @@ import * as winston from "winston"
 const timestamp = winston.format.timestamp
 
 const logger = winston.createLogger({
-	level: "info",
+	level: process.env.LOG_LEVEL || "info",
 	format: winston.format.combine(
 		winston.format.combine(timestamp(), winston.format.simple()),
 		winston.format.printf((info) => `[${info.timestamp}] ${info.message}`)
@@ -11,7 +11,7 @@ const logger = winston.createLogger({
 	transports: [
 		new winston.transports.File({
 			filename: "../logs.log",
-			level: "info",
+			level: process.env.LOG_LEVEL || "info",
 			format: winston.format.combine(
 				winston.format.timestamp(),
 				winston.format.simple(),
@@ -19,7 +19,7 @@ const logger = winston.createLogger({
 			),
 		}),
 		new winston.transports.Console({
-			level: "info",
+			level: process.env.LOG_LEVEL || "info",
 			format: winston.format.combine(
 				winston.format.colorize(),
 				winston.format.simple(),
