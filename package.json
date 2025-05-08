@@ -12,15 +12,14 @@
         "@prisma/extension-accelerate": "^1.2.2",
         "bgutils-js": "^3.2.0",
         "discord-player": "^7.0.0",
-        "discord-player-youtubei": "^1.4.3",
+        "discord-player-youtubei": "^1.4.6",
         "discord.js": "^14.17.2",
         "dotenv": "^16.4.5",
         "ffmpeg-static": "^5.2.0",
         "mediaplex": "^1.0.0",
         "prisma": "^6.4.1",
         "tsx": "^4.19.3",
-        "winston": "^3.13.0",
-        "youtubei.js": "^13.4.0"
+        "winston": "^3.13.0"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^8.11.0",
