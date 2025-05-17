@@ -9,6 +9,8 @@ import {
 } from "discord-player"
 import { logger } from "./Utils/Logging/logger.ts"
 
+const EXPIRE_AFTER = 604_800_000 // 7 days
+
 export class QueryCache implements QueryCacheProvider<CachedTrack> {
 	public timer: NodeJS.Timer
 	public player!: Player
@@ -63,7 +65,7 @@ export class QueryCache implements QueryCacheProvider<CachedTrack> {
                     track: data.tracks[0],
                     playlist: data.playlist,
                     queryAliases: new Set([data.query.toLowerCase()]),
-                })
+                }, EXPIRE_AFTER)
             )
             return
         }
@@ -77,7 +79,7 @@ export class QueryCache implements QueryCacheProvider<CachedTrack> {
 				const existingCache = QueryCache.resultCache.get(key)
 				const queryAliases = existingCache
 					? existingCache.data.queryAliases.add(data.query.toLowerCase())
-					: new Set([data.query.toLowerCase()])
+					: new Set([data.query.toLowerCase(), trackData.url, trackData.cleanTitle])
 				this.addToCache(trackData, trackData.playlist, queryAliases)
 			}
 		})
@@ -86,7 +88,7 @@ export class QueryCache implements QueryCacheProvider<CachedTrack> {
 	private addToCache(trackData: Track, playlist: Playlist | null | undefined, queryAliases: Set<string>): void {
 		QueryCache.resultCache.set(
 			trackData.url.toLowerCase(),
-			new DiscordPlayerQueryResultCache({ track: trackData, playlist, queryAliases })
+			new DiscordPlayerQueryResultCache({ track: trackData, playlist, queryAliases }, EXPIRE_AFTER)
 		)
 	}
 }
