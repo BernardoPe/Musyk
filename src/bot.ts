@@ -7,6 +7,7 @@ import { BaseCommand } from "./types.ts"
 import { getAllFiles } from "./Utils/Files/json.ts"
 import path from "path"
 import { logger } from "./Utils/Logging/logger.ts"
+import { QueryCache } from "./QueryCache.ts"
 
 class MusicBot {
 	client: Client
@@ -23,7 +24,9 @@ class MusicBot {
 				GatewayIntentBits.GuildVoiceStates,
 			],
 		})
-		this.player = new Player(this.client, { skipFFmpeg: true })
+		const cache = new QueryCache()
+		this.player = new Player(this.client, { skipFFmpeg: true, queryCache: cache })
+		cache.player = this.player
 		this.registerCommands()
 			.then(() => this.registerExtractors())
 			.then(() => this.addEventListeners())

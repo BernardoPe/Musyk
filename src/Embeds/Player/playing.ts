@@ -26,7 +26,7 @@ function updatePlayer(queue: GuildQueue<QueueMetadata>, lang: Language) {
 	queue.metadata.updatingPlayer = true // Prevents unnecessary concurrent upda
 
 	const data = queue.metadata.playerEmbed
-	const embed = nowPlayingEmbed(queue, lang)// tes
+	const embed = nowPlayingEmbed(queue, lang) // tes
 
 	data.edit({
 		embeds: [embed],
