@@ -4,9 +4,9 @@ import { YoutubeiExtractor } from "discord-player-youtubei"
 import { Client, ClientEvents, GatewayIntentBits } from "discord.js"
 import "dotenv/config"
 import { BaseCommand } from "./types.ts"
-import { getAllFiles } from "./utils/files/json.ts"
+import { getAllFiles } from "./Utils/Files/json.ts"
 import path from "path"
-import { logger } from "./utils/logging/logger.ts"
+import { logger } from "./Utils/Logging/logger.ts"
 
 class MusicBot {
 	client: Client
