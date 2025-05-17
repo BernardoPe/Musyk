@@ -31,11 +31,11 @@ class MusicBot {
 	}
 
 	private async addEventListeners() {
-		const files = getAllFiles(path.join(__dirname, "listeners"))
+		const files = getAllFiles(path.join(__dirname, "Listeners"))
 		for (const file of files) {
 			const module = await import(file)
 			const event = module.default
-			if (file.includes("player")) {
+			if (file.includes("Player")) {
 				this.player.events.on(event.name, (...args: any) => event.execute(...args, this))
 				logger.info(`[LISTENER]: ${event.name} registered`)
 			} else {
@@ -47,7 +47,7 @@ class MusicBot {
 
 	private async registerCommands() {
 		const commands: { [key: string]: BaseCommand } = {}
-		const commandFiles: string[] = getAllFiles(path.join(__dirname, "commands"))
+		const commandFiles: string[] = getAllFiles(path.join(__dirname, "Commands"))
 		for (const file of commandFiles) {
 			const module = await import(file)
 			const command: BaseCommand = module.default

@@ -128,7 +128,7 @@ const admins: Array<Snowflake> = (process.env.ADMINS || "").split(",")
 const langs: { [key: string]: Language } = {};
 
 (async () => {
-	getAllFiles(path.join(__dirname, "../../langs"))
+	getAllFiles(path.join(__dirname, "../Langs"))
 		.filter((file) => file.endsWith(".json"))
 		.map((file) => require(file))
 		.forEach((lang) => {
