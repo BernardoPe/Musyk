@@ -3,7 +3,8 @@ FROM node:22.11.0-slim
 RUN apt-get update && apt-get install -y \
     python3 \
     make \
-    g++
+    g++ \
+    git
 
 COPY --from=mwader/static-ffmpeg:7.1 /ffmpeg /usr/local/bin/
 COPY --from=mwader/static-ffmpeg:7.1 /ffprobe /usr/local/bin/
