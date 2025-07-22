@@ -19,6 +19,7 @@
         "mediaplex": "^1.0.0",
         "prisma": "^6.4.1",
         "tsx": "^4.19.3",
+        "youtubei.js": "^15.0.1",
         "winston": "^3.13.0"
     },
     "devDependencies": {
