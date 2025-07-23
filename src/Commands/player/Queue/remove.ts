@@ -38,7 +38,7 @@ class RemoveCommand implements PlayerCommand {
 		const song = serverQueue.node.remove(tracks[value - 1])
 		const embed = successEmbed(
 			null,
-			config.lang.commands.remove.invalid_index.replace("{songTitle}", `[${song!.title}](${song!.url})`)
+			config.lang.commands.remove.removed.replace("{song}", `[${song!.title}](${song!.url})`)
 		)
 		updatePlayer(serverQueue, config.lang)
 		sendEmbed(channel, { embeds: [embed] }, 20000)
