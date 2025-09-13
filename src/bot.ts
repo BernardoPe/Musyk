@@ -70,7 +70,6 @@ class MusicBot {
 				spotifySearch: "yt",
 				default: "yt",
 			},
-			generateWithPoToken: true,
 		})
 		logger.info("[EXTRACTORS]: Youtubei extractor registered")
 		await this.player.extractors.loadMulti(DefaultExtractors)
