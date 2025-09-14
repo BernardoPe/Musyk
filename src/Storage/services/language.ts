@@ -8,10 +8,6 @@ class LanguageService {
 	private readonly languages: Map<string, Language> = new Map()
 	private initialized = false
 
-	constructor() {
-		this.initializeLanguages()
-	}
-
 	private async initializeLanguages(): Promise<void> {
 		if (this.initialized) return
 

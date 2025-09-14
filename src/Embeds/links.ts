@@ -2,7 +2,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js"
 import "dotenv/config"
 import { Language } from "../langs"
 
-const inviteLink: string = process.env.INVITE_LINK!
+const inviteLink = process.env.INVITE_LINK!
 
 function createLink(lang: Language): ActionRowBuilder<ButtonBuilder> {
 	const link = new ButtonBuilder()
