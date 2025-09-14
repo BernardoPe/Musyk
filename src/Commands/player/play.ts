@@ -1,10 +1,10 @@
 import { MusicBot, QueueMetadata, BotCommand, GuildMessage, Config } from "../../types.ts"
 
-import { sendEmbed } from "../../Embeds/channels.ts"
+import { sendEmbed } from "../../embeds/channels.ts"
 import { GuildQueue, SearchQueryType } from "discord-player"
 import { GuildTextBasedChannel, VoiceBasedChannel } from "discord.js"
-import { logger } from "../../Utils/Logging/logger.ts"
-import { errorEmbed } from "../../Embeds/status.ts"
+import { logger } from "../../utils/logger/logger.ts"
+import { errorEmbed } from "../../embeds/status.ts"
 
 class PlayCommand implements BotCommand {
 	adminCommand: boolean = false
@@ -15,7 +15,7 @@ class PlayCommand implements BotCommand {
 	msg: string | null = null
 	guild: string | null = null
 
-	private searchEngines = {
+	private readonly searchEngines = {
 		"-sp": "spotifySearch",
 		"-yt": "youtube",
 		"-sc": "soundcloudSearch",

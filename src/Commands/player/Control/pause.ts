@@ -1,7 +1,7 @@
-import { sendEmbed } from "../../../Embeds/channels.ts"
+import { sendEmbed } from "../../../embeds/channels.ts"
 import { QueueMetadata, PlayerCommand, Config } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
-import { errorEmbed, successEmbed } from "../../../Embeds/status.ts"
+import { errorEmbed, successEmbed } from "../../../embeds/status.ts"
 import { GuildTextBasedChannel } from "discord.js"
 
 class PauseCommand implements PlayerCommand {
@@ -27,7 +27,6 @@ class PauseCommand implements PlayerCommand {
 		const embed = successEmbed(null, config.lang.commands.pause.paused)
         serverQueue.dispatcher!.pause()
         sendEmbed(channel, { embeds: [embed] }, 20000)
-        return
 	}
 }
 

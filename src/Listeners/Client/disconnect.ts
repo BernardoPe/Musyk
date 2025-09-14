@@ -1,6 +1,6 @@
 import { Events } from "discord.js"
 import { ClientEventHandler } from "../../types.ts"
-import { logger } from "../../Utils/Logging/logger.ts"
+import { logger } from "../../utils/logger/logger.ts"
 
 class ShardDisconnectHandler implements ClientEventHandler {
 	public name = Events.ShardDisconnect

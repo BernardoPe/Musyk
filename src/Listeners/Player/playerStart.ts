@@ -1,21 +1,19 @@
-import { GuildQueue } from "discord-player"
+import { GuildQueue, GuildQueueEvent } from "discord-player"
 import { GuildQueueEventHandler, QueueMetadata } from "../../types.ts"
-import { GuildQueueEvent } from "discord-player"
 import { ButtonInteraction, InteractionCollector } from "discord.js"
-import { createButtons } from "../../Embeds/Player/buttons.ts"
-import { nowPlayingEmbed, updatePlayer } from "../../Embeds/Player/playing.ts"
-import { sendEmbed } from "../../Embeds/channels.ts"
-import { getOrCreateServerInfo } from "../../Storage/server.ts"
+import { createButtons } from "../../embeds/player/buttons.ts"
+import { nowPlayingEmbed, updatePlayer } from "../../embeds/player/playing.ts"
+import { sendEmbed } from "../../embeds/channels.ts"
+import { serverRepository } from "../../storage/repositories/server.ts"
 
 class PlayerStartHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.PlayerStart
 
 	public async execute(queue: GuildQueue<QueueMetadata>) {
-		const server = await getOrCreateServerInfo(queue.guild)
+		const server = await serverRepository.getOrPut(queue.guild)
 		if (!queue.metadata.playerEmbed) {
 			const embed = nowPlayingEmbed(queue, server.lang)
 			const buttons = createButtons()
-
 			const data = await sendEmbed(queue.metadata.textChannel!, {
 				embeds: [embed],
 				components: buttons,
@@ -26,7 +24,7 @@ class PlayerStartHandler implements GuildQueueEventHandler {
 			queue.setMetadata({
 				textChannel: queue.metadata.textChannel,
 				voiceChannel: queue.metadata.voiceChannel,
-				playerEmbed: data ? data : null,
+				playerEmbed: data ?? null,
 				collector: col as InteractionCollector<ButtonInteraction> | null,
 				updatingPlayer: queue.metadata.updatingPlayer,
 			})

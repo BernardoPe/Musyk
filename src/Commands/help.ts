@@ -1,7 +1,7 @@
 import { GuildMessage, BotCommand, MusicBot, Config } from "../types.ts"
-import paginate from "../Embeds/paginator.ts"
-import { helpEmbeds } from "../Embeds/help.ts"
-import { createLink } from "../Embeds/links.ts"
+import paginate from "../embeds/paginator.ts"
+import { helpEmbeds } from "../embeds/help.ts"
+import { createLink } from "../embeds/links.ts"
 
 class HelpCommand implements BotCommand {
 	public aliases: string[] = ["help"]

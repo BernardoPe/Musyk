@@ -1,12 +1,12 @@
-import { sendEmbed } from "../Embeds/channels.ts"
-import { logger } from "../Utils/Logging/logger.ts"
+import { sendEmbed } from "../embeds/channels.ts"
+import { logger } from "../utils/logger/logger.ts"
 import { ButtonInteraction, GuildTextBasedChannel, Message } from "discord.js"
 import { BotCommand, Config, GuildMessage, MusicBot, PlayerCommand, QueueMetadata } from "../types.ts"
 
 import { GuildQueue, useQueue } from "discord-player"
-import { errorEmbed } from "../Embeds/status.ts"
-import { getCommandInfo } from "../Storage/service.ts"
-import { getAdmins } from "../Storage/server.ts"
+import { errorEmbed } from "../embeds/status.ts"
+import { getCommandInfo } from "../storage/service.ts"
+import { adminService } from "../storage/services/admin.ts"
 
 export async function handleCommand(msg: GuildMessage | ButtonInteraction, args: string[], bot: MusicBot) {
 	const messageContent = msg instanceof Message ? msg.content : msg.customId
@@ -23,7 +23,7 @@ export async function handleCommand(msg: GuildMessage | ButtonInteraction, args:
 		const serverQueue: GuildQueue<QueueMetadata> | null = useQueue(msg.guild!.id)
 
 		if (command.adminCommand) {
-			const admins = getAdmins()
+			const admins = adminService.getAdmins()
 			if (!admins.includes(user.id)) return
 		}
 
@@ -36,17 +36,17 @@ export async function handleCommand(msg: GuildMessage | ButtonInteraction, args:
 		const configInfo: Config = {
 			prefix: serverInfo.prefix,
 			lang: serverInfo.lang,
-			playerConfig: userInfo.playerConfig || serverInfo.playerConfig!,
+			playerConfig: userInfo.playerConfig || serverInfo.playerConfig,
 		}
 
 		if (command.requiresPlayer) {
-			if (!serverQueue || !serverQueue.isPlaying()) {
+			if (!serverQueue?.isPlaying()) {
 				const embed = errorEmbed(null, configInfo.lang.shared.not_playing)
 				return sendEmbed(channel, { embeds: [embed] }, 20000)
 			}
-			(command as PlayerCommand).execute(serverQueue!, channel, args, configInfo)
+			(command as PlayerCommand).execute(serverQueue, channel, args, configInfo)
 		} else {
-			(command as BotCommand).execute(bot!, msg as GuildMessage, args, configInfo)
+			(command as BotCommand).execute(bot, msg as GuildMessage, args, configInfo)
 		}
 	}
 }

@@ -1,8 +1,8 @@
 import { QueueMetadata, PlayerCommand, Config } from "../../../types.ts"
-import { sendEmbed } from "../../../Embeds/channels.ts"
+import { sendEmbed } from "../../../embeds/channels.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
-import { errorEmbed, successEmbed } from "../../../Embeds/status.ts"
+import { errorEmbed, successEmbed } from "../../../embeds/status.ts"
 
 class VolumeCommand implements PlayerCommand {
 	public aliases = ["volume"]
@@ -19,24 +19,27 @@ class VolumeCommand implements PlayerCommand {
 				null,
 				config.lang.commands.volume.current_volume.replace("{volume}", serverQueue.node.volume.toString())
 			)
-			return sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
+			return
 		}
 
 		const volume = parseInt(args[1])
 
 		if (isNaN(volume)) {
 			const embed = errorEmbed(null, config.lang.commands.shared.value_must_be_number)
-			return sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
+			return
 		}
 
 		if (volume > 200 || volume < 1) {
 			const embed = errorEmbed(null, config.lang.commands.volume.invalid_volume)
-			return sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
+			return
 		}
 
 		serverQueue.node.setVolume(volume)
 		const embed = successEmbed(null, config.lang.commands.volume.volume_set.replace("{volume}", volume.toString()))
-		return sendEmbed(channel, { embeds: [embed] }, 20000)
+		sendEmbed(channel, { embeds: [embed] }, 20000)
 	}
 }
 

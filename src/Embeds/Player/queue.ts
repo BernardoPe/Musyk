@@ -2,7 +2,7 @@ import { Colors, EmbedBuilder } from "discord.js"
 import { GuildQueue, Playlist, RawTrackData, Track } from "discord-player"
 import { QueueMetadata } from "../../types.ts"
 import { getEmoji } from "./playing.ts"
-import { Language } from "../../Langs"
+import { Language } from "../../langs"
 
 function leavingEmbed(lang: Language): EmbedBuilder {
 	return new EmbedBuilder().setDescription(lang.embeds.leaving.description).setColor(Colors.Red)

@@ -1,15 +1,15 @@
 import { GuildQueue, GuildQueueEvent, Track } from "discord-player"
 import { GuildQueueEventHandler, QueueMetadata } from "../../types.ts"
-import { queuePlaylistEmbed } from "../../Embeds/Player/queue.ts"
-import { sendEmbed } from "../../Embeds/channels.ts"
-import { updatePlayer } from "../../Embeds/Player/playing.ts"
-import { getOrCreateServerInfo } from "../../Storage/server.ts"
+import { queuePlaylistEmbed } from "../../embeds/player/queue.ts"
+import { sendEmbed } from "../../embeds/channels.ts"
+import { updatePlayer } from "../../embeds/player/playing.ts"
+import { serverRepository } from "../../storage/repositories/server.ts"
 
 class AudioTracksAddHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.AudioTracksAdd
 
 	public async execute(queue: GuildQueue<QueueMetadata>, tracks: Track[]) {
-		const server = await getOrCreateServerInfo(queue.guild)
+		const server = await serverRepository.getOrPut(queue.guild)
 
 		const embed = queuePlaylistEmbed(tracks[0].playlist!, server.lang)
 

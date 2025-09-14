@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "start": "ts-node src/bot.ts",
+        "start": "tsx src/bot.ts",
         "deploy-commands": "tsx src/slash-command-deployment.ts",
         "db:generate": "prisma generate --no-engine --schema=./src/Storage/schema.prisma",
         "db:push": "prisma db push --schema=./src/Storage/schema.prisma",

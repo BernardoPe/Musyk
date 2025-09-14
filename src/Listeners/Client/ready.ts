@@ -1,6 +1,6 @@
 import { ClientEventHandler } from "../../types.ts"
 import { Events, ActivityType, Client } from "discord.js"
-import { logger } from "../../Utils/Logging/logger.ts"
+import { logger } from "../../utils/logger/logger.ts"
 
 class ClientReadyHandler implements ClientEventHandler {
 	public name = Events.ClientReady

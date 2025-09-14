@@ -8,7 +8,7 @@ import {
 	VoiceBasedChannel,
 } from "discord.js"
 import { GuildQueue, GuildQueueEvent, Player } from "discord-player"
-import { Language } from "./Langs"
+import { Language } from "./langs"
 
 /**
  * Represents the discord bot client, extended with the discord-player player
@@ -32,7 +32,7 @@ interface MusicBot {
  */
 interface GuildQueueEventHandler {
     name: GuildQueueEvent;
-    execute: (...args: any) => void;
+    execute: (...args: any) => Promise<void> | void;
 }
 
 /**
@@ -44,13 +44,8 @@ interface GuildQueueEventHandler {
  */
 interface ClientEventHandler {
     name: Events;
-    execute: (...args: any) => void;
+    execute: (...args: any) => Promise<void> | void;
 }
-
-/**
- * Represents a server prefix, which is used to identify the prefix used by a specific server
- */
-type ServerPrefix = string;
 
 /**
  * Represents a base command, which is used to define the properties of a command
@@ -79,11 +74,11 @@ interface PlayerCommand extends BaseCommand {
         channel: GuildTextBasedChannel,
         args: string[],
         config: Config
-    ): void;
+    ): Promise<void> | void;
 }
 
 interface BotCommand extends BaseCommand {
-    execute(bot: MusicBot, msg: GuildMessage, args: string[], config: Config): void;
+    execute(bot: MusicBot, msg: GuildMessage, args: string[], config: Config): Promise<void> | void;
 }
 
 /**
@@ -126,7 +121,7 @@ type PlayerConfig = {
  * @param playerConfig - The player configuration used in the server
  */
 type Config = {
-    prefix: ServerPrefix;
+    prefix: string;
     lang: Language;
     playerConfig: PlayerConfig;
 };
@@ -140,7 +135,6 @@ export {
 	MusicBot,
 	GuildQueueEventHandler,
 	ClientEventHandler,
-	ServerPrefix,
 	BaseCommand,
 	QueueMetadata,
 	GuildMessage,

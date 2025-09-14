@@ -1,8 +1,7 @@
 import { GuildQueueEventHandler, QueueMetadata } from "../../types.ts"
-import { sendEmbed, leftEmbed } from "../../Embeds/channels.ts"
-import { GuildQueue, GuildQueueEvent } from "discord-player"
-import { Util } from "discord-player"
-import { getOrCreateServerInfo } from "../../Storage/server.ts"
+import { sendEmbed, leftEmbed } from "../../embeds/channels.ts"
+import { GuildQueue, GuildQueueEvent, Util } from "discord-player"
+import { serverRepository } from "../../storage/repositories/server.ts"
 
 class QueueDeleteHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.QueueDelete
@@ -11,7 +10,7 @@ class QueueDeleteHandler implements GuildQueueEventHandler {
 		const channel = queue.metadata.textChannel
 		const col = queue.metadata.collector
 		const message = queue.metadata.playerEmbed
-		const server = await getOrCreateServerInfo(queue.guild)
+		const server = await serverRepository.getOrPut(queue.guild)
 
 		while (queue.metadata.updatingPlayer) await Util.wait(5)
 

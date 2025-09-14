@@ -1,6 +1,6 @@
 import { ClientEventHandler, GuildMessage, MusicBot } from "../../types.ts"
 import { Events } from "discord.js"
-import { handleCommand } from "../../Handlers/commands.ts"
+import { handleCommand } from "../../handlers/commands.ts"
 
 class MessageCreateHandler implements ClientEventHandler {
 	public name = Events.MessageCreate

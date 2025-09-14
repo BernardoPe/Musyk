@@ -1,10 +1,10 @@
-import { sendEmbed } from "../../../Embeds/channels.ts"
-import paginate from "../../../Embeds/paginator.ts"
+import { sendEmbed } from "../../../embeds/channels.ts"
+import paginate from "../../../embeds/paginator.ts"
 import { Config, QueueMetadata } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
-import { createQueueEmbed } from "../../../Embeds/Player/queue.ts"
-import { errorEmbed } from "../../../Embeds/status.ts"
+import { createQueueEmbed } from "../../../embeds/player/queue.ts"
+import { errorEmbed } from "../../../embeds/status.ts"
 
 class QueueCommand implements QueueCommand {
 	public aliases = ["queue"]

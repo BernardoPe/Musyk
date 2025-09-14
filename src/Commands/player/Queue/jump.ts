@@ -1,8 +1,8 @@
-import { sendEmbed } from "../../../Embeds/channels.ts"
+import { sendEmbed } from "../../../embeds/channels.ts"
 import { QueueMetadata, PlayerCommand, Config } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
 import { GuildTextBasedChannel } from "discord.js"
-import { errorEmbed } from "../../../Embeds/status.ts"
+import { errorEmbed } from "../../../embeds/status.ts"
 
 class JumpCommand implements PlayerCommand {
 	public aliases = ["jump"]

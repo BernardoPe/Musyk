@@ -5,9 +5,9 @@ import { SpotifyExtractor } from "discord-player-spotify"
 import { Client, ClientEvents, GatewayIntentBits } from "discord.js"
 import "dotenv/config"
 import { BaseCommand } from "./types.ts"
-import { getAllFiles } from "./Utils/Files/json.ts"
+import { getAllFiles } from "./utils/files/json.ts"
 import path from "path"
-import { logger } from "./Utils/Logging/logger.ts"
+import { logger } from "./utils/logger/logger.ts"
 import { QueryCache } from "./QueryCache.ts"
 
 class MusicBot {
@@ -46,7 +46,7 @@ class MusicBot {
 		for (const file of files) {
 			const module = await import(file)
 			const event = module.default
-			if (file.includes("Player")) {
+			if (file.includes("player")) {
 				this.player.events.on(event.name, (...args: any) => event.execute(...args, this))
 				logger.info(`[LISTENER]: ${event.name} registered`)
 			} else {

@@ -1,7 +1,7 @@
 import { GuildQueue, QueueRepeatMode } from "discord-player"
-import { sendEmbed } from "../../../Embeds/channels.ts"
+import { sendEmbed } from "../../../embeds/channels.ts"
 import { Config, PlayerCommand, QueueMetadata } from "../../../types.ts"
-import { successEmbed } from "../../../Embeds/status.ts"
+import { successEmbed } from "../../../embeds/status.ts"
 import { GuildTextBasedChannel } from "discord.js"
 
 class CycleCommand implements PlayerCommand {

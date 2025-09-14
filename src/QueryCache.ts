@@ -7,20 +7,20 @@ import {
 	SearchResult,
 	Track,
 } from "discord-player"
-import { logger } from "./Utils/Logging/logger.ts"
+import { logger } from "./utils/logger/logger.ts"
 
 const EXPIRE_AFTER = 604_800_000 // 7 days
 
 export class QueryCache implements QueryCacheProvider<CachedTrack> {
-	public timer: NodeJS.Timer
+	public timer: NodeJS.Timeout
 	public player!: Player
-	private static resultCache = new Map<string, DiscordPlayerQueryResultCache<CachedTrack>>()
+	private static readonly resultCache = new Map<string, DiscordPlayerQueryResultCache<CachedTrack>>()
 
 	public constructor(public checkInterval: number = 60000) {
 		this.timer = setInterval(this.cleanupExpiredEntries, this.checkInterval)
 	}
 
-	private cleanupExpiredEntries = () => {
+	private readonly cleanupExpiredEntries = () => {
 		const now = Date.now()
 		// eslint-disable-next-line
         // @ts-ignore

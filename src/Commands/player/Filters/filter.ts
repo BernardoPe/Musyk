@@ -1,8 +1,8 @@
 import { QueueMetadata, PlayerCommand, Config } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
-import { sendEmbed } from "../../../Embeds/channels.ts"
+import { sendEmbed } from "../../../embeds/channels.ts"
 import { GuildTextBasedChannel } from "discord.js"
-import { errorEmbed, successEmbed } from "../../../Embeds/status.ts"
+import { errorEmbed, successEmbed } from "../../../embeds/status.ts"
 
 class FilterCommand implements PlayerCommand {
 	public adminCommand: boolean = false

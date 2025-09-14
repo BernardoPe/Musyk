@@ -1,7 +1,7 @@
 import { Config, PlayerCommand, QueueMetadata } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
-import { sendEmbed } from "../../../Embeds/channels.ts"
-import { errorEmbed, successEmbed } from "../../../Embeds/status.ts"
+import { sendEmbed } from "../../../embeds/channels.ts"
+import { errorEmbed, successEmbed } from "../../../embeds/status.ts"
 import { GuildTextBasedChannel } from "discord.js"
 
 class ResumeCommand implements PlayerCommand {
@@ -14,16 +14,16 @@ class ResumeCommand implements PlayerCommand {
 	user = null
 
 	execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel, args: string[], config: Config) {
-		if (serverQueue.dispatcher && serverQueue.dispatcher.isPlaying()) {
+		if (serverQueue.dispatcher?.isPlaying()) {
 			const embed = errorEmbed(null, config.lang.commands.resume.already_playing)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
-		if (serverQueue.dispatcher && serverQueue.dispatcher.isPaused()) {
+
+		if (serverQueue.dispatcher?.isPaused()) {
 			serverQueue.dispatcher.resume()
 			const embed = successEmbed(null, config.lang.commands.resume.resumed)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
-			return
 		}
 	}
 }

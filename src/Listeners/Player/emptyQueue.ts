@@ -1,10 +1,8 @@
-import { GuildQueue, Util } from "discord-player"
+import { GuildQueue, Util, GuildQueueEvent } from "discord-player"
 import { GuildQueueEventHandler, QueueMetadata } from "../../types.ts"
-
-import { GuildQueueEvent } from "discord-player"
-import { sendEmbed } from "../../Embeds/channels.ts"
-import { leavingEmbed } from "../../Embeds/Player/queue.ts"
-import { getOrCreateServerInfo } from "../../Storage/server.ts"
+import { sendEmbed } from "../../embeds/channels.ts"
+import { leavingEmbed } from "../../embeds/player/queue.ts"
+import { serverRepository } from "../../storage/repositories/server.ts"
 
 class EmptyQueueHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.EmptyQueue
@@ -13,7 +11,7 @@ class EmptyQueueHandler implements GuildQueueEventHandler {
 		const channel = queue.metadata.textChannel!
 		const col = queue.metadata.collector
 		const data = queue.metadata.playerEmbed
-		const server = await getOrCreateServerInfo(queue.guild)
+		const server = await serverRepository.getOrPut(queue.guild)
 
 		while (queue.metadata.updatingPlayer) await Util.wait(5)
 

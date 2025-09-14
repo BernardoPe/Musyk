@@ -1,13 +1,13 @@
 import { GuildQueueEventHandler, QueueMetadata } from "../../types.ts"
 import { GuildQueue, GuildQueueEvent } from "discord-player"
-import { getOrCreateServerInfo } from "../../Storage/server.ts"
-import { updatePlayer } from "../../Embeds/Player/playing.ts"
+import { updatePlayer } from "../../embeds/player/playing.ts"
+import { serverRepository } from "../../storage/repositories/server.ts"
 
 class PlayerResumeHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.PlayerResume
 
 	public async execute(queue: GuildQueue<QueueMetadata>) {
-		const server = await getOrCreateServerInfo(queue.guild)
+		const server = await serverRepository.getOrPut(queue.guild)
 		updatePlayer(queue, server.lang)
 	}
 }

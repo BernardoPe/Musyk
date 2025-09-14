@@ -1,7 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, GuildTextBasedChannel } from "discord.js"
 
 async function paginate(channel: GuildTextBasedChannel, pages: EmbedBuilder[], buttons: ButtonBuilder[] = []) {
-	if (!channel || !pages || !(pages.length > 0)) return
+	if (!channel || !pages || pages.length <= 0) return
 
 	let index = 0
 
@@ -17,8 +17,8 @@ async function paginate(channel: GuildTextBasedChannel, pages: EmbedBuilder[], b
 
 	const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button1, button2, button3)
 
-	for (let i = 0; i < buttons.length; i++) {
-		row.addComponents(buttons[i])
+	for (const element of buttons) {
+		row.addComponents(element)
 	}
 
 	const data = await channel.send({

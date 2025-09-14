@@ -1,7 +1,7 @@
 import { Colors, EmbedBuilder, Snowflake } from "discord.js"
 import { GuildQueue, RawTrackData, Track } from "discord-player"
 import { QueueMetadata } from "../../types.ts"
-import { Language } from "../../Langs"
+import { Language } from "../../langs"
 
 function getEmoji(source: string, embed?: EmbedBuilder): string {
 	let emoji: Snowflake
@@ -23,10 +23,10 @@ function updatePlayer(queue: GuildQueue<QueueMetadata>, lang: Language) {
 		return
 	}
 
-	queue.metadata.updatingPlayer = true // Prevents unnecessary concurrent upda
+	queue.metadata.updatingPlayer = true // Prevents unnecessary concurrent updates
 
 	const data = queue.metadata.playerEmbed
-	const embed = nowPlayingEmbed(queue, lang) // tes
+	const embed = nowPlayingEmbed(queue, lang)
 
 	data.edit({
 		embeds: [embed],

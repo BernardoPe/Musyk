@@ -1,10 +1,10 @@
 import { GuildQueue, Track } from "discord-player"
 import { QueueMetadata, PlayerCommand, Config } from "../../../types.ts"
 
-import { sendEmbed } from "../../../Embeds/channels.ts"
+import { sendEmbed } from "../../../embeds/channels.ts"
 import { GuildTextBasedChannel } from "discord.js"
-import { errorEmbed, successEmbed } from "../../../Embeds/status.ts"
-import { updatePlayer } from "../../../Embeds/Player/playing.ts"
+import { errorEmbed, successEmbed } from "../../../embeds/status.ts"
+import { updatePlayer } from "../../../embeds/player/playing.ts"
 
 class ReverseCommand implements PlayerCommand {
 	aliases = ["reverse"]
@@ -30,7 +30,6 @@ class ReverseCommand implements PlayerCommand {
 		updatePlayer(serverQueue, config.lang)
 		const embed = successEmbed(null, "Reversed the queue")
 		sendEmbed(channel, { embeds: [embed] }, 20000)
-		return
 	}
 
 	private reverse(serverQueue: GuildQueue<QueueMetadata>, array: Track[]) {
