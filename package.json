@@ -2,8 +2,8 @@
 	"scripts": {
 		"start": "tsx src/bot.ts",
 		"deploy-commands": "tsx src/slash-command-deployment.ts",
-		"db:generate": "prisma generate --no-engine --schema=./src/Storage/schema.prisma",
-		"db:push": "prisma db push --schema=./src/Storage/schema.prisma",
+		"db:generate": "prisma generate --no-engine --schema=./src/storage/schema.prisma",
+		"db:push": "prisma db push --schema=./src/storage/schema.prisma",
 		"lint": "eslint src/**/*.{ts,tsx,md} && prettier --check src/**/*.{ts,tsx,md}",
 		"lint:fix": "eslint src/**/*.{ts,tsx,md} --fix",
 		"lint:staged": "eslint src/**/*.{ts,tsx,md} --fix",
@@ -24,6 +24,7 @@
 		]
 	},
 	"dependencies": {
+		"@discordjs/opus": "^0.10.0",
 		"@prisma/client": "^6.4.1",
 		"@prisma/extension-accelerate": "^1.2.2",
 		"discord-player": "^7.1.0",
