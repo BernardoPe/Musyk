@@ -1,7 +1,9 @@
 {
     "scripts": {
-        "start": "tsx src/bot.ts",
+        "start": "ts-node src/bot.ts",
         "deploy-commands": "tsx src/slash-command-deployment.ts",
+        "db:generate": "prisma generate --no-engine --schema=./src/Storage/schema.prisma",
+        "db:push": "prisma db push --schema=./src/Storage/schema.prisma",
         "lint": "eslint src/**/*.ts",
         "lint:fix": "eslint src/**/*.ts --fix",
         "prettier": "prettier --write src/**/*.ts",
@@ -10,8 +12,7 @@
     "dependencies": {
         "@prisma/client": "^6.4.1",
         "@prisma/extension-accelerate": "^1.2.2",
-        "bgutils-js": "^3.2.0",
-        "discord-player": "^7.0.0",
+        "discord-player": "^7.1.0",
         "discord-player-youtubei": "github:retrouser955/discord-player-youtubei",
         "discord.js": "^14.17.2",
         "dotenv": "^16.4.5",
@@ -19,7 +20,6 @@
         "mediaplex": "^1.0.0",
         "prisma": "^6.4.1",
         "tsx": "^4.19.3",
-        "youtubei.js": "^15.0.1",
         "winston": "^3.13.0"
     },
     "devDependencies": {

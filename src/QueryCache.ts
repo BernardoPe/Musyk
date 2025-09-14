@@ -58,19 +58,22 @@ export class QueryCache implements QueryCacheProvider<CachedTrack> {
 	}
 
 	public async addData(data: SearchResult) {
-        if (data.hasPlaylist()) {
-            QueryCache.resultCache.set(
-                data.query.toLowerCase(),
-                new DiscordPlayerQueryResultCache({
-                    track: data.tracks[0],
-                    playlist: data.playlist,
-                    queryAliases: new Set([data.query.toLowerCase()]),
-                }, EXPIRE_AFTER)
-            )
-            return
-        }
+		if (data.hasPlaylist()) {
+			QueryCache.resultCache.set(
+				data.query.toLowerCase(),
+				new DiscordPlayerQueryResultCache(
+					{
+						track: data.tracks[0],
+						playlist: data.playlist,
+						queryAliases: new Set([data.query.toLowerCase()]),
+					},
+					EXPIRE_AFTER
+				)
+			)
+			return
+		}
 
-        const isURL = URL.canParse(data.query)
+		const isURL = URL.canParse(data.query)
 		data.tracks.forEach((trackData) => {
 			const key = trackData.url.toLowerCase()
 			if (isURL && !QueryCache.resultCache.has(key)) {

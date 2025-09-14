@@ -14,7 +14,7 @@ class MusicBot {
 	player: Player
 	commands: { [key: string]: BaseCommand } = {}
 
-	constructor(token?: string) {
+	constructor() {
 		this.client = new Client({
 			intents: [
 				GatewayIntentBits.Guilds,
@@ -27,10 +27,17 @@ class MusicBot {
 		const cache = new QueryCache()
 		this.player = new Player(this.client, { skipFFmpeg: true, queryCache: cache })
 		cache.player = this.player
-		this.registerCommands()
-			.then(() => this.registerExtractors())
-			.then(() => this.addEventListeners())
-			.then(() => this.client.login(token || process.env.TOKEN))
+	}
+
+	public async initialize() {
+		await this.registerCommands()
+		await this.registerExtractors()
+		await this.addEventListeners()
+		const token = process.env.TOKEN
+		if (!token) {
+			throw new Error("No TOKEN provided in environment variables")
+		}
+		await this.client.login(token)
 	}
 
 	private async addEventListeners() {
@@ -63,13 +70,14 @@ class MusicBot {
 	private async registerExtractors() {
 		await this.player.extractors.register(YoutubeiExtractor, {
 			overrideBridgeMode: {
-                youtubeVideo: "ytmusic",
-                youtubePlaylist: "ytmusic",
+				youtubeVideo: "ytmusic",
+				youtubePlaylist: "ytmusic",
 				spotifySong: "ytmusic",
 				spotifyAlbum: "ytmusic",
 				spotifySearch: "yt",
 				default: "yt",
 			},
+			generateWithPoToken: true
 		})
 		logger.info("[EXTRACTORS]: Youtubei extractor registered")
 		await this.player.extractors.loadMulti(DefaultExtractors)
@@ -85,4 +93,10 @@ process.on("unhandledRejection", (reason, promise) => {
 	console.error("Unhandled Rejection at:", promise)
 })
 
-export default new MusicBot()
+const bot = new MusicBot();
+
+(async () => {
+	await bot.initialize()
+})()
+
+export default bot
