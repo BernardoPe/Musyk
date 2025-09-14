@@ -1,6 +1,7 @@
 import { Player } from "discord-player"
-import { DefaultExtractors } from "@discord-player/extractor"
 import { YoutubeiExtractor } from "discord-player-youtubei"
+import { DefaultExtractors, SpotifyExtractor as sp } from "@discord-player/extractor"
+import { SpotifyExtractor } from "discord-player-spotify"
 import { Client, ClientEvents, GatewayIntentBits } from "discord.js"
 import "dotenv/config"
 import { BaseCommand } from "./types.ts"
@@ -77,10 +78,12 @@ class MusicBot {
 				spotifySearch: "yt",
 				default: "yt",
 			},
-			generateWithPoToken: true
+			generateWithPoToken: true,
 		})
-		logger.info("[EXTRACTORS]: Youtubei extractor registered")
+		await this.player.extractors.register(SpotifyExtractor, {})
 		await this.player.extractors.loadMulti(DefaultExtractors)
+		await this.player.extractors.unregister(sp.identifier)
+		logger.info("[EXTRACTORS]: Youtubei extractor registered")
 		logger.info("[EXTRACTORS]: Default extractors registered")
 	}
 }

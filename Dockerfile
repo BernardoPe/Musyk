@@ -22,7 +22,7 @@ RUN npm install --verbose
 COPY . .
 
 # Generate Prisma client
-RUN npm db:generate
+RUN npx prisma generate --no-engine --schema=./src/Storage/schema.prisma
 
 # Command to run the application
 CMD ["npm", "start"]
