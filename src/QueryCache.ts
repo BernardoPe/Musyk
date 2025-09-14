@@ -23,7 +23,7 @@ export class QueryCache implements QueryCacheProvider<CachedTrack> {
 	private readonly cleanupExpiredEntries = () => {
 		const now = Date.now()
 		// eslint-disable-next-line
-        // @ts-ignore
+		// @ts-ignore
 		for (const [key, value] of QueryCache.resultCache.entries()) {
 			if (value.expireAfter < now) {
 				QueryCache.resultCache.delete(key)
@@ -97,7 +97,7 @@ export class QueryCache implements QueryCacheProvider<CachedTrack> {
 }
 
 type CachedTrack = {
-    track: Track;
-    playlist: Playlist | null | undefined;
-    queryAliases: Set<string>;
-};
+	track: Track
+	playlist: Playlist | null | undefined
+	queryAliases: Set<string>
+}

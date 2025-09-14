@@ -27,9 +27,9 @@ const prefixCommand = new SlashCommandBuilder()
 
 const helpCommand = new SlashCommandBuilder().setName("help").setDescription("Learn how to use Musyk").toJSON()
 
-const rest = new REST().setToken(process.env.TOKEN || "");
+const rest = new REST().setToken(process.env.TOKEN || "")
 
-(async () => {
+;(async () => {
 	try {
 		console.log("Started refreshing application (/) commands.")
 		const data = await rest.put(Routes.applicationCommands(process.env.BOT_ID || ""), {

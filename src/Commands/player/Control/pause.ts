@@ -25,8 +25,8 @@ class PauseCommand implements PlayerCommand {
 			return
 		}
 		const embed = successEmbed(null, config.lang.commands.pause.paused)
-        serverQueue.dispatcher!.pause()
-        sendEmbed(channel, { embeds: [embed] }, 20000)
+		serverQueue.dispatcher!.pause()
+		sendEmbed(channel, { embeds: [embed] }, 20000)
 	}
 }
 

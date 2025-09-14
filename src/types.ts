@@ -18,9 +18,9 @@ import { Language } from "./langs"
  * @see {@link https://discord-player.js.org/docs/discord-player/class/Player}
  */
 interface MusicBot {
-    client: Client;
-    player: Player;
-    commands: { [key: string]: BaseCommand };
+	client: Client
+	player: Player
+	commands: { [key: string]: BaseCommand }
 }
 
 /**
@@ -31,8 +31,8 @@ interface MusicBot {
  * @see {@link https://discord-player.js.org/docs/discord-player/type/GuildQueueEvents}
  */
 interface GuildQueueEventHandler {
-    name: GuildQueueEvent;
-    execute: (...args: any) => Promise<void> | void;
+	name: GuildQueueEvent
+	execute: (...args: any) => Promise<void> | void
 }
 
 /**
@@ -43,8 +43,8 @@ interface GuildQueueEventHandler {
  * @see {@link https://discord.js.org/docs/packages/discord.js/14.16.3/ClientEvents:Interface}
  */
 interface ClientEventHandler {
-    name: Events;
-    execute: (...args: any) => Promise<void> | void;
+	name: Events
+	execute: (...args: any) => Promise<void> | void
 }
 
 /**
@@ -59,26 +59,26 @@ interface ClientEventHandler {
  * @param user - The user that triggered the command
  */
 interface BaseCommand {
-    name: string;
-    aliases: string[];
-    adminCommand: boolean;
-    requiresPlayer: boolean;
-    user: string | null;
-    msg: string | null;
-    guild: string | null;
+	name: string
+	aliases: string[]
+	adminCommand: boolean
+	requiresPlayer: boolean
+	user: string | null
+	msg: string | null
+	guild: string | null
 }
 
 interface PlayerCommand extends BaseCommand {
-    execute(
-        serverQueue: GuildQueue<QueueMetadata> | null,
-        channel: GuildTextBasedChannel,
-        args: string[],
-        config: Config
-    ): Promise<void> | void;
+	execute(
+		serverQueue: GuildQueue<QueueMetadata> | null,
+		channel: GuildTextBasedChannel,
+		args: string[],
+		config: Config
+	): Promise<void> | void
 }
 
 interface BotCommand extends BaseCommand {
-    execute(bot: MusicBot, msg: GuildMessage, args: string[], config: Config): Promise<void> | void;
+	execute(bot: MusicBot, msg: GuildMessage, args: string[], config: Config): Promise<void> | void
 }
 
 /**
@@ -91,12 +91,12 @@ interface BotCommand extends BaseCommand {
  * @param updatingPlayer - Whether the player is currently being updated
  */
 type QueueMetadata = {
-    voiceChannel: VoiceBasedChannel | null;
-    textChannel: GuildTextBasedChannel | null;
-    playerEmbed: Message | null;
-    collector: InteractionCollector<ButtonInteraction> | null;
-    updatingPlayer: boolean | null;
-};
+	voiceChannel: VoiceBasedChannel | null
+	textChannel: GuildTextBasedChannel | null
+	playerEmbed: Message | null
+	collector: InteractionCollector<ButtonInteraction> | null
+	updatingPlayer: boolean | null
+}
 
 /**
  * Represents the configuration for the player in a server
@@ -107,11 +107,11 @@ type QueueMetadata = {
  * @param leaveOnEndCooldown - The cooldown before the player leaves the voice channel when the queue ends
  */
 type PlayerConfig = {
-    searchEngine: string;
-    volume: number;
-    leaveOnEnd: boolean;
-    leaveOnEndCooldown: number;
-};
+	searchEngine: string
+	volume: number
+	leaveOnEnd: boolean
+	leaveOnEndCooldown: number
+}
 
 /**
  * Represents the configuration information for a server
@@ -121,15 +121,15 @@ type PlayerConfig = {
  * @param playerConfig - The player configuration used in the server
  */
 type Config = {
-    prefix: string;
-    lang: Language;
-    playerConfig: PlayerConfig;
-};
+	prefix: string
+	lang: Language
+	playerConfig: PlayerConfig
+}
 
 /**
  * Represents a message in a server
  */
-type GuildMessage = Message<true>;
+type GuildMessage = Message<true>
 
 export {
 	MusicBot,

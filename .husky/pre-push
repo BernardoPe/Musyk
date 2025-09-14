@@ -1,0 +1,15 @@
+echo "🔍 Running pre-push checks..."
+
+# Run full linting on all files
+echo "📋 Linting all files..."
+npm run lint
+
+# Run type checking
+echo "🔍 Type checking..."
+npm run type-check
+
+# Run prettier check on all files
+echo "🎨 Checking code formatting..."
+npx prettier --check "src/**/*.{ts,tsx,md}"
+
+echo "✅ Pre-push checks passed!"

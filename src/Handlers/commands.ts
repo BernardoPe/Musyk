@@ -44,9 +44,9 @@ export async function handleCommand(msg: GuildMessage | ButtonInteraction, args:
 				const embed = errorEmbed(null, configInfo.lang.shared.not_playing)
 				return sendEmbed(channel, { embeds: [embed] }, 20000)
 			}
-			(command as PlayerCommand).execute(serverQueue, channel, args, configInfo)
+			;(command as PlayerCommand).execute(serverQueue, channel, args, configInfo)
 		} else {
-			(command as BotCommand).execute(bot, msg as GuildMessage, args, configInfo)
+			;(command as BotCommand).execute(bot, msg as GuildMessage, args, configInfo)
 		}
 	}
 }

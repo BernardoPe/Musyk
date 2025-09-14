@@ -47,7 +47,7 @@ class PlayCommand implements BotCommand {
 		}
 
 		const queue: GuildQueue<QueueMetadata> =
-            bot.player.queues.get(msg.guild.id) || this.createQueue(bot, channel, voiceChannel, config)
+			bot.player.queues.get(msg.guild.id) || this.createQueue(bot, channel, voiceChannel, config)
 
 		if (queue.connection && queue.channel !== msg.member!.voice.channel) {
 			const embed = errorEmbed(null, config.lang.commands.play.already_connected)

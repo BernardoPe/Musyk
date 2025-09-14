@@ -5,13 +5,8 @@
 		"sourceType": "module"
 	},
 	"plugins": ["@typescript-eslint"],
-	"extends": [
-		"eslint:recommended",
-		"prettier",
-		"plugin:@typescript-eslint/recommended"
-	],
+	"extends": ["eslint:recommended", "prettier", "plugin:@typescript-eslint/recommended"],
 	"rules": {
-		"indent": ["error", "tab"],
 		"quotes": ["error", "double"],
 		"semi": ["error", "never"],
 		"no-explicit-any": "off",

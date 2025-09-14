@@ -4,10 +4,10 @@ import { Language } from "../langs"
 
 function playerAnalyticsEmbed(
 	stats: {
-        queuesCount: number;
-        queryCacheEnabled: boolean;
-        queues: GuildQueueStatisticsMetadata[];
-    },
+		queuesCount: number
+		queryCacheEnabled: boolean
+		queues: GuildQueueStatisticsMetadata[]
+	},
 	lang: Language
 ): EmbedBuilder[] {
 	const globalInfo = new EmbedBuilder()

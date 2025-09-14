@@ -1,10 +1,8 @@
 # Musyk :notes:
 
-
 Musyk is a discord bot developed using the [discord-player](https://github.com/androz2091/discord-player) framework to play music on discord servers.
 
 ## Features :bulb:
-
 
 - Music playback from multiple platforms with search functionality and playlist support.
 - Queue management with skip, pause, resume, and stop commands.
@@ -14,17 +12,16 @@ Musyk is a discord bot developed using the [discord-player](https://github.com/a
 
 ## Installation :cd:
 
-
 ### Prerequisites :warning:
 
 - [Node.js](https://nodejs.org/en) - The bot must be run in a Node.js environment. You can download Node.js [here](https://nodejs.org/en/download/). It is recommended to use the LTS
-build available for your operating system.
+  build available for your operating system.
 - [FFmpeg](https://ffmpeg.org/) - The bot comes with the ffmpeg-static package which should allow the bot to run without any additional setup. However, you
-can install your own version of FFmpeg [here](https://ffmpeg.org/download.html). To install FFmpeg, just download the binaries and
-add the folder containing the binaries to your system's `PATH` environment variable.
+  can install your own version of FFmpeg [here](https://ffmpeg.org/download.html). To install FFmpeg, just download the binaries and
+  add the folder containing the binaries to your system's `PATH` environment variable.
 - [Discord Account](https://discord.com) - You will need to register a bot on the Discord Developer site. To do this, go to the [Developer site](https://discord.com/developers/applications)
-and click on the `New Application` button. Give your bot a name and click on the `Create` button. On the sidebar, click on the `Bot` tab and then click on the `Reset Token` button to get your bot's token.
-This is the token that should be used in the `.ENV` file.
+  and click on the `New Application` button. Give your bot a name and click on the `Create` button. On the sidebar, click on the `Bot` tab and then click on the `Reset Token` button to get your bot's token.
+  This is the token that should be used in the `.ENV` file.
 
 ### Setup :wrench:
 
@@ -35,20 +32,23 @@ This is the token that should be used in the `.ENV` file.
 ---
 
 ##### Basic setup
+
 Download the .zip source code. Extract the contents of the .zip file and move on to the next step.
 
 ##### Git setup
+
 If you have [Git](https://git-scm.com/) installed, you can clone the repository using the following command:
-```git clone https://github.com/BernardoPe/Musyk.git```
+`git clone https://github.com/BernardoPe/Musyk.git`
 
 ##### Setup continuation
+
 1. Open a terminal and navigate to the folder where the bot's files are located.
 2. Run `npm install` to install the bot's dependencies.
-3. Copy the `.env.example` file and rename it to `.env`. Fill in all the required information. 
-To get the optional Youtube access token, go to [bot.ts](src/bot.ts) and uncomment the line `// generateOauthTokens();`. Run the bot and follow the instructions to get the token.
+3. Copy the `.env.example` file and rename it to `.env`. Fill in all the required information.
+   To get the optional Youtube access token, go to [bot.ts](src/bot.ts) and uncomment the line `// generateOauthTokens();`. Run the bot and follow the instructions to get the token.
 4. Run `npm start` to start the bot.
 
-To create the bot's invite link, go to the [Discord Developer site](https://discord.com/developers/applications) and click on your bot's application. 
+To create the bot's invite link, go to the [Discord Developer site](https://discord.com/developers/applications) and click on your bot's application.
 
 In the sidebar, you'll find the OAuth2 URL generator. Select the bot and applications.commands options. Once you select the bot option, a list of permissions will appear, allowing you to configure the permissions your bot needs.
 
@@ -58,17 +58,22 @@ After configuring the permissions, copy the generated URL and paste it into the 
 
 ---
 
-You can access the bot's Docker image on [Docker Hub](https://hub.docker.com/r/bernardope/musyk). 
+You can access the bot's Docker image on [Docker Hub](https://hub.docker.com/r/bernardope/musyk).
 To run the bot using this image, you can use the following command:
+
 ```
 docker compose up -d
 ```
-Alternatively, you can use the provided [Dockerfile](Dockerfile) to build the image yourself. 
+
+Alternatively, you can use the provided [Dockerfile](Dockerfile) to build the image yourself.
 Run the following command to build the image:
+
 ```
 docker build -t musyk .
 ```
+
 Then, you can run the image using the following command:
+
 ```
 docker run -d \
 --name musyk

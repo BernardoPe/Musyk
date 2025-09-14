@@ -1,6 +1,6 @@
 enum CacheType {
-    Server,
-    User,
+	Server,
+	User,
 }
 
 const serverCache = new Map<string, any>()

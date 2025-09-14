@@ -7,24 +7,24 @@ import { Language } from "../../langs"
 import { languageService } from "../services/language.ts"
 
 export interface PlayerConfig {
-    searchEngine: string;
-    volume: number;
-    leaveOnEnd: boolean;
-    leaveOnEndCooldown: number;
+	searchEngine: string
+	volume: number
+	leaveOnEnd: boolean
+	leaveOnEndCooldown: number
 }
 
 export interface ServerInfo {
-    serverId: string;
-    prefix: string;
-    lang: Language;
-    playerConfig: PlayerConfig;
+	serverId: string
+	prefix: string
+	lang: Language
+	playerConfig: PlayerConfig
 }
 
 export interface PlayerConfigUpdate {
-    searchEngine?: SearchQueryType;
-    volume?: number;
-    leaveOnEnd?: boolean;
-    leaveOnEndCooldown?: number;
+	searchEngine?: SearchQueryType
+	volume?: number
+	leaveOnEnd?: boolean
+	leaveOnEndCooldown?: number
 }
 
 class ServerRepository {

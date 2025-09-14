@@ -5,22 +5,22 @@ import { CacheType, doCachedQuery, invalidateCache } from "../cache.ts"
 import { DEFAULT_USER_PLAYER_CONFIG } from "../constants/user.ts"
 
 export interface UserPlayerConfig {
-    searchEngine: string;
-    volume: number;
-    leaveOnEnd: boolean;
-    leaveOnEndCooldown: number;
+	searchEngine: string
+	volume: number
+	leaveOnEnd: boolean
+	leaveOnEndCooldown: number
 }
 
 export interface UserInfo {
-    userId: string;
-    playerConfig: UserPlayerConfig | null;
+	userId: string
+	playerConfig: UserPlayerConfig | null
 }
 
 export interface UserPlayerConfigUpdate {
-    searchEngine?: SearchQueryType;
-    volume?: number;
-    leaveOnEnd?: boolean;
-    leaveOnEndCooldown?: number;
+	searchEngine?: SearchQueryType
+	volume?: number
+	leaveOnEnd?: boolean
+	leaveOnEndCooldown?: number
 }
 
 class UserRepository {
@@ -36,11 +36,11 @@ class UserRepository {
 					userId: existingUser.userId,
 					playerConfig: existingUser.playerConfig
 						? {
-							searchEngine: existingUser.playerConfig.searchEngine,
-							volume: existingUser.playerConfig.volume,
-							leaveOnEnd: existingUser.playerConfig.leaveOnEnd,
-							leaveOnEndCooldown: existingUser.playerConfig.leaveOnEndCooldown,
-						}
+								searchEngine: existingUser.playerConfig.searchEngine,
+								volume: existingUser.playerConfig.volume,
+								leaveOnEnd: existingUser.playerConfig.leaveOnEnd,
+								leaveOnEndCooldown: existingUser.playerConfig.leaveOnEndCooldown,
+							}
 						: null,
 				}
 			}

@@ -9,18 +9,18 @@ import { Language } from "../../langs"
 import { serverRepository } from "../../storage/repositories/server.ts"
 
 type ButtonCommand = (
-    interaction: ButtonInteraction,
-    serverQueue: GuildQueue<QueueMetadata>,
-    serverPrefix: string,
-    bot: MusicBot
-) => Promise<void> | void;
+	interaction: ButtonInteraction,
+	serverQueue: GuildQueue<QueueMetadata>,
+	serverPrefix: string,
+	bot: MusicBot
+) => Promise<void> | void
 
 type TextCommand = (
-    interaction: ChatInputCommandInteraction,
-    serverPrefix: string,
-    bot: MusicBot,
-    lang: Language
-) => Promise<void> | void;
+	interaction: ChatInputCommandInteraction,
+	serverPrefix: string,
+	bot: MusicBot,
+	lang: Language
+) => Promise<void> | void
 
 class InteractionCreateHandler implements ClientEventHandler {
 	public name: Events.InteractionCreate = Events.InteractionCreate

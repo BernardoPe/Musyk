@@ -1,177 +1,177 @@
 {
-  "tag": "pt-pt",
-  "shared": {
-    "not_playing": "Não está a tocar nenhuma música de momento",
-    "current_prefix": "O prefixo atual é **{prefix}**",
-    "current_lang": "A língua atual é **{lang}**",
-    "set_lang": "Língua definida para **{lang}**",
-    "set_lang_error": "Ocorreu um erro ao definir a língua.",
-    "set_prefix": "Prefixo definido para **{prefix}**",
-    "set_prefix_error": "Ocorreu um erro ao definir o prefixo."
-  },
-  "embeds": {
-    "analytics": {
-      "global_title": "Análises do Player",
-      "global_description": "Estatísticas do player",
-      "title": "Análises da Fila",
-      "description": "Estatísticas da fila para o servidor **{guild}**",
-      "fields": {
-        "instances": "Instâncias",
-        "players": "Players",
-        "event_loop_lag": "Atraso do Event Loop (ms)",
-        "tracks_count": "Contagem de Faixas",
-        "history_size": "Tamanho do Histórico",
-        "rss": "Rss (MB)",
-        "heap_total": "Heap Total (MB)",
-        "heap_used": "Heap Usado (MB)"
-      }
-    },
-    "left": {
-      "description": "A sair do canal..."
-    },
-    "leaving": {
-      "description": "A fila está vazia, a sair em 5 minutos..."
-    },
-    "create_link": {
-      "label": "Link de Convite"
-    },
-    "now_playing": {
-      "title": "A Tocar Agora",
-      "paused_title": "Em pausa",
-      "description": "A tocar agora em **{guild}**",
-      "fields": {
-        "duration": "Duração",
-        "author": "Pedido por",
-        "requested_by": "Pedido por",
-        "volume": "Volume",
-        "songs_in_queue": "Músicas na Fila",
-        "total_queue_duration": "Duração Total da Fila",
-        "next_track": "Próxima Faixa"
-      }
-    },
-    "queue": {
-      "title": "Página {page} da fila",
-      "fields": {
-        "currently_playing": "A Tocar Agora",
-        "position": "Posição {position}:",
-        "total_queue_duration": "Duração Total da Fila",
-        "songs_in_queue": "Músicas na Fila"
-      }
-    },
-    "playlist_queued": {
-      "title": "Playlist adicionada à Fila",
-      "fields": {
-        "songs": "Músicas",
-        "duration": "Duração"
-      }
-    },
-    "song_queued": {
-      "title": "Música adicionada à Fila",
-      "duration": "Duração",
-      "position": "Posição na Fila",
-      "requested_by": "Pedido por"
-    },
-    "help": {
-      "intro": {
-        "title": "Musyk - Um Bot de Música",
-        "description": "Musyk é um bot do Discord que permite tocar música no seu servidor.\n\n Com o Musyk, pode tocar música do Youtube, Spotify e SoundCloud."
-      },
-      "playing_music": {
-        "title": "A Tocar Música",
-        "description": "Para tocar música, use o comando '.play <nome da música / url>'. O Musyk irá juntar-se ao seu canal de voz e começar a tocar a música pedida.\n\nO Musyk irá automaticamente procurar a música pedida no Youtube se não for fornecido um URL. Se quiser procurar numa plataforma específica, use os seguintes parâmetros:\n\n**-yt** : Procurar no Youtube\n**-sp** : Procurar no Spotify\n**-sc** : Procurar no SoundCloud\n\nPor exemplo, '.play -yt Never Gonna Give You Up ' irá procurar 'Never Gonna Give You Up' no Youtube."
-      },
-      "commands": {
-        "title": "Comandos",
-        "description": "Os comandos do Musyk começam com o prefixo padrão '.'. Este prefixo pode ser alterado com o *slash command* '/prefix'. Os comandos disponíveis estão listados abaixo.\n\n**/prefix <novo prefixo> ** : Definir um novo prefixo de comando para este servidor. Se 'current' ou 'curr' for fornecido, este comando irá mostrar o prefixo atual. \n\n**/language <nova língua>** Define a língua utilizada pelo bot. Atualmente estão disponíveis Inglês e Português de Portugal. \n\n**.play/.p <nome da música / url>** : Tocar uma música/playlist ou adicioná-la à fila de música.\n\n**.stop**: Parar a reprodução atual e limpar a fila de música.\n\n**.clear**: Limpar a fila de música.\n\n**.disconnect/.leave/.dc**: Desconectar o bot do canal de voz.\n\n**.skip**: Pular a música que está a tocar e tocar a próxima música na fila.\n\n**.swap <Posição na Fila 1> <Posição na Fila 2>**: Trocar a posição de duas músicas na fila.\n\n**.progress**: Mostrar a barra de progresso da música atual.\n\n**.pause**: Pausar a reprodução atual.\n\n**.resume**: Retomar a reprodução pausada.\n\n**.queue**: Mostrar a fila de músicas atual.\n\n**.seek <timestamp>**: saltar ou retroceder para um timestamp na música. O formato é hh:mm:ss, (valores zero antes do primeiro valor não zero podem ser omitidos)\n\n**.volume <volume>**: Ajustar o volume da reprodução. Se não forem fornecidos argumentos, mostra o volume atual \n\n**.remove <Posição na Fila>**: Remover uma música específica da fila de música.\n\n**.shuffle**: Embaralhar a ordem das músicas na fila de música.\n\n**.skipto <Posição na Fila>**: Pular para uma música específica na fila de música. Remove todas as músicas entre a atual e a especificada da fila.\n\n**.reverse**: Inverter a prioridade da fila.\n\n**.jump <Posição na Fila>**: Saltar para uma posição específica na fila. Mantém todas as músicas entre a atual e a especificada na fila.\n\n**.cycle <modo>**: Alternar o modo de repetição para a fila de música. As opções disponíveis são 'off' para sem repetição, 'track' para repetição da faixa atual, 'queue' para ciclo da fila, e 'autoplay' para pesquisa automática após o fim da fila."
-      },
-      "buttons": {
-        "title": "Botões de Reprodução",
-        "fields": {
-          "skip": "Saltar a música atual.",
-          "pause": "Pausar/Retomar o player.",
-          "stop": "Parar o player.",
-          "increase_volume": "Aumentar o volume em 20%.",
-          "decrease_volume": "Diminuir o volume em 20%.",
-          "shuffle": "Embaralhar a fila.",
-          "queue": "Mostrar a fila atual.",
-          "reverse": "Inverter a fila.",
-          "clear": "Limpar a fila.",
-          "loop": "Alternar o ciclo da faixa atual.",
-          "autoplay": "Alternar o modo de reprodução automática.",
-          "dc": "Desconectar o bot do canal de voz."
-        }
-      },
-      "filters": {
-        "title": "Filtros de Reprodução",
-        "description": "Através do comando **.filter <filtro>**, pode definir filtros para o player de áudio.\n\nOs filtros disponíveis são: bassboost, 8D, vaporwave, nightcore, phaser, tremolo, vibrato, reverse, treble, normalizer, normalizer2, surrounding, pulsator, subboost, karaoke, flanger, gate, hass, mcompand, mono, mstlr, mstrr, compress, expander, softlimiter, chorus, chorus2d, chorus3d, fadein, dim, e lofi.\n\nSe passar 'disableall' como argumento, todos os filtros serão desativados."
-      },
-      "additional_info": {
-        "title": "Informações Adicionais",
-        "description": "Certifique-se de que o Musyk tem as permissões necessárias para entrar em canais de voz e gerir a reprodução de música.\n\nSe encontrar algum bug, pode abrir uma issue no meu [repositório do GitHub](https://github.com/BernardoPe/Musyk)."
-      }
-    }
-  },
-  "commands": {
-    "shared": {
-      "empty_queue": "A fila está vazia.",
-      "queue_has_only_one_song": "A fila tem apenas uma música.",
-      "invalid_position": "Posição inválida.",
-      "value_must_be_number": "O valor deve ser um número."
-    },
-    "cycle": {
-      "loop_mode_off": "Modo de repetição desativado.",
-      "repeat_mode_on": "Repetição da faixa ativada.",
-      "looping_queue_on": "Ciclo da fila ativado.",
-      "autoplay_on": "Modo de reprodução automática ativado.",
-      "current_mode": "Modo atual: {mode}."
-    },
-    "pause": {
-      "already_paused": "O player já está pausado.",
-      "paused": "Player pausado."
-    },
-    "resume": {
-      "already_resumed": "O player já está a tocar.",
-      "resumed": "Player retomado."
-    },
-    "seek": {
-      "invalid_time": "**{time}** não é um timestamp válido nesta faixa.",
-      "invalid_time_format": "**{time}** não é um formato de timestamp válido. Por favor, use `hh:mm:ss`.",
-      "seeked": "Tempo de reprodução da faixa definido para **{time}**."
-    },
-    "filter": {
-      "disabled_all": "Todos os filtros desativados.",
-      "disabled_single": "Filtro **{filter}** desativado.",
-      "enabled_single": "Filtro **{filter}** ativado.",
-      "invalid_filter": "Filtro inválido."
-    },
-    "remove": {
-      "invalid_index": "Índice inválido, deve ser 1-{queueLength}.",
-      "removed": "{song} removida da fila."
-    },
-    "reverse": {
-      "reversed": "Fila invertida."
-    },
-    "shuffle": {
-      "not_enough_songs": "Não há músicas suficientes para embaralhar.",
-      "shuffled": "Fila embaralhada."
-    },
-    "swap": {
-      "invalid_position_1": "Posição 1 fornecida inválida.",
-      "invalid_position_2": "Posição 2 fornecida inválida.",
-      "swapped": "**{song1}** e **{song2}** trocadas na fila."
-    },
-    "volume": {
-      "current_volume": "O volume está em {volume}%.",
-      "invalid_volume": "Volume inválido, deve ser 0-200.",
-      "volume_set": "Volume definido para {volume}%."
-    },
-    "play": {
-      "provide_search": "Por favor forneça argumentos de pesquisa.",
-      "need_to_be_in_voice": "Precisa de estar num canal de voz para tocar música.",
-      "need_permissions": "Preciso de permissões para entrar e falar no seu canal de voz.",
-      "already_connected": "Já estou conectado a um canal de voz diferente.",
-      "no_results": "Nenhum resultado encontrado.",
-      "error": "Ocorreu um erro ao tocar a música."
-    }
-  }
+	"tag": "pt-pt",
+	"shared": {
+		"not_playing": "Não está a tocar nenhuma música de momento",
+		"current_prefix": "O prefixo atual é **{prefix}**",
+		"current_lang": "A língua atual é **{lang}**",
+		"set_lang": "Língua definida para **{lang}**",
+		"set_lang_error": "Ocorreu um erro ao definir a língua.",
+		"set_prefix": "Prefixo definido para **{prefix}**",
+		"set_prefix_error": "Ocorreu um erro ao definir o prefixo."
+	},
+	"embeds": {
+		"analytics": {
+			"global_title": "Análises do Player",
+			"global_description": "Estatísticas do player",
+			"title": "Análises da Fila",
+			"description": "Estatísticas da fila para o servidor **{guild}**",
+			"fields": {
+				"instances": "Instâncias",
+				"players": "Players",
+				"event_loop_lag": "Atraso do Event Loop (ms)",
+				"tracks_count": "Contagem de Faixas",
+				"history_size": "Tamanho do Histórico",
+				"rss": "Rss (MB)",
+				"heap_total": "Heap Total (MB)",
+				"heap_used": "Heap Usado (MB)"
+			}
+		},
+		"left": {
+			"description": "A sair do canal..."
+		},
+		"leaving": {
+			"description": "A fila está vazia, a sair em 5 minutos..."
+		},
+		"create_link": {
+			"label": "Link de Convite"
+		},
+		"now_playing": {
+			"title": "A Tocar Agora",
+			"paused_title": "Em pausa",
+			"description": "A tocar agora em **{guild}**",
+			"fields": {
+				"duration": "Duração",
+				"author": "Pedido por",
+				"requested_by": "Pedido por",
+				"volume": "Volume",
+				"songs_in_queue": "Músicas na Fila",
+				"total_queue_duration": "Duração Total da Fila",
+				"next_track": "Próxima Faixa"
+			}
+		},
+		"queue": {
+			"title": "Página {page} da fila",
+			"fields": {
+				"currently_playing": "A Tocar Agora",
+				"position": "Posição {position}:",
+				"total_queue_duration": "Duração Total da Fila",
+				"songs_in_queue": "Músicas na Fila"
+			}
+		},
+		"playlist_queued": {
+			"title": "Playlist adicionada à Fila",
+			"fields": {
+				"songs": "Músicas",
+				"duration": "Duração"
+			}
+		},
+		"song_queued": {
+			"title": "Música adicionada à Fila",
+			"duration": "Duração",
+			"position": "Posição na Fila",
+			"requested_by": "Pedido por"
+		},
+		"help": {
+			"intro": {
+				"title": "Musyk - Um Bot de Música",
+				"description": "Musyk é um bot do Discord que permite tocar música no seu servidor.\n\n Com o Musyk, pode tocar música do Youtube, Spotify e SoundCloud."
+			},
+			"playing_music": {
+				"title": "A Tocar Música",
+				"description": "Para tocar música, use o comando '.play <nome da música / url>'. O Musyk irá juntar-se ao seu canal de voz e começar a tocar a música pedida.\n\nO Musyk irá automaticamente procurar a música pedida no Youtube se não for fornecido um URL. Se quiser procurar numa plataforma específica, use os seguintes parâmetros:\n\n**-yt** : Procurar no Youtube\n**-sp** : Procurar no Spotify\n**-sc** : Procurar no SoundCloud\n\nPor exemplo, '.play -yt Never Gonna Give You Up ' irá procurar 'Never Gonna Give You Up' no Youtube."
+			},
+			"commands": {
+				"title": "Comandos",
+				"description": "Os comandos do Musyk começam com o prefixo padrão '.'. Este prefixo pode ser alterado com o *slash command* '/prefix'. Os comandos disponíveis estão listados abaixo.\n\n**/prefix <novo prefixo> ** : Definir um novo prefixo de comando para este servidor. Se 'current' ou 'curr' for fornecido, este comando irá mostrar o prefixo atual. \n\n**/language <nova língua>** Define a língua utilizada pelo bot. Atualmente estão disponíveis Inglês e Português de Portugal. \n\n**.play/.p <nome da música / url>** : Tocar uma música/playlist ou adicioná-la à fila de música.\n\n**.stop**: Parar a reprodução atual e limpar a fila de música.\n\n**.clear**: Limpar a fila de música.\n\n**.disconnect/.leave/.dc**: Desconectar o bot do canal de voz.\n\n**.skip**: Pular a música que está a tocar e tocar a próxima música na fila.\n\n**.swap <Posição na Fila 1> <Posição na Fila 2>**: Trocar a posição de duas músicas na fila.\n\n**.progress**: Mostrar a barra de progresso da música atual.\n\n**.pause**: Pausar a reprodução atual.\n\n**.resume**: Retomar a reprodução pausada.\n\n**.queue**: Mostrar a fila de músicas atual.\n\n**.seek <timestamp>**: saltar ou retroceder para um timestamp na música. O formato é hh:mm:ss, (valores zero antes do primeiro valor não zero podem ser omitidos)\n\n**.volume <volume>**: Ajustar o volume da reprodução. Se não forem fornecidos argumentos, mostra o volume atual \n\n**.remove <Posição na Fila>**: Remover uma música específica da fila de música.\n\n**.shuffle**: Embaralhar a ordem das músicas na fila de música.\n\n**.skipto <Posição na Fila>**: Pular para uma música específica na fila de música. Remove todas as músicas entre a atual e a especificada da fila.\n\n**.reverse**: Inverter a prioridade da fila.\n\n**.jump <Posição na Fila>**: Saltar para uma posição específica na fila. Mantém todas as músicas entre a atual e a especificada na fila.\n\n**.cycle <modo>**: Alternar o modo de repetição para a fila de música. As opções disponíveis são 'off' para sem repetição, 'track' para repetição da faixa atual, 'queue' para ciclo da fila, e 'autoplay' para pesquisa automática após o fim da fila."
+			},
+			"buttons": {
+				"title": "Botões de Reprodução",
+				"fields": {
+					"skip": "Saltar a música atual.",
+					"pause": "Pausar/Retomar o player.",
+					"stop": "Parar o player.",
+					"increase_volume": "Aumentar o volume em 20%.",
+					"decrease_volume": "Diminuir o volume em 20%.",
+					"shuffle": "Embaralhar a fila.",
+					"queue": "Mostrar a fila atual.",
+					"reverse": "Inverter a fila.",
+					"clear": "Limpar a fila.",
+					"loop": "Alternar o ciclo da faixa atual.",
+					"autoplay": "Alternar o modo de reprodução automática.",
+					"dc": "Desconectar o bot do canal de voz."
+				}
+			},
+			"filters": {
+				"title": "Filtros de Reprodução",
+				"description": "Através do comando **.filter <filtro>**, pode definir filtros para o player de áudio.\n\nOs filtros disponíveis são: bassboost, 8D, vaporwave, nightcore, phaser, tremolo, vibrato, reverse, treble, normalizer, normalizer2, surrounding, pulsator, subboost, karaoke, flanger, gate, hass, mcompand, mono, mstlr, mstrr, compress, expander, softlimiter, chorus, chorus2d, chorus3d, fadein, dim, e lofi.\n\nSe passar 'disableall' como argumento, todos os filtros serão desativados."
+			},
+			"additional_info": {
+				"title": "Informações Adicionais",
+				"description": "Certifique-se de que o Musyk tem as permissões necessárias para entrar em canais de voz e gerir a reprodução de música.\n\nSe encontrar algum bug, pode abrir uma issue no meu [repositório do GitHub](https://github.com/BernardoPe/Musyk)."
+			}
+		}
+	},
+	"commands": {
+		"shared": {
+			"empty_queue": "A fila está vazia.",
+			"queue_has_only_one_song": "A fila tem apenas uma música.",
+			"invalid_position": "Posição inválida.",
+			"value_must_be_number": "O valor deve ser um número."
+		},
+		"cycle": {
+			"loop_mode_off": "Modo de repetição desativado.",
+			"repeat_mode_on": "Repetição da faixa ativada.",
+			"looping_queue_on": "Ciclo da fila ativado.",
+			"autoplay_on": "Modo de reprodução automática ativado.",
+			"current_mode": "Modo atual: {mode}."
+		},
+		"pause": {
+			"already_paused": "O player já está pausado.",
+			"paused": "Player pausado."
+		},
+		"resume": {
+			"already_resumed": "O player já está a tocar.",
+			"resumed": "Player retomado."
+		},
+		"seek": {
+			"invalid_time": "**{time}** não é um timestamp válido nesta faixa.",
+			"invalid_time_format": "**{time}** não é um formato de timestamp válido. Por favor, use `hh:mm:ss`.",
+			"seeked": "Tempo de reprodução da faixa definido para **{time}**."
+		},
+		"filter": {
+			"disabled_all": "Todos os filtros desativados.",
+			"disabled_single": "Filtro **{filter}** desativado.",
+			"enabled_single": "Filtro **{filter}** ativado.",
+			"invalid_filter": "Filtro inválido."
+		},
+		"remove": {
+			"invalid_index": "Índice inválido, deve ser 1-{queueLength}.",
+			"removed": "{song} removida da fila."
+		},
+		"reverse": {
+			"reversed": "Fila invertida."
+		},
+		"shuffle": {
+			"not_enough_songs": "Não há músicas suficientes para embaralhar.",
+			"shuffled": "Fila embaralhada."
+		},
+		"swap": {
+			"invalid_position_1": "Posição 1 fornecida inválida.",
+			"invalid_position_2": "Posição 2 fornecida inválida.",
+			"swapped": "**{song1}** e **{song2}** trocadas na fila."
+		},
+		"volume": {
+			"current_volume": "O volume está em {volume}%.",
+			"invalid_volume": "Volume inválido, deve ser 0-200.",
+			"volume_set": "Volume definido para {volume}%."
+		},
+		"play": {
+			"provide_search": "Por favor forneça argumentos de pesquisa.",
+			"need_to_be_in_voice": "Precisa de estar num canal de voz para tocar música.",
+			"need_permissions": "Preciso de permissões para entrar e falar no seu canal de voz.",
+			"already_connected": "Já estou conectado a um canal de voz diferente.",
+			"no_results": "Nenhum resultado encontrado.",
+			"error": "Ocorreu um erro ao tocar a música."
+		}
+	}
 }

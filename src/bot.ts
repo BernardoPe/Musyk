@@ -96,9 +96,9 @@ process.on("unhandledRejection", (reason, promise) => {
 	console.error("Unhandled Rejection at:", promise)
 })
 
-const bot = new MusicBot();
+const bot = new MusicBot()
 
-(async () => {
+;(async () => {
 	await bot.initialize()
 })()
 
