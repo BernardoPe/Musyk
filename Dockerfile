@@ -7,9 +7,6 @@ RUN apt-get update && apt-get install -y \
      python3 \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=mwader/static-ffmpeg:7.1 /ffmpeg /usr/local/bin/
-COPY --from=mwader/static-ffmpeg:7.1 /ffprobe /usr/local/bin/
-
 # Set working directory inside the container
 WORKDIR /usr/src/app
 
