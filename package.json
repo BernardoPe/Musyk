@@ -12,7 +12,8 @@
 		"format": "npm run prettier",
 		"format:staged": "npm run prettier:staged && npm run lint:staged",
 		"type-check": "tsc --noEmit",
-		"prepare": "husky"
+		"prepare": "husky",
+		"postinstall": "patch-package"
 	},
 	"lint-staged": {
 		"*.{ts,tsx}": [

@@ -1,7 +1,6 @@
 import { Player } from "discord-player"
 import { YoutubeiExtractor } from "discord-player-youtubei"
 import { DefaultExtractors, SpotifyExtractor as sp } from "@discord-player/extractor"
-import { SpotifyExtractor } from "discord-player-spotify"
 import { Client, ClientEvents, GatewayIntentBits } from "discord.js"
 import "dotenv/config"
 import { BaseCommand } from "./types.ts"
@@ -9,6 +8,7 @@ import { getAllFiles } from "./utils/files/json.ts"
 import path from "path"
 import { logger } from "./utils/logger/logger.ts"
 import { QueryCache } from "./QueryCache.ts"
+import { SpotifyExtractor } from "discord-player-spotify"
 
 class MusicBot {
 	client: Client
@@ -77,6 +77,12 @@ class MusicBot {
 				spotifyAlbum: "ytmusic",
 				spotifySearch: "yt",
 				default: "yt",
+			},
+			innertubeConfigRaw: {
+				player_id: "b66835e2",
+			},
+			streamOptions: {
+				useClient: "WEB_EMBEDDED",
 			},
 			generateWithPoToken: true,
 		})
