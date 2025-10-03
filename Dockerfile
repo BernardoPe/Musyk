@@ -10,8 +10,7 @@ RUN apt-get update && apt-get install -y \
 # Set working directory inside the container
 WORKDIR /usr/src/app
 
-# Install patch-package globally
-RUN npm install -g patch-package
+COPY patches ./patches
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
