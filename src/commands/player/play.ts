@@ -114,7 +114,6 @@ class PlayCommand implements BotCommand {
 			volume: config.playerConfig.volume,
 			leaveOnEnd: config.playerConfig.leaveOnEnd,
 			leaveOnEndCooldown: config.playerConfig.leaveOnEndCooldown,
-			disableHistory: true,
 		})
 		queue.metadata = {
 			voiceChannel: voiceChannel,
