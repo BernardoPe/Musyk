@@ -78,9 +78,6 @@ class MusicBot {
 				spotifySearch: "yt",
 				default: "yt",
 			},
-			innertubeConfigRaw: {
-				player_id: "b66835e2",
-			},
 			streamOptions: {
 				useClient: "WEB_EMBEDDED",
 			},

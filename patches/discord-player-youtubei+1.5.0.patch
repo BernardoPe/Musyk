@@ -1,5 +1,31 @@
+diff --git a/node_modules/discord-player-youtubei/dist/index.d.mts b/node_modules/discord-player-youtubei/dist/index.d.mts
+index b3755dc..e4b2bc0 100644
+--- a/node_modules/discord-player-youtubei/dist/index.d.mts
++++ b/node_modules/discord-player-youtubei/dist/index.d.mts
+@@ -189,7 +189,7 @@ declare function stream<T extends boolean = false>(url: string, skipStream?: T,
+         is_crawlable?: boolean | undefined;
+         is_post_live_dvr?: boolean | undefined;
+         is_low_latency_live_stream?: boolean | undefined;
+-        live_chunk_readahead?: number | undefined;
++        live_chunk_readahead?: number;
+     };
+     formatInfo: youtubei_js_dist_src_parser_misc.Format;
+     stream: If<T, null, PassThrough>;
+diff --git a/node_modules/discord-player-youtubei/dist/index.d.ts b/node_modules/discord-player-youtubei/dist/index.d.ts
+index b3755dc..e4b2bc0 100644
+--- a/node_modules/discord-player-youtubei/dist/index.d.ts
++++ b/node_modules/discord-player-youtubei/dist/index.d.ts
+@@ -189,7 +189,7 @@ declare function stream<T extends boolean = false>(url: string, skipStream?: T,
+         is_crawlable?: boolean | undefined;
+         is_post_live_dvr?: boolean | undefined;
+         is_low_latency_live_stream?: boolean | undefined;
+-        live_chunk_readahead?: number | undefined;
++        live_chunk_readahead?: number;
+     };
+     formatInfo: youtubei_js_dist_src_parser_misc.Format;
+     stream: If<T, null, PassThrough>;
 diff --git a/node_modules/discord-player-youtubei/dist/index.js b/node_modules/discord-player-youtubei/dist/index.js
-index 3f415d3..8cce99c 100644
+index 3f415d3..2a5f4fa 100644
 --- a/node_modules/discord-player-youtubei/dist/index.js
 +++ b/node_modules/discord-player-youtubei/dist/index.js
 @@ -138,7 +138,9 @@ async function streamFromYT(query, innerTube, options = {
@@ -8,108 +34,106 @@ index 3f415d3..8cce99c 100644
    if (!id) id = query.url.split("/").at(-1)?.split("?").at(0);
 -  const videoInfo = await innerTube.getBasicInfo(id, context.useClient);
 +  const videoInfo = await innerTube.getBasicInfo(id, {
-+	  client: context.useClient,
++    client: context.useClient
 +  });
    if (videoInfo.basic_info.is_live)
      return videoInfo.streaming_data?.hls_manifest_url;
    let format = videoInfo.chooseFormat(
-@@ -987,48 +989,49 @@ ${error}`);
-   async getRelatedTracks(track, history) {
-     let id = new URL(track.url).searchParams.get("v");
-     if (!id) id = track.url.split("/").at(-1)?.split("?").at(0);
--    const videoInfo = await this.innerTube.getInfo(id);
--    const next = videoInfo.watch_next_feed;
--    const recommended = next.filter(
--      (v) => !history.tracks.some(
--        (x) => x.url === `https://youtube.com/watch?v=${v.id}`
--      ) && v.type === "CompactVideo"
--    );
--    if (!recommended) {
--      this.context.player.debug("Unable to fetch recommendations");
--      return this.#emptyResponse();
--    }
--    const trackConstruct = recommended.map((v) => {
--      const duration = import_discord_player.Util.buildTimeCode(
--        import_discord_player.Util.parseMS(v.duration.seconds * 1e3)
--      );
--      const raw = {
--        live: v.is_live,
--        duration_ms: v.duration.seconds * 1e3,
--        duration
--      };
--      return new import_discord_player.Track(this.context.player, {
--        title: v.title?.text ?? "UNKNOWN TITLE",
--        thumbnail: v.best_thumbnail?.url ?? v.thumbnails[0]?.url,
--        author: v.author?.name ?? "UNKNOWN AUTHOR",
--        requestedBy: track.requestedBy,
--        url: `https://youtube.com/watch?v=${v.id}`,
--        views: parseInt((v.view_count?.text ?? "0").replaceAll(",", "")),
--        duration,
--        raw,
--        source: "youtube",
--        queryType: "youtubeVideo",
--        metadata: raw,
--        async requestMetadata() {
--          return this.raw;
--        },
--        live: v.is_live
--      });
--    });
--    return {
--      playlist: null,
--      tracks: trackConstruct
--    };
-+	const videoInfo = await this.innerTube.getInfo(id);
-+	const filtered = (videoInfo.watch_next_feed ?? []).filter(
-+	  c => c.type === "LockupView" && c.content_type === "VIDEO"
-+	);
-+	const recommended = filtered.filter(
-+	  tr => !history.tracks.some(t => t.url.includes(tr.content_id))
-+	);
-+	const selected = import_discord_player.Util.randomChoice(recommended.slice(0, 2)) ?? import_discord_player.Util.randomChoice(filtered.slice(0, 5));
-+	if (!recommended) {
-+	  this.context.player.debug("Unable to fetch recommendations");
-+	  return this.#emptyResponse();
-+	}
-+	const next = await this.innerTube.getBasicInfo(selected.content_id)
-+	const v = next.basic_info
-+	const duration = import_discord_player.Util.buildTimeCode(
-+		import_discord_player.Util.parseMS((v.duration ?? 0) * 1000),
-+	);
-+	const raw = {
-+	  live: v.is_live,
-+	  duration_ms: (v.duration ?? 0) * 1000,
-+	  duration,
-+	};
-+	const t = new import_discord_player.Track(this.context.player, {
-+	  title: v.title ?? "UNKNOWN TITLE",
-+	  thumbnail: v.thumbnail?.at(0)?.url ?? "",
-+	  author: v.author ?? "UNKNOWN AUTHOR",
-+	  requestedBy: track.requestedBy,
-+	  url: `https://youtube.com/watch?v=${selected.content_id}`,
-+	  views: v.view_count,
-+	  duration,
-+	  raw,
-+	  source: "youtube",
-+	  queryType: "youtubeVideo",
-+	  metadata: raw,
-+	  async requestMetadata() {
-+		  return this.raw;
-+	  },
-+	  live: v.is_live,
-+	});
-+	return {
-+	  playlist: null,
-+	  tracks: [t]
-+	};
-   }
-   #emptyResponse() {
-     return {
+@@ -156,7 +158,7 @@ async function streamFromYT(query, innerTube, options = {
+       videoInfo
+     );
+   } else {
+-    format.url = format.decipher(innerTube.session.player);
++    format.url = await format.decipher(innerTube.session.player);
+     if (!format.content_length)
+       throw new Error("Not matching URL for this format found");
+     return createNativeReadable(
+@@ -347,7 +349,9 @@ async function stream(url, skipStream, options, tube, client) {
+   const yt = tube || await import_youtubei3.default.create({
+     retrieve_player: false
+   });
+-  const info = await yt.getBasicInfo(vidId, client);
++  const info = await yt.getBasicInfo(vidId, {
++    client
++  });
+   let fmt = info.chooseFormat(
+     options || {
+       format: "mp4",
+@@ -356,7 +360,7 @@ async function stream(url, skipStream, options, tube, client) {
+     }
+   );
+   if (client && !["IOS", "ANDROID"].includes(client))
+-    fmt.url = fmt.decipher(yt.session.player);
++    fmt.url = await fmt.decipher(yt.session.player);
+   if (!fmt.url || !fmt.content_length) throw Errors.NoDownload;
+   const downloadedUrl = fmt.url;
+   const stream2 = skipStream ? null : createNativeReadable(downloadedUrl, fmt.content_length, yt, info);
+@@ -619,6 +623,18 @@ var YoutubeiExtractor = class _YoutubeiExtractor extends import_discord_player.B
+         );
+       };
+     }
++    import_youtubei5.Platform.shim.eval = async (data, env) => {
++      const properties = [];
++      if (env.n) {
++        properties.push(`n: exportedVars.nFunction("${env.n}")`);
++      }
++      if (env.sig) {
++        properties.push(`sig: exportedVars.sigFunction("${env.sig}")`);
++      }
++      const code = `${data.output}
++return { ${properties.join(", ")} }`;
++      return new Function(code)();
++    };
+     _YoutubeiExtractor.instance = this;
+     if (this.options.authentication) {
+       try {
+@@ -726,7 +742,7 @@ ${error}`);
+       quality: "best",
+       format: "mp4"
+     });
+-    format.url = format.decipher(this.innerTube.session.player);
++    format.url = await format.decipher(this.innerTube.session.player);
+     return createNativeReadable(
+       format.url,
+       format.content_length,
 diff --git a/node_modules/discord-player-youtubei/dist/index.mjs b/node_modules/discord-player-youtubei/dist/index.mjs
-index 499a1cc..af91741 100644
+index 499a1cc..0f4c752 100644
 --- a/node_modules/discord-player-youtubei/dist/index.mjs
 +++ b/node_modules/discord-player-youtubei/dist/index.mjs
-@@ -128,7 +128,7 @@ async function streamFromYT(query, innerTube, options = {
+@@ -44,7 +44,11 @@ import {
+   QueryType,
+   BaseExtractor
+ } from "discord-player";
+-import Innertube2, { UniversalCache, YTNodes as YTNodes2 } from "youtubei.js";
++import Innertube2, {
++  Platform as Platform2,
++  UniversalCache,
++  YTNodes as YTNodes2
++} from "youtubei.js";
+ 
+ // lib/common/createNativeReadable.ts
+ import { Readable } from "stream";
+@@ -97,7 +101,9 @@ async function streamFromYT(query, innerTube, options = {
+   const context = YoutubeiExtractor.getStreamingContext();
+   let id = new URL(query.url).searchParams.get("v");
+   if (!id) id = query.url.split("/").at(-1)?.split("?").at(0);
+-  const videoInfo = await innerTube.getBasicInfo(id, context.useClient);
++  const videoInfo = await innerTube.getBasicInfo(id, {
++    client: context.useClient
++  });
+   if (videoInfo.basic_info.is_live)
+     return videoInfo.streaming_data?.hls_manifest_url;
+   let format = videoInfo.chooseFormat(
+@@ -115,7 +121,7 @@ async function streamFromYT(query, innerTube, options = {
+       videoInfo
+     );
+   } else {
+-    format.url = format.decipher(innerTube.session.player);
++    format.url = await format.decipher(innerTube.session.player);
+     if (!format.content_length)
+       throw new Error("Not matching URL for this format found");
+     return createNativeReadable(
+@@ -128,7 +134,7 @@ async function streamFromYT(query, innerTube, options = {
  }
  
  // lib/Extractor/Youtube.ts
@@ -118,7 +142,27 @@ index 499a1cc..af91741 100644
  
  // lib/utils/index.ts
  import { Platform } from "youtubei.js";
-@@ -359,7 +359,7 @@ function extractVideoId(vid) {
+@@ -306,7 +312,9 @@ async function stream(url, skipStream, options, tube, client) {
+   const yt = tube || await Innertube.create({
+     retrieve_player: false
+   });
+-  const info = await yt.getBasicInfo(vidId, client);
++  const info = await yt.getBasicInfo(vidId, {
++    client
++  });
+   let fmt = info.chooseFormat(
+     options || {
+       format: "mp4",
+@@ -315,7 +323,7 @@ async function stream(url, skipStream, options, tube, client) {
+     }
+   );
+   if (client && !["IOS", "ANDROID"].includes(client))
+-    fmt.url = fmt.decipher(yt.session.player);
++    fmt.url = await fmt.decipher(yt.session.player);
+   if (!fmt.url || !fmt.content_length) throw Errors.NoDownload;
+   const downloadedUrl = fmt.url;
+   const stream2 = skipStream ? null : createNativeReadable(downloadedUrl, fmt.content_length, yt, info);
+@@ -359,7 +367,7 @@ function extractVideoId(vid) {
  }
  
  // lib/ServerAbr/CreateServerAbrStream.ts
@@ -127,6 +171,34 @@ index 499a1cc..af91741 100644
  async function getGoogleVideo() {
    try {
      return await import("googlevideo");
+@@ -578,6 +586,18 @@ var YoutubeiExtractor = class _YoutubeiExtractor extends BaseExtractor {
+         );
+       };
+     }
++    Platform2.shim.eval = async (data, env) => {
++      const properties = [];
++      if (env.n) {
++        properties.push(`n: exportedVars.nFunction("${env.n}")`);
++      }
++      if (env.sig) {
++        properties.push(`sig: exportedVars.sigFunction("${env.sig}")`);
++      }
++      const code = `${data.output}
++return { ${properties.join(", ")} }`;
++      return new Function(code)();
++    };
+     _YoutubeiExtractor.instance = this;
+     if (this.options.authentication) {
+       try {
+@@ -685,7 +705,7 @@ ${error}`);
+       quality: "best",
+       format: "mp4"
+     });
+-    format.url = format.decipher(this.innerTube.session.player);
++    format.url = await format.decipher(this.innerTube.session.player);
+     return createNativeReadable(
+       format.url,
+       format.content_length,
 diff --git a/node_modules/discord-player-youtubei/yarn-error.log b/node_modules/discord-player-youtubei/yarn-error.log
 deleted file mode 100644
 index 00f5f49..0000000
