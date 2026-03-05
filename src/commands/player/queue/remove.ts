@@ -21,8 +21,8 @@ class RemoveCommand implements PlayerCommand {
 		args: string[],
 		config: Config
 	) {
-		const value = parseInt(args[1])
-		if (isNaN(value)) {
+		const value = Number.parseInt(args[1])
+		if (Number.isNaN(value)) {
 			const embed = errorEmbed(null, config.lang.commands.shared.value_must_be_number)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return

@@ -11,7 +11,7 @@ class PlayerStartHandler implements GuildQueueEventHandler {
 
 	public async execute(queue: GuildQueue<QueueMetadata>) {
 		const server = await serverRepository.getOrPut(queue.guild)
-		if (!queue.metadata.playerEmbed) {
+		if (queue.metadata.playerEmbed === null) {
 			const embed = nowPlayingEmbed(queue, server.lang)
 			const buttons = createButtons()
 			const data = await sendEmbed(queue.metadata.textChannel!, {

@@ -24,9 +24,9 @@ class VolumeCommand implements PlayerCommand {
 			return
 		}
 
-		const volume = parseInt(args[1])
+		const volume = Number.parseInt(args[1])
 
-		if (isNaN(volume)) {
+		if (Number.isNaN(volume)) {
 			const embed = errorEmbed(null, config.lang.commands.shared.value_must_be_number)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return

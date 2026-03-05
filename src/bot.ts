@@ -4,7 +4,7 @@ import { DeezerExtractor } from "discord-player-deezer"
 import { Client, GatewayIntentBits } from "discord.js"
 import "dotenv/config"
 import { getAllFiles } from "./utils/files/dir.ts"
-import path from "path"
+import path from "node:path"
 import { fileURLToPath, pathToFileURL } from "url"
 import { logger } from "./utils/logger/logger.ts"
 import { QueryCache } from "./QueryCache.ts"
@@ -70,7 +70,9 @@ class MusicBot {
 			const fileUrl = pathToFileURL(file).href
 			const module = await import(fileUrl)
 			const command: BaseCommand = module.default
-			command.aliases.forEach((alias) => (commands[alias] = command))
+			for (const alias of command.aliases) {
+				commands[alias] = command
+			}
 			logger.info(`[COMMAND]: ${command.name} registered`)
 		}
 		this.commands = commands
@@ -109,8 +111,6 @@ process.on("unhandledRejection", (reason, promise) => {
 
 const bot = new MusicBot()
 
-;(async () => {
-	await bot.initialize()
-})()
+bot.initialize().then((_) => logger.info("Bot initialized"))
 
 export default bot

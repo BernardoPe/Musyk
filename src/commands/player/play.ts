@@ -91,10 +91,10 @@ class PlayCommand implements BotCommand {
 		try {
 			if (!queue.isPlaying() && !queue.dispatcher!.isBuffering()) {
 				await queue.play(song)
-			} else if (!result.playlist) {
-				queue.addTrack(song)
-			} else {
+			} else if (result.playlist) {
 				queue.addTrack(result.playlist)
+			} else {
+				queue.addTrack(song)
 			}
 		} catch (e) {
 			logger.error(e)

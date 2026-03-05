@@ -5,7 +5,7 @@ import { logger } from "../../utils/logger/logger.ts"
 
 import type { Language } from "../../langs"
 import { fileURLToPath } from "url"
-import fs from "fs"
+import fs from "node:fs"
 
 class LanguageService {
 	private readonly languages: Map<string, Language> = new Map()

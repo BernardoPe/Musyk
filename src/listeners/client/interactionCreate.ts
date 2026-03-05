@@ -178,7 +178,7 @@ class InteractionCreateHandler implements ClientEventHandler {
 		serverPrefix: string,
 		bot: MusicBot
 	) {
-		const repeatMode = serverQueue.repeatMode !== QueueRepeatMode.TRACK ? "track" : "off"
+		const repeatMode = serverQueue.repeatMode === QueueRepeatMode.TRACK ? "off" : "track"
 		handleCommand(interaction, [`${serverPrefix}cycle`, repeatMode], bot)
 	}
 
@@ -188,7 +188,7 @@ class InteractionCreateHandler implements ClientEventHandler {
 		serverPrefix: string,
 		bot: MusicBot
 	) {
-		const repeatMode = serverQueue.repeatMode !== QueueRepeatMode.AUTOPLAY ? "autoplay" : "off"
+		const repeatMode = serverQueue.repeatMode === QueueRepeatMode.AUTOPLAY ? "off" : "autoplay"
 		handleCommand(interaction, [`${serverPrefix}cycle`, repeatMode], bot)
 	}
 

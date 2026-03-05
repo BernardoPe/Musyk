@@ -2,7 +2,7 @@ function validateTimestamp(timestamp: string, maxDuration: number): number | boo
 	const timestampComponents = timestamp.split(":").map(Number)
 	const numComponents = timestampComponents.length
 
-	if (numComponents < 1 || numComponents > 3 || timestampComponents.some((num) => isNaN(num))) {
+	if (numComponents < 1 || numComponents > 3 || timestampComponents.some((num) => Number.isNaN(num))) {
 		return false
 	}
 

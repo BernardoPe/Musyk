@@ -43,7 +43,7 @@ function nowPlayingEmbed(queue: GuildQueue, lang: Language): EmbedBuilder {
 	const emoji = getEmoji(queue.currentTrack!.source, embed)
 	const song: Track<RawTrackData> = queue.currentTrack as Track<RawTrackData>
 	embed
-		.setTitle(!queue.dispatcher?.paused ? lang.embeds.now_playing.title : lang.embeds.now_playing.paused_title)
+		.setTitle(queue.dispatcher?.paused ? lang.embeds.now_playing.paused_title : lang.embeds.now_playing.title)
 		.setDescription(`${emoji} **[${song.cleanTitle}](${song.url})**`)
 		.setThumbnail(`${song.thumbnail}`)
 		.addFields(
