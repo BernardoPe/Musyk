@@ -1,22 +1,26 @@
 import path from "path"
-import { Language } from "../../langs"
-import { getAllFiles } from "../../utils/files/json.ts"
+import { getAllFiles } from "../../utils/files/dir.ts"
 import { DEFAULT_LANGUAGE } from "../constants/server.ts"
 import { logger } from "../../utils/logger/logger.ts"
+
+import type { Language } from "../../langs"
+import { fileURLToPath } from "url"
+import fs from "fs"
 
 class LanguageService {
 	private readonly languages: Map<string, Language> = new Map()
 	private initialized = false
 
-	private async initializeLanguages(): Promise<void> {
+	private async ensureLanguages(): Promise<void> {
 		if (this.initialized) return
 
 		try {
-			const langFiles = getAllFiles(path.join(__dirname, "../../langs/data")).filter((file) =>
+			const currentFileDir = path.dirname(fileURLToPath(import.meta.url))
+			const langFiles = getAllFiles(path.join(currentFileDir, "../../langs/data")).filter((file) =>
 				file.endsWith(".json")
 			)
 			for (const file of langFiles) {
-				const lang = require(file) as Language
+				const lang = JSON.parse(fs.readFileSync(file, "utf-8")) as Language
 				if (lang.tag) {
 					this.languages.set(lang.tag, lang)
 					logger.info(`[LANG] Loaded language: ${lang.tag}`)
@@ -29,7 +33,7 @@ class LanguageService {
 	}
 
 	public async getLanguage(tag: string): Promise<Language> {
-		await this.initializeLanguages()
+		await this.ensureLanguages()
 
 		const language = this.languages.get(tag)
 		if (!language) {

@@ -1,7 +1,10 @@
-import { Colors, EmbedBuilder, Snowflake } from "discord.js"
-import { GuildQueue, RawTrackData, Track } from "discord-player"
-import { QueueMetadata } from "../../types.ts"
-import { Language } from "../../langs"
+import { Colors, EmbedBuilder } from "discord.js"
+import { GuildQueue, Track } from "discord-player"
+
+import type { Snowflake } from "discord.js"
+import type { RawTrackData } from "discord-player"
+import type { QueueMetadata } from "../../types.ts"
+import type { Language } from "../../langs"
 
 function getEmoji(source: string, embed?: EmbedBuilder): string {
 	let emoji: Snowflake

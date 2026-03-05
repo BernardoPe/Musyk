@@ -1,5 +1,6 @@
 import { GuildQueue, QueueRepeatMode } from "discord-player"
-import { QueueMetadata, PlayerCommand } from "../../../types.ts"
+
+import type { QueueMetadata, PlayerCommand } from "../../../types.ts"
 
 class StopCommand implements PlayerCommand {
 	public aliases = ["stop"]

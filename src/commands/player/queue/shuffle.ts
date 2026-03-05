@@ -1,9 +1,10 @@
 import { sendEmbed } from "../../../embeds/channels.ts"
-import { QueueMetadata, PlayerCommand, Config } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
-import { GuildTextBasedChannel } from "discord.js"
 import { errorEmbed, successEmbed } from "../../../embeds/status.ts"
 import { updatePlayer } from "../../../embeds/player/playing.ts"
+
+import type { QueueMetadata, PlayerCommand, Config } from "../../../types.ts"
+import type { GuildTextBasedChannel } from "discord.js"
 
 class ShuffleCommand implements PlayerCommand {
 	public aliases = ["shuffle"]

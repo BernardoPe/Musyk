@@ -1,5 +1,6 @@
 import { Events } from "discord.js"
-import { ClientEventHandler } from "../../types.ts"
+
+import type { ClientEventHandler } from "../../types.ts"
 
 class ErrorEventHandler implements ClientEventHandler {
 	public name = Events.Error

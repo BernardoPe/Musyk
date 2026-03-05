@@ -1,12 +1,14 @@
+import { ButtonInteraction, Message } from "discord.js"
+import { GuildQueue, useQueue } from "discord-player"
+
 import { sendEmbed } from "../embeds/channels.ts"
 import { logger } from "../utils/logger/logger.ts"
-import { ButtonInteraction, GuildTextBasedChannel, Message } from "discord.js"
-import { BotCommand, Config, GuildMessage, MusicBot, PlayerCommand, QueueMetadata } from "../types.ts"
-
-import { GuildQueue, useQueue } from "discord-player"
 import { errorEmbed } from "../embeds/status.ts"
 import { getCommandInfo } from "../storage/service.ts"
 import { adminService } from "../storage/services/admin.ts"
+
+import type { GuildTextBasedChannel } from "discord.js"
+import type { BotCommand, Config, GuildMessage, MusicBot, PlayerCommand, QueueMetadata } from "../types.ts"
 
 export async function handleCommand(msg: GuildMessage | ButtonInteraction, args: string[], bot: MusicBot) {
 	const messageContent = msg instanceof Message ? msg.content : msg.customId

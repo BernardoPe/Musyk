@@ -1,10 +1,11 @@
 import { Guild } from "discord.js"
-import { SearchQueryType } from "discord-player"
 import prisma from "../source.ts"
 import { CacheType, doCachedQuery, invalidateCache } from "../cache.ts"
 import { DEFAULT_PLAYER_CONFIG } from "../constants/server.ts"
-import { Language } from "../../langs"
 import { languageService } from "../services/language.ts"
+
+import type { SearchQueryType } from "discord-player"
+import type { Language } from "../../langs"
 
 export interface PlayerConfig {
 	searchEngine: string

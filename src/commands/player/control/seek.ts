@@ -1,9 +1,11 @@
-import { sendEmbed } from "../../../embeds/channels.ts"
-import { validateTimestamp, millisecondsToTimestamp } from "../../../utils/time.ts"
-import { QueueMetadata, PlayerCommand, Config } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
-import { GuildTextBasedChannel } from "discord.js"
+
+import { sendEmbed } from "../../../embeds/channels.ts"
 import { successEmbed } from "../../../embeds/status.ts"
+import { validateTimestamp, millisecondsToTimestamp } from "../../../utils/time.ts"
+
+import type { GuildTextBasedChannel } from "discord.js"
+import type { QueueMetadata, PlayerCommand, Config } from "../../../types.ts"
 
 class SeekCommand implements PlayerCommand {
 	public aliases = ["seek"]

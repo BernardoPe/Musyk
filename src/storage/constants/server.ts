@@ -1,4 +1,4 @@
-import { SearchQueryType } from "discord-player"
+import type { SearchQueryType } from "discord-player"
 
 export const DEFAULT_PLAYER_CONFIG = {
 	searchEngine: "auto" as SearchQueryType,

@@ -1,4 +1,4 @@
-FROM node:22.11.0-slim
+FROM node:22.12-slim
 
 RUN apt-get update && apt-get install -y \
      g++ \
@@ -10,8 +10,6 @@ RUN apt-get update && apt-get install -y \
 # Set working directory inside the container
 WORKDIR /usr/src/app
 
-COPY patches ./patches
-
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
@@ -22,7 +20,7 @@ RUN npm install --verbose
 COPY . .
 
 # Generate Prisma client
-RUN npx prisma generate --no-engine --schema=./src/storage/schema.prisma
+RUN npx prisma generate --schema=./src/storage/schema.prisma
 
 # Command to run the application
 CMD ["npm", "start"]

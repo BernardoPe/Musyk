@@ -1,5 +1,6 @@
-import { QueueMetadata, PlayerCommand } from "../../../types.ts"
 import { GuildQueue } from "discord-player"
+
+import type { QueueMetadata, PlayerCommand } from "../../../types.ts"
 
 class SkipCommand implements PlayerCommand {
 	aliases = ["skip"]

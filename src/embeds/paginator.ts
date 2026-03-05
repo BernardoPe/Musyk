@@ -1,4 +1,6 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, GuildTextBasedChannel } from "discord.js"
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from "discord.js"
+
+import type { GuildTextBasedChannel } from "discord.js"
 
 async function paginate(channel: GuildTextBasedChannel, pages: EmbedBuilder[], buttons: ButtonBuilder[] = []) {
 	if (!channel || !pages || pages.length <= 0) return

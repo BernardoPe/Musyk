@@ -1,7 +1,8 @@
-enum CacheType {
-	Server,
-	User,
-}
+const CacheType = {
+	Server: "Server",
+	User: "User",
+} as const
+type CacheType = (typeof CacheType)[keyof typeof CacheType]
 
 const serverCache = new Map<string, any>()
 const userCache = new Map<string, any>()

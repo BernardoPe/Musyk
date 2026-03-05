@@ -1,12 +1,13 @@
 import { BaseInteraction, ButtonInteraction, ChatInputCommandInteraction, Events } from "discord.js"
-import { ClientEventHandler, MusicBot, QueueMetadata } from "../../types.ts"
 import { handleCommand } from "../../handlers/commands.ts"
 import { GuildQueue, QueueRepeatMode, useQueue } from "discord-player"
 import { errorEmbed, successEmbed } from "../../embeds/status.ts"
 import { helpEmbeds } from "../../embeds/help.ts"
 import { createLink } from "../../embeds/links.ts"
-import { Language } from "../../langs"
 import { serverRepository } from "../../storage/repositories/server.ts"
+
+import type { Language } from "../../langs"
+import type { ClientEventHandler, MusicBot, QueueMetadata } from "../../types.ts"
 
 type ButtonCommand = (
 	interaction: ButtonInteraction,

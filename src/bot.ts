@@ -1,14 +1,17 @@
 import { Player } from "discord-player"
 import { YoutubeiExtractor } from "discord-player-youtubei"
-import { DefaultExtractors, SpotifyExtractor as sp } from "@discord-player/extractor"
-import { Client, ClientEvents, GatewayIntentBits } from "discord.js"
+import { DeezerExtractor } from "discord-player-deezer"
+import { Client, GatewayIntentBits } from "discord.js"
 import "dotenv/config"
-import { BaseCommand } from "./types.ts"
-import { getAllFiles } from "./utils/files/json.ts"
+import { getAllFiles } from "./utils/files/dir.ts"
 import path from "path"
+import { fileURLToPath, pathToFileURL } from "url"
 import { logger } from "./utils/logger/logger.ts"
 import { QueryCache } from "./QueryCache.ts"
 import { SpotifyExtractor } from "discord-player-spotify"
+
+import type { ClientEvents } from "discord.js"
+import type { BaseCommand } from "./types.ts"
 
 class MusicBot {
 	client: Client
@@ -42,9 +45,11 @@ class MusicBot {
 	}
 
 	private async addEventListeners() {
-		const files = getAllFiles(path.join(__dirname, "listeners"))
+		const currentFileDir = path.dirname(fileURLToPath(import.meta.url))
+		const files = getAllFiles(path.join(currentFileDir, "listeners"))
 		for (const file of files) {
-			const module = await import(file)
+			const fileUrl = pathToFileURL(file).href
+			const module = await import(fileUrl)
 			const event = module.default
 			if (file.includes("player")) {
 				this.player.events.on(event.name, (...args: any) => event.execute(...args, this))
@@ -58,9 +63,12 @@ class MusicBot {
 
 	private async registerCommands() {
 		const commands: { [key: string]: BaseCommand } = {}
-		const commandFiles: string[] = getAllFiles(path.join(__dirname, "commands"))
+		const currentFileDir = path.dirname(fileURLToPath(import.meta.url))
+		const commandsDir = path.join(currentFileDir, "commands")
+		const commandFiles: string[] = getAllFiles(commandsDir)
 		for (const file of commandFiles) {
-			const module = await import(file)
+			const fileUrl = pathToFileURL(file).href
+			const module = await import(fileUrl)
 			const command: BaseCommand = module.default
 			command.aliases.forEach((alias) => (commands[alias] = command))
 			logger.info(`[COMMAND]: ${command.name} registered`)
@@ -78,14 +86,14 @@ class MusicBot {
 				spotifySearch: "yt",
 				default: "yt",
 			},
-			streamOptions: {
-				useClient: "WEB_EMBEDDED",
-			},
-			generateWithPoToken: true,
+			useYoutubeDL: true,
+			logLevel: "ALL",
+		})
+		await this.player.extractors.register(DeezerExtractor, {
+			decryptionKey: process.env.KEY!,
+			arl: process.env.ARL!,
 		})
 		await this.player.extractors.register(SpotifyExtractor, {})
-		await this.player.extractors.loadMulti(DefaultExtractors)
-		await this.player.extractors.unregister(sp.identifier)
 		logger.info("[EXTRACTORS]: Youtubei extractor registered")
 		logger.info("[EXTRACTORS]: Default extractors registered")
 	}

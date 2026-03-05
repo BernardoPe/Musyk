@@ -1,5 +1,5 @@
-import { CommandsLangConfig } from "./commands.ts"
-import { EmbedsLangConfig } from "./embeds.ts"
+import type { CommandsLangConfig } from "./commands.ts"
+import type { EmbedsLangConfig } from "./embeds.ts"
 
 export interface Language {
 	tag: string

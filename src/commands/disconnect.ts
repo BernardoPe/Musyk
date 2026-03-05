@@ -1,5 +1,6 @@
 import { GuildQueue } from "discord-player"
-import { QueueMetadata, PlayerCommand } from "../types.ts"
+
+import type { QueueMetadata, PlayerCommand } from "../types.ts"
 
 class DisconnectCommand implements PlayerCommand {
 	public aliases = ["dc", "disconnect", "leave"]

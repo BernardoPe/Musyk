@@ -1,13 +1,7 @@
-import {
-	DiscordPlayerQueryResultCache,
-	Player,
-	Playlist,
-	QueryCacheProvider,
-	QueryCacheResolverContext,
-	SearchResult,
-	Track,
-} from "discord-player"
+import { DiscordPlayerQueryResultCache, SearchResult } from "discord-player"
 import { logger } from "./utils/logger/logger.ts"
+
+import type { Player, Playlist, QueryCacheProvider, QueryCacheResolverContext, Track } from "discord-player"
 
 const EXPIRE_AFTER = 604_800_000 // 7 days
 
@@ -15,8 +9,10 @@ export class QueryCache implements QueryCacheProvider<CachedTrack> {
 	public timer: NodeJS.Timeout
 	public player!: Player
 	private static readonly resultCache = new Map<string, DiscordPlayerQueryResultCache<CachedTrack>>()
+	public checkInterval: number
 
-	public constructor(public checkInterval: number = 60000) {
+	public constructor() {
+		this.checkInterval = 60_000
 		this.timer = setInterval(this.cleanupExpiredEntries, this.checkInterval)
 	}
 

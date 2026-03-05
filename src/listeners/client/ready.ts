@@ -1,6 +1,7 @@
-import { ClientEventHandler } from "../../types.ts"
 import { Events, ActivityType, Client } from "discord.js"
 import { logger } from "../../utils/logger/logger.ts"
+
+import type { ClientEventHandler } from "../../types.ts"
 
 class ClientReadyHandler implements ClientEventHandler {
 	public name = Events.ClientReady
@@ -10,18 +11,7 @@ class ClientReadyHandler implements ClientEventHandler {
 			name: ".help | /help",
 			type: ActivityType.Listening,
 		})
-
-		const members = new Set<string>()
-
-		for (const guild of Array.from(bot.guilds.cache.values())) {
-			const fetchedMembers = await guild.members.fetch()
-			for (const member of Array.from(fetchedMembers.values())) {
-				if (!member.user.bot) {
-					members.add(member.id)
-				}
-			}
-		}
-		logger.info(`Bot is ready, serving ${bot.guilds.cache.size} servers with ${members.size} members`)
+		logger.info("Bot is ready")
 	}
 }
 

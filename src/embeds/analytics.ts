@@ -1,6 +1,7 @@
 import { EmbedBuilder } from "discord.js"
-import { GuildQueueStatisticsMetadata } from "discord-player"
-import { Language } from "../langs"
+
+import type { GuildQueueStatisticsMetadata } from "discord-player"
+import type { Language } from "../langs"
 
 function playerAnalyticsEmbed(
 	stats: {

@@ -1,8 +1,9 @@
 import { User } from "discord.js"
-import { SearchQueryType } from "discord-player"
 import prisma from "../source.ts"
 import { CacheType, doCachedQuery, invalidateCache } from "../cache.ts"
 import { DEFAULT_USER_PLAYER_CONFIG } from "../constants/user.ts"
+
+import type { SearchQueryType } from "discord-player"
 
 export interface UserPlayerConfig {
 	searchEngine: string

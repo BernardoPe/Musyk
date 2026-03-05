@@ -1,4 +1,4 @@
-import {
+import type {
 	ButtonInteraction,
 	Client,
 	Events,
@@ -8,7 +8,7 @@ import {
 	VoiceBasedChannel,
 } from "discord.js"
 import { GuildQueue, GuildQueueEvent, Player } from "discord-player"
-import { Language } from "./langs"
+import type { Language } from "./langs"
 
 /**
  * Represents the discord bot client, extended with the discord-player player
@@ -58,7 +58,7 @@ interface ClientEventHandler {
  * @param guild - The guild that the command was triggered in
  * @param user - The user that triggered the command
  */
-interface BaseCommand {
+export interface BaseCommand {
 	name: string
 	aliases: string[]
 	adminCommand: boolean
@@ -68,7 +68,7 @@ interface BaseCommand {
 	guild: string | null
 }
 
-interface PlayerCommand extends BaseCommand {
+export interface PlayerCommand extends BaseCommand {
 	execute(
 		serverQueue: GuildQueue<QueueMetadata> | null,
 		channel: GuildTextBasedChannel,
@@ -77,7 +77,7 @@ interface PlayerCommand extends BaseCommand {
 	): Promise<void> | void
 }
 
-interface BotCommand extends BaseCommand {
+export interface BotCommand extends BaseCommand {
 	execute(bot: MusicBot, msg: GuildMessage, args: string[], config: Config): Promise<void> | void
 }
 
@@ -131,15 +131,4 @@ type Config = {
  */
 type GuildMessage = Message<true>
 
-export {
-	MusicBot,
-	GuildQueueEventHandler,
-	ClientEventHandler,
-	BaseCommand,
-	QueueMetadata,
-	GuildMessage,
-	PlayerCommand,
-	BotCommand,
-	Config,
-	PlayerConfig,
-}
+export type { MusicBot, GuildQueueEventHandler, ClientEventHandler, QueueMetadata, GuildMessage, Config, PlayerConfig }

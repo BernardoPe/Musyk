@@ -1,10 +1,12 @@
 import { GuildQueue, Track } from "discord-player"
-import { QueueMetadata, PlayerCommand, Config } from "../../../types.ts"
 
 import { sendEmbed } from "../../../embeds/channels.ts"
-import { GuildTextBasedChannel } from "discord.js"
 import { errorEmbed, successEmbed } from "../../../embeds/status.ts"
 import { updatePlayer } from "../../../embeds/player/playing.ts"
+
+import type { PlayerCommand } from "../../../types.ts"
+import type { QueueMetadata, Config } from "../../../types.ts"
+import type { GuildTextBasedChannel } from "discord.js"
 
 class ReverseCommand implements PlayerCommand {
 	aliases = ["reverse"]

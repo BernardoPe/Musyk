@@ -1,5 +1,6 @@
 import { Colors, EmbedBuilder } from "discord.js"
-import { Language } from "../langs"
+
+import type { Language } from "../langs"
 
 function helpEmbeds(lang: Language): EmbedBuilder[] {
 	const embed1 = new EmbedBuilder()

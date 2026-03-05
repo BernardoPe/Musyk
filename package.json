@@ -2,7 +2,7 @@
 	"scripts": {
 		"start": "tsx src/bot.ts",
 		"deploy-commands": "tsx src/slash-command-deployment.ts",
-		"db:generate": "prisma generate --no-engine --schema=./src/storage/schema.prisma",
+		"db:generate": "prisma generate --schema=./src/storage/schema.prisma",
 		"db:push": "prisma db push --schema=./src/storage/schema.prisma",
 		"lint": "eslint src/**/*.{ts,tsx,md} && prettier --check src/**/*.{ts,tsx,md}",
 		"lint:fix": "eslint src/**/*.{ts,tsx,md} --fix",
@@ -26,29 +26,33 @@
 	},
 	"dependencies": {
 		"@discordjs/opus": "^0.10.0",
-		"@prisma/client": "^6.4.1",
+		"@prisma/adapter-pg": "^7.4.2",
+		"@prisma/client": "^7.4.2",
 		"@prisma/extension-accelerate": "^1.2.2",
-		"discord-player": "^7.1.0",
+		"@snazzah/davey": "^0.1.10",
+		"discord-player": "^7.2.0",
+		"discord-player-deezer": "^2.5.0",
 		"discord-player-spotify": "^1.1.7",
-		"discord-player-youtubei": "^1.5.0",
+		"discord-player-youtubei": "github:retrouser955/discord-player-youtubei",
 		"discord.js": "^14.17.2",
-		"youtubei.js": "^16.0.0",
-		"meriyah": "^6.1.4",
 		"dotenv": "^16.4.5",
 		"ffmpeg-static": "^5.2.0",
-		"mediaplex": "^1.0.0",
+		"meriyah": "^6.1.4",
 		"patch-package": "8.0.1",
-		"prisma": "^6.4.1",
-		"tsx": "^4.19.3",
+		"pg": "^8.20.0",
 		"winston": "^3.13.0"
 	},
 	"devDependencies": {
+		"@types/pg": "^8.18.0",
 		"@typescript-eslint/eslint-plugin": "^8.11.0",
 		"@typescript-eslint/parser": "^8.11.0",
-		"eslint": "^8.57.1",
+		"eslint": "9.26.0",
 		"eslint-config-prettier": "^9.1.0",
 		"husky": "^9.1.7",
 		"lint-staged": "^16.1.6",
-		"prettier": "^3.3.3"
-	}
+		"prettier": "^3.3.3",
+		"prisma": "^7.4.2",
+		"tsx": "^4.21.0"
+	},
+	"type": "module"
 }
