@@ -15,8 +15,8 @@ function getEmoji(source: string, embed?: EmbedBuilder): string {
 		emoji = "<:SpotifyLogo:1124141017260634262>"
 		embed?.setColor(Colors.Green)
 	} else {
-		emoji = "<:4678_SoundCloud:1124303937017745469>"
-		embed?.setColor(Colors.Orange)
+		emoji = "<:deezer:1479260292587327650>"
+		embed?.setColor(Colors.Purple)
 	}
 	return emoji
 }
@@ -49,7 +49,7 @@ function nowPlayingEmbed(queue: GuildQueue, lang: Language): EmbedBuilder {
 		.addFields(
 			{
 				name: lang.embeds.now_playing.fields.duration,
-				value: `${song.metadata!.live ? "Live" : song.duration.padStart(5, "0")}`,
+				value: `${song.metadata?.live ? "Live" : song.duration.padStart(5, "0")}`,
 				inline: true,
 			},
 			{

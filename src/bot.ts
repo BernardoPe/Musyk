@@ -79,21 +79,14 @@ class MusicBot {
 	}
 
 	private async registerExtractors() {
-		await this.player.extractors.register(YoutubeiExtractor, {
-			overrideBridgeMode: {
-				youtubeVideo: "ytmusic",
-				youtubePlaylist: "ytmusic",
-				spotifySong: "ytmusic",
-				spotifyAlbum: "ytmusic",
-				spotifySearch: "yt",
-				default: "yt",
-			},
-			useYoutubeDL: true,
-			logLevel: "ALL",
-		})
 		await this.player.extractors.register(DeezerExtractor, {
 			decryptionKey: process.env.KEY!,
 			arl: process.env.ARL!,
+			priority: 100,
+		})
+		await this.player.extractors.register(YoutubeiExtractor, {
+			useYoutubeDL: true,
+			logLevel: "ALL",
 		})
 		await this.player.extractors.register(SpotifyExtractor, {})
 		logger.info("[EXTRACTORS]: Youtubei extractor registered")

@@ -98,7 +98,7 @@ function songQueuedEmbed(song: Track<RawTrackData>, queue: GuildQueue<QueueMetad
 		.addFields(
 			{
 				name: lang.embeds.song_queued.duration,
-				value: `${song.metadata!.live ? "Live" : song.duration.padStart(5, "0")}`,
+				value: `${song.metadata?.live ? "Live" : song.duration.padStart(5, "0")}`,
 				inline: true,
 			},
 			{
