@@ -1,9 +1,9 @@
 import { sendEmbed } from "../../embeds/channels.ts"
-import { GuildQueue } from "discord-player"
+import { GuildQueue, SearchQueryType } from "discord-player"
 import { logger } from "../../utils/logger/logger.ts"
 import { errorEmbed } from "../../embeds/status.ts"
+import { YoutubeiExtractor } from "discord-player-youtubei"
 
-import type { SearchQueryType } from "discord-player"
 import type { GuildTextBasedChannel, VoiceBasedChannel } from "discord.js"
 import type { MusicBot, QueueMetadata, BotCommand, GuildMessage, Config } from "../../types.ts"
 
@@ -17,9 +17,7 @@ class PlayCommand implements BotCommand {
 	guild: string | null = null
 
 	private readonly searchEngines = {
-		"-sp": "spotifySearch",
 		"-yt": "youtube",
-		"-sc": "soundcloudSearch",
 	}
 
 	public async execute(bot: MusicBot, msg: GuildMessage, args: string[], config: Config) {
@@ -75,6 +73,11 @@ class PlayCommand implements BotCommand {
 
 		const str = args.filter((arg) => arg.trim() !== "").join(" ")
 
+		const extractor = bot.player.extractors.get(YoutubeiExtractor.identifier)!
+		if (searchEngine === "youtube") {
+			extractor.priority = Number.MAX_VALUE
+		}
+
 		const result = await bot.player.search(str, {
 			requestedBy: msg.author,
 			searchEngine: searchEngine as SearchQueryType,
@@ -100,6 +103,8 @@ class PlayCommand implements BotCommand {
 			logger.error(e)
 			const embed = errorEmbed(null, config.lang.commands.play.error)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
+		} finally {
+			extractor.priority = 0
 		}
 	}
 

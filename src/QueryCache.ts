@@ -32,7 +32,7 @@ export class QueryCache implements QueryCacheProvider<CachedTrack> {
 	}
 
 	public async resolve(context: QueryCacheResolverContext): Promise<SearchResult> {
-		const queryKey = context.query.toLowerCase()
+		const queryKey = `${context.queryType}:${context.query.toLowerCase()}`
 		const res = QueryCache.resultCache.get(queryKey)
 		const tracks = res ? [res.data.track] : this.findTracksByAlias(queryKey)
 
@@ -86,7 +86,7 @@ export class QueryCache implements QueryCacheProvider<CachedTrack> {
 
 	private addToCache(trackData: Track, playlist: Playlist | null | undefined, queryAliases: Set<string>): void {
 		QueryCache.resultCache.set(
-			trackData.url.toLowerCase(),
+			`${trackData.queryType}:${trackData.url.toLowerCase()}`,
 			new DiscordPlayerQueryResultCache({ track: trackData, playlist, queryAliases }, EXPIRE_AFTER)
 		)
 	}
