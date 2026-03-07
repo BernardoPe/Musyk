@@ -1,7 +1,10 @@
 {
 	"scripts": {
-		"start": "tsx src/bot.ts",
+		"dev": "tsx src/bot.ts",
+		"start": "node dist/bot.js",
+		"build": "tsup",
 		"deploy-commands": "tsx src/slash-command-deployment.ts",
+		"deploy-commands:prod": "node dist/slash-command-deployment.js",
 		"db:generate": "prisma generate --schema=./src/storage/schema.prisma",
 		"db:push": "prisma db push --schema=./src/storage/schema.prisma",
 		"lint": "eslint src/**/*.{ts,tsx,md} && prettier --check src/**/*.{ts,tsx,md}",
@@ -35,7 +38,7 @@
 		"discord-player-spotify": "^1.1.7",
 		"discord-player-youtubei": "github:retrouser955/discord-player-youtubei",
 		"discord.js": "^14.17.2",
-		"dotenv": "^16.4.5",
+		"dotenv": "^16.6.1",
 		"ffmpeg-static": "^5.2.0",
 		"meriyah": "^6.1.4",
 		"patch-package": "8.0.1",
@@ -52,6 +55,7 @@
 		"lint-staged": "^16.1.6",
 		"prettier": "^3.3.3",
 		"prisma": "^7.4.2",
+		"tsup": "^8.5.0",
 		"tsx": "^4.21.0"
 	},
 	"type": "module"

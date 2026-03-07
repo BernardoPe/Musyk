@@ -1,28 +1,41 @@
-FROM node:22.12-slim
+FROM node:22.12-slim AS base
 
 RUN apt-get update && apt-get install -y \
+     ffmpeg \
      g++ \
      git \
      make \
      python3 \
     && rm -rf /var/lib/apt/lists/*
 
-# Set working directory inside the container
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json
+FROM base AS deps
+
 COPY package*.json ./
+COPY patches ./patches
+RUN npm install --ignore-scripts && npx patch-package
 
-# Install dependencies
-RUN npm install --verbose
+FROM deps AS builder
 
-# Copy the rest of the application code to the working directory
-COPY . .
+COPY tsconfig.json ./
+COPY tsup.config.ts ./
+COPY src ./src
+RUN npm run db:generate
+RUN npm run build
 
-# Generate Prisma client
-RUN npx prisma generate --schema=./src/storage/schema.prisma
+FROM base AS production
 
-# Command to run the application
+ENV NODE_ENV=production
+
+COPY package*.json ./
+COPY patches ./patches
+RUN npm install --omit=dev --ignore-scripts && npx patch-package
+
+COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/src/generated ./src/generated
+COPY --from=builder /usr/src/app/src/storage/schema.prisma ./src/storage/schema.prisma
+
 CMD ["npm", "start"]
 
 # Instructions to build and run the Docker container:
