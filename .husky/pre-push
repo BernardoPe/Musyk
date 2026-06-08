@@ -10,6 +10,6 @@ npm run type-check
 
 # Run prettier check on all files
 echo "🎨 Checking code formatting..."
-npx prettier --check "src/**/*.{ts,tsx,md}"
+npx prettier --check "src/**/*.{ts,tsx,md}" --no-error-on-unmatched-pattern
 
 echo "✅ Pre-push checks passed!"
