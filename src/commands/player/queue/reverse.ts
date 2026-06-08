@@ -3,21 +3,15 @@ import { GuildQueue, Track } from "discord-player"
 import { sendEmbed } from "@/embeds/channels.ts"
 import { errorEmbed, successEmbed } from "@/embeds/status.ts"
 import { updatePlayer } from "@/embeds/player/playing.ts"
-
-import type { PlayerCommand } from "@/types.ts"
-import type { QueueMetadata, Config } from "@/types.ts"
-import type { GuildTextBasedChannel } from "discord.js"
+import type { PlayerCommand, QueueMetadata, PlayerCommandContext } from "@/types.ts"
 
 class ReverseCommand implements PlayerCommand {
 	aliases = ["reverse"]
 	name = "reverse"
 	requiresPlayer = true
 	adminCommand = false
-	guild = null
-	msg = null
-	user = null
-
-	execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel, _args: string[], config: Config) {
+	execute(ctx: PlayerCommandContext) {
+		const { queue: serverQueue, channel, config } = ctx
 		if (serverQueue.isEmpty()) {
 			const embed = errorEmbed(null, config.lang.commands.shared.empty_queue)
 			sendEmbed(channel, { embeds: [embed] }, 20000)

@@ -1,19 +1,16 @@
 import paginate from "@/embeds/paginator.ts"
 import { playerAnalyticsEmbed } from "@/embeds/analytics.ts"
 
-import type { GuildMessage, BotCommand, MusicBot, Config } from "@/types.ts"
+import type { BotCommand, CommandContext } from "@/types.ts"
 
 class AnalyticsCommand implements BotCommand {
 	public aliases = ["analytics", "stats"]
 	public name = "analytics"
 	public requiresPlayer = false
 	public adminCommand = true
-	public user = null
-	public guild = null
-	public msg = null
-
-	public async execute(bot: MusicBot, msg: GuildMessage, _args: string[], config: Config) {
-		await paginate(msg.channel, playerAnalyticsEmbed(bot.player.generateStatistics(), config.lang), [])
+	public async execute(ctx: CommandContext) {
+		const { bot, channel, config } = ctx
+		await paginate(channel, playerAnalyticsEmbed(bot.player.generateStatistics(), config.lang), [])
 	}
 }
 

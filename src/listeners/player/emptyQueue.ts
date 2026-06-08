@@ -9,16 +9,10 @@ class EmptyQueueHandler implements GuildQueueEventHandler {
 
 	public async execute(queue: GuildQueue<QueueMetadata>) {
 		const channel = queue.metadata.textChannel!
-		const col = queue.metadata.collector
 		const data = queue.metadata.playerEmbed
 		const server = await serverRepository.getOrPut(queue.guild)
 
 		while (queue.metadata.updatingPlayer) await Util.wait(5)
-
-		if (col) {
-			col.stop()
-			queue.metadata.collector = null
-		}
 
 		if (data) {
 			await data.delete()

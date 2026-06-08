@@ -1,20 +1,14 @@
 import { sendEmbed } from "@/embeds/channels.ts"
-import { GuildQueue } from "discord-player"
 import { errorEmbed, successEmbed } from "@/embeds/status.ts"
-
-import type { GuildTextBasedChannel } from "discord.js"
-import type { QueueMetadata, PlayerCommand, Config } from "@/types.ts"
+import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
 
 class VolumeCommand implements PlayerCommand {
 	public aliases = ["volume"]
 	public name = "volume"
 	public requiresPlayer = true
 	public adminCommand: boolean = false
-	public guild: string | null = null
-	public msg: string | null = null
-	public user: string | null = null
-
-	execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel, args: string[], config: Config) {
+	execute(ctx: PlayerCommandContext) {
+		const { queue: serverQueue, channel, args, config } = ctx
 		if (!args[1]) {
 			const embed = successEmbed(
 				null,

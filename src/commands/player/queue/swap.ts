@@ -1,26 +1,15 @@
-import { GuildQueue } from "discord-player"
 import { sendEmbed } from "@/embeds/channels.ts"
 import { errorEmbed, successEmbed } from "@/embeds/status.ts"
 import { updatePlayer } from "@/embeds/player/playing.ts"
-
-import type { GuildTextBasedChannel } from "discord.js"
-import type { QueueMetadata, PlayerCommand, Config } from "@/types.ts"
+import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
 
 class SwapCommand implements PlayerCommand {
 	public aliases = ["swap"]
 	public name = "swap"
 	public requiresPlayer = true
 	public adminCommand = false
-	public user = null
-	public guild = null
-	public msg = null
-
-	public execute(
-		serverQueue: GuildQueue<QueueMetadata>,
-		channel: GuildTextBasedChannel,
-		args: string[],
-		config: Config
-	) {
+	public execute(ctx: PlayerCommandContext) {
+		const { queue: serverQueue, channel, args, config } = ctx
 		const swapPos1 = Number.parseInt(args[1])
 		const swapPos2 = Number.parseInt(args[2])
 

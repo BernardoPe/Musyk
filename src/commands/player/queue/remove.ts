@@ -1,26 +1,15 @@
 import { sendEmbed } from "@/embeds/channels.ts"
-import { GuildQueue } from "discord-player"
 import { errorEmbed, successEmbed } from "@/embeds/status.ts"
 import { updatePlayer } from "@/embeds/player/playing.ts"
-
-import type { QueueMetadata, PlayerCommand, Config } from "@/types.ts"
-import type { GuildTextBasedChannel } from "discord.js"
+import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
 
 class RemoveCommand implements PlayerCommand {
 	public aliases = ["remove"]
 	public name = "remove"
 	public requiresPlayer = true
 	public adminCommand: boolean = false
-	public guild: string | null = null
-	public msg: string | null = null
-	public user: string | null = null
-
-	public execute(
-		serverQueue: GuildQueue<QueueMetadata>,
-		channel: GuildTextBasedChannel,
-		args: string[],
-		config: Config
-	) {
+	public execute(ctx: PlayerCommandContext) {
+		const { queue: serverQueue, channel, args, config } = ctx
 		const value = Number.parseInt(args[1])
 		if (Number.isNaN(value)) {
 			const embed = errorEmbed(null, config.lang.commands.shared.value_must_be_number)

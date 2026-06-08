@@ -1,21 +1,15 @@
 import { sendEmbed } from "@/embeds/channels.ts"
-import { GuildQueue } from "discord-player"
 import { errorEmbed, successEmbed } from "@/embeds/status.ts"
 import { updatePlayer } from "@/embeds/player/playing.ts"
-
-import type { QueueMetadata, PlayerCommand, Config } from "@/types.ts"
-import type { GuildTextBasedChannel } from "discord.js"
+import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
 
 class ShuffleCommand implements PlayerCommand {
 	public aliases = ["shuffle"]
 	public name = "shuffle"
 	public requiresPlayer = true
 	public adminCommand: boolean = false
-	public guild: string | null = null
-	public msg: string | null = null
-	public user: string | null = null
-
-	execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel, _args: string[], config: Config) {
+	execute(ctx: PlayerCommandContext) {
+		const { queue: serverQueue, channel, config } = ctx
 		if (serverQueue.tracks.size < 2) {
 			const embed = errorEmbed(null, config.lang.commands.shuffle.not_enough_songs)
 			sendEmbed(channel, { embeds: [embed] }, 20000)

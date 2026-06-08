@@ -1,22 +1,15 @@
-import { GuildQueue } from "discord-player"
-
 import { sendEmbed } from "@/embeds/channels.ts"
 import { errorEmbed, successEmbed } from "@/embeds/status.ts"
 import { updatePlayer } from "@/embeds/player/playing.ts"
-
-import type { GuildTextBasedChannel } from "discord.js"
-import type { QueueMetadata, PlayerCommand, Config } from "@/types.ts"
+import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
 
 class ClearCommand implements PlayerCommand {
 	aliases = ["clear"]
 	name = "clear"
 	requiresPlayer = true
 	adminCommand: boolean = false
-	guild = null
-	msg = null
-	user = null
-
-	execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel, _args: string[], config: Config) {
+	execute(ctx: PlayerCommandContext) {
+		const { queue: serverQueue, channel, config } = ctx
 		if (serverQueue.tracks.size === 0) {
 			const embed = errorEmbed(null, config.lang.commands.clear.empty_queue)
 			sendEmbed(channel, { embeds: [embed] }, 20000)

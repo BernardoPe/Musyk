@@ -1,5 +1,5 @@
 import { Events } from "discord.js"
-import { handleCommand } from "@/handlers/commands.ts"
+import { handleMessageCommand } from "@/handlers/commands.ts"
 
 import type { ClientEventHandler, GuildMessage, MusicBot } from "@/types.ts"
 
@@ -9,7 +9,7 @@ class MessageCreateHandler implements ClientEventHandler {
 	public execute(msg: GuildMessage, bot: MusicBot) {
 		if (msg.author.bot) return
 		const args = msg.content.split(/ +/)
-		handleCommand(msg, args, bot)
+		handleMessageCommand(bot, msg, args)
 	}
 }
 

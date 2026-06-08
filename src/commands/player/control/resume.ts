@@ -1,21 +1,14 @@
-import { GuildQueue } from "discord-player"
-
 import { sendEmbed } from "@/embeds/channels.ts"
 import { errorEmbed, successEmbed } from "@/embeds/status.ts"
-
-import type { GuildTextBasedChannel } from "discord.js"
-import type { Config, PlayerCommand, QueueMetadata } from "@/types.ts"
+import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
 
 class ResumeCommand implements PlayerCommand {
 	aliases = ["resume"]
 	name = "resume"
 	requiresPlayer = true
 	adminCommand = false
-	guild = null
-	msg = null
-	user = null
-
-	execute(serverQueue: GuildQueue<QueueMetadata>, channel: GuildTextBasedChannel, args: string[], config: Config) {
+	execute(ctx: PlayerCommandContext) {
+		const { queue: serverQueue, channel, config } = ctx
 		if (serverQueue.dispatcher?.isPlaying()) {
 			const embed = errorEmbed(null, config.lang.commands.resume.already_playing)
 			sendEmbed(channel, { embeds: [embed] }, 20000)

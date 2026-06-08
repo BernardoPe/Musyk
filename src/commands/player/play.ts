@@ -5,23 +5,20 @@ import { errorEmbed } from "@/embeds/status.ts"
 import { YoutubeiExtractor } from "discord-player-youtubei"
 
 import type { GuildTextBasedChannel, VoiceBasedChannel } from "discord.js"
-import type { MusicBot, QueueMetadata, BotCommand, GuildMessage, Config } from "@/types.ts"
+import type { MusicBot, QueueMetadata, BotCommand, CommandContext, Config } from "@/types.ts"
 
 class PlayCommand implements BotCommand {
 	adminCommand: boolean = false
 	aliases: string[] = ["p", "play"]
 	name: string = "play"
 	requiresPlayer: boolean = false
-	user: string | null = null
-	msg: string | null = null
-	guild: string | null = null
-
 	private readonly searchEngines = {
 		"-yt": "youtube",
 	}
 
-	public async execute(bot: MusicBot, msg: GuildMessage, args: string[], config: Config) {
-		const { channel } = msg
+	public async execute(ctx: CommandContext) {
+		const { bot, channel, guild, member, user, config } = ctx
+		let args = ctx.args
 
 		if (args.length === 1) {
 			const embed = errorEmbed(null, config.lang.commands.play.provide_search)
@@ -29,7 +26,7 @@ class PlayCommand implements BotCommand {
 			return
 		}
 
-		const voiceChannel = msg.member!.voice.channel
+		const voiceChannel = member!.voice.channel
 
 		if (!voiceChannel) {
 			const embed = errorEmbed(null, config.lang.commands.play.need_to_be_in_voice)
@@ -37,7 +34,7 @@ class PlayCommand implements BotCommand {
 			return
 		}
 
-		const permissions = voiceChannel.permissionsFor(msg.client.user)!
+		const permissions = voiceChannel.permissionsFor(bot.client.user!)!
 
 		if (!permissions.has("Connect") || !permissions.has("Speak")) {
 			const embed = errorEmbed(null, config.lang.commands.play.need_permissions)
@@ -46,11 +43,11 @@ class PlayCommand implements BotCommand {
 		}
 
 		const queue: GuildQueue<QueueMetadata> =
-			bot.player.queues.get(msg.guild.id) || this.createQueue(bot, channel, voiceChannel, config)
+			bot.player.queues.get(guild.id) || this.createQueue(bot, channel, voiceChannel, config)
 
-		if (queue.connection && queue.channel !== msg.member!.voice.channel) {
+		if (queue.connection && queue.channel !== voiceChannel) {
 			const embed = errorEmbed(null, config.lang.commands.play.already_connected)
-			sendEmbed(msg.channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, 20000)
 			return
 		}
 
@@ -58,7 +55,7 @@ class PlayCommand implements BotCommand {
 			try {
 				await queue.connect(voiceChannel)
 			} catch (e) {
-				bot.player.nodes.delete(msg.guild.id)
+				bot.player.nodes.delete(guild.id)
 				logger.error(e)
 			}
 		}
@@ -73,14 +70,11 @@ class PlayCommand implements BotCommand {
 
 		const str = args.filter((arg) => arg.trim() !== "").join(" ")
 
-		const extractor = bot.player.extractors.get(YoutubeiExtractor.identifier)!
-		if (searchEngine === "youtube") {
-			extractor.priority = Number.MAX_VALUE
-		}
+		const engine = searchEngine === "youtube" ? `ext:${YoutubeiExtractor.identifier}` : searchEngine
 
 		const result = await bot.player.search(str, {
-			requestedBy: msg.author,
-			searchEngine: searchEngine as SearchQueryType,
+			requestedBy: user,
+			searchEngine: engine as SearchQueryType,
 		})
 
 		const song = result.tracks[0]
@@ -103,8 +97,6 @@ class PlayCommand implements BotCommand {
 			logger.error(e)
 			const embed = errorEmbed(null, config.lang.commands.play.error)
 			sendEmbed(channel, { embeds: [embed] }, 20000)
-		} finally {
-			extractor.priority = 0
 		}
 	}
 
@@ -125,7 +117,6 @@ class PlayCommand implements BotCommand {
 			voiceChannel: voiceChannel,
 			textChannel: channel,
 			playerEmbed: null,
-			collector: null,
 			updatingPlayer: false,
 		}
 		return queue as GuildQueue<QueueMetadata>

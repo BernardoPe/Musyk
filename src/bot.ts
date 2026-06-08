@@ -45,11 +45,11 @@ class MusicBot {
 
 	private async addEventListeners() {
 		for (const listener of clientListeners) {
-			this.client.on(listener.name as keyof ClientEvents, (...args: any) => listener.execute(...args, this))
+			this.client.on(listener.name as keyof ClientEvents, (...args: any[]) => listener.execute(...args, this))
 			logger.info(`[LISTENER]: ${listener.name} registered`)
 		}
 		for (const listener of playerListeners) {
-			this.player.events.on(listener.name, (...args: any) => listener.execute(...args, this))
+			this.player.events.on(listener.name, (...args: any[]) => listener.execute(...args, this))
 			logger.info(`[LISTENER]: ${listener.name} registered`)
 		}
 	}

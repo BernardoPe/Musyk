@@ -1,5 +1,5 @@
 import { ButtonInteraction, Message } from "discord.js"
-import { GuildQueue, useQueue } from "discord-player"
+import { useQueue } from "discord-player"
 
 import { sendEmbed } from "@/embeds/channels.ts"
 import { logger } from "@/utils/logger/logger.ts"
@@ -7,48 +7,66 @@ import { errorEmbed } from "@/embeds/status.ts"
 import { getCommandInfo } from "@/storage/service.ts"
 import { adminService } from "@/storage/services/admin.ts"
 
-import type { GuildTextBasedChannel } from "discord.js"
-import type { BotCommand, Config, GuildMessage, MusicBot, PlayerCommand, QueueMetadata } from "@/types.ts"
+import type { GuildMember, GuildTextBasedChannel } from "discord.js"
+import type { GuildQueue } from "discord-player"
+import type {
+	BotCommand,
+	CommandContext,
+	Config,
+	GuildMessage,
+	MusicBot,
+	PlayerCommand,
+	QueueMetadata,
+} from "@/types.ts"
 
-export async function handleCommand(msg: GuildMessage | ButtonInteraction, args: string[], bot: MusicBot) {
-	const messageContent = msg instanceof Message ? msg.content : msg.customId
-	const user = msg instanceof Message ? msg.author : msg.user
-	const channel: GuildTextBasedChannel = msg.channel as GuildTextBasedChannel
-	const { userInfo, serverInfo } = await getCommandInfo(user, msg.guild!)
+async function dispatch(
+	bot: MusicBot,
+	commandName: string,
+	args: string[],
+	source: GuildMessage | ButtonInteraction,
+	raw: string
+) {
+	const command = bot.commands[commandName]
+	if (!command) return
 
-	if (!args[0].startsWith(serverInfo.prefix) || user.bot) return
+	const user = source instanceof Message ? source.author : source.user
+	if (user.bot) return
 
-	const commandName = args[0].slice(serverInfo.prefix.length).toLowerCase()
+	const guild = source.guild!
+	const channel = source.channel as GuildTextBasedChannel
+	const member = source.member as GuildMember | null
 
-	if (bot.commands[commandName]) {
-		const command = bot.commands[commandName]
-		const serverQueue: GuildQueue<QueueMetadata> | null = useQueue(msg.guild!.id)
+	if (command.adminCommand && !adminService.isAdmin(user.id)) return
 
-		if (command.adminCommand) {
-			const admins = adminService.getAdmins()
-			if (!admins.includes(user.id)) return
-		}
-
-		command.msg = messageContent
-		command.user = user.username
-		command.guild = msg.guild!.name
-
-		logger.info(`[COMMAND]: ${command.name} | ${command.msg} | User: ${command.user} | Guild: ${command.guild}`)
-
-		const configInfo: Config = {
-			prefix: serverInfo.prefix,
-			lang: serverInfo.lang,
-			playerConfig: userInfo.playerConfig || serverInfo.playerConfig,
-		}
-
-		if (command.requiresPlayer) {
-			if (!serverQueue?.isPlaying()) {
-				const embed = errorEmbed(null, configInfo.lang.shared.not_playing)
-				return sendEmbed(channel, { embeds: [embed] }, 20000)
-			}
-			;(command as PlayerCommand).execute(serverQueue, channel, args, configInfo)
-		} else {
-			;(command as BotCommand).execute(bot, msg as GuildMessage, args, configInfo)
-		}
+	const { userInfo, serverInfo } = await getCommandInfo(user, guild)
+	const config: Config = {
+		prefix: serverInfo.prefix,
+		lang: serverInfo.lang,
+		playerConfig: userInfo.playerConfig || serverInfo.playerConfig,
 	}
+
+	logger.info(`[COMMAND]: ${command.name} | ${raw} | User: ${user.username} | Guild: ${guild.name}`)
+
+	const ctx: CommandContext = { bot, guild, channel, user, member, args, config, raw, source }
+
+	if (command.requiresPlayer) {
+		const queue = useQueue(guild.id) as GuildQueue<QueueMetadata> | null
+		if (!queue?.isPlaying()) {
+			const embed = errorEmbed(null, config.lang.shared.not_playing)
+			return sendEmbed(channel, { embeds: [embed] }, 20000)
+		}
+		return (command as PlayerCommand).execute({ ...ctx, queue })
+	}
+
+	return (command as BotCommand).execute(ctx)
 }
+
+async function handleMessageCommand(bot: MusicBot, msg: GuildMessage, args: string[]) {
+	if (msg.author.bot || !args[0]) return
+	const { serverInfo } = await getCommandInfo(msg.author, msg.guild)
+	if (!args[0].startsWith(serverInfo.prefix)) return
+	const commandName = args[0].slice(serverInfo.prefix.length).toLowerCase()
+	return dispatch(bot, commandName, args, msg, msg.content)
+}
+
+export { dispatch, handleMessageCommand }

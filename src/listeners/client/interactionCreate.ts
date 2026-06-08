@@ -1,20 +1,14 @@
 import { BaseInteraction, ButtonInteraction, ChatInputCommandInteraction, Events } from "discord.js"
-import { handleCommand } from "@/handlers/commands.ts"
+import { dispatch } from "@/handlers/commands.ts"
 import { GuildQueue, QueueRepeatMode, useQueue } from "discord-player"
 import { errorEmbed, successEmbed } from "@/embeds/status.ts"
 import { helpEmbeds } from "@/embeds/help.ts"
 import { createLink } from "@/embeds/links.ts"
 import { serverRepository } from "@/storage/repositories/server.ts"
+import { logger } from "@/utils/logger/logger.ts"
 
 import type { Language } from "@/langs"
 import type { ClientEventHandler, MusicBot, QueueMetadata } from "@/types.ts"
-
-type ButtonCommand = (
-	interaction: ButtonInteraction,
-	serverQueue: GuildQueue<QueueMetadata>,
-	serverPrefix: string,
-	bot: MusicBot
-) => Promise<void> | void
 
 type TextCommand = (
 	interaction: ChatInputCommandInteraction,
@@ -33,7 +27,7 @@ class InteractionCreateHandler implements ClientEventHandler {
 			this.handleTextCommands(interaction as ChatInputCommandInteraction, server.prefix, bot, server.lang)
 		} else {
 			if (!serverQueue) return
-			this.handleButtonCommands(interaction, serverQueue, server.prefix, bot)
+			this.handleButtonCommands(interaction, serverQueue, bot)
 		}
 	}
 
@@ -41,17 +35,6 @@ class InteractionCreateHandler implements ClientEventHandler {
 		help: this.helpCommand,
 		prefix: this.prefixCommand,
 		language: this.langCommand,
-	}
-
-	private readonly buttonCommands: { [key: string]: ButtonCommand } = {
-		pause: this.pauseCommand,
-		resume: this.pauseCommand,
-		increaseVolume: this.increaseVolumeCommand,
-		decreaseVolume: this.decreaseVolumeCommand,
-		cycle: this.cycleCommand,
-		autoplay: this.autoplayCommand,
-		clear: this.clearCommand,
-		disconnect: this.disconnectCommand,
 	}
 
 	private handleTextCommands(
@@ -69,16 +52,40 @@ class InteractionCreateHandler implements ClientEventHandler {
 	private handleButtonCommands(
 		interaction: ButtonInteraction,
 		serverQueue: GuildQueue<QueueMetadata>,
-		serverPrefix: string,
 		bot: MusicBot
 	) {
 		const { customId } = interaction
 
 		interaction.deferUpdate().then(() => {
-			if (this.buttonCommands[customId]) {
-				this.buttonCommands[customId](interaction, serverQueue, serverPrefix, bot)
-			} else {
-				handleCommand(interaction, [`${serverPrefix}${customId}`], bot)
+			switch (customId) {
+				case "increaseVolume": {
+					const volume = serverQueue.node.volume === 200 ? 200 : serverQueue.node.volume + 20
+					serverQueue.node.setVolume(volume)
+					return
+				}
+				case "decreaseVolume": {
+					const volume = serverQueue.node.volume === 0 ? 0 : serverQueue.node.volume - 20
+					serverQueue.node.setVolume(volume)
+					return
+				}
+				case "pause":
+				case "resume": {
+					const command = serverQueue.isPlaying() && !serverQueue.dispatcher!.isPaused() ? "pause" : "resume"
+					dispatch(bot, command, [command], interaction, customId)
+					return
+				}
+				case "cycle": {
+					const mode = serverQueue.repeatMode === QueueRepeatMode.TRACK ? "off" : "track"
+					dispatch(bot, "cycle", ["cycle", mode], interaction, customId)
+					return
+				}
+				case "autoplay": {
+					const mode = serverQueue.repeatMode === QueueRepeatMode.AUTOPLAY ? "off" : "autoplay"
+					dispatch(bot, "cycle", ["cycle", mode], interaction, customId)
+					return
+				}
+				default:
+					dispatch(bot, customId, [customId], interaction, customId)
 			}
 		})
 	}
@@ -117,7 +124,7 @@ class InteractionCreateHandler implements ClientEventHandler {
 		} catch (e) {
 			const embed = errorEmbed(null, lang.shared.set_prefix_error)
 			await interaction.reply({ embeds: [embed], flags: "Ephemeral" })
-			console.error(e)
+			logger.error(e)
 			return
 		}
 
@@ -144,70 +151,12 @@ class InteractionCreateHandler implements ClientEventHandler {
 		} catch (e) {
 			const embed = errorEmbed(null, lang.shared.set_lang_error)
 			await interaction.reply({ embeds: [embed], flags: "Ephemeral" })
-			console.error(e)
+			logger.error(e)
 			return
 		}
 
 		const embed = successEmbed(null, lang.shared.set_lang.replace("{lang}", newLang))
 		await interaction.reply({ embeds: [embed] })
-	}
-
-	private pauseCommand(
-		interaction: ButtonInteraction,
-		serverQueue: GuildQueue<QueueMetadata>,
-		serverPrefix: string,
-		bot: MusicBot
-	) {
-		const command = serverQueue.isPlaying() && !serverQueue.dispatcher!.isPaused() ? "pause" : "resume"
-		handleCommand(interaction, [`${serverPrefix}${command}`], bot)
-	}
-
-	private increaseVolumeCommand(_interaction: ButtonInteraction, serverQueue: GuildQueue<QueueMetadata>) {
-		const newVolume = serverQueue.node.volume === 200 ? 200 : serverQueue.node.volume + 20
-		serverQueue.node.setVolume(newVolume)
-	}
-
-	private decreaseVolumeCommand(_interaction: ButtonInteraction, serverQueue: GuildQueue<QueueMetadata>) {
-		const newVolume = serverQueue.node.volume === 0 ? 0 : serverQueue.node.volume - 20
-		serverQueue.node.setVolume(newVolume)
-	}
-
-	private cycleCommand(
-		interaction: ButtonInteraction,
-		serverQueue: GuildQueue<QueueMetadata>,
-		serverPrefix: string,
-		bot: MusicBot
-	) {
-		const repeatMode = serverQueue.repeatMode === QueueRepeatMode.TRACK ? "off" : "track"
-		handleCommand(interaction, [`${serverPrefix}cycle`, repeatMode], bot)
-	}
-
-	private autoplayCommand(
-		interaction: ButtonInteraction,
-		serverQueue: GuildQueue<QueueMetadata>,
-		serverPrefix: string,
-		bot: MusicBot
-	) {
-		const repeatMode = serverQueue.repeatMode === QueueRepeatMode.AUTOPLAY ? "off" : "autoplay"
-		handleCommand(interaction, [`${serverPrefix}cycle`, repeatMode], bot)
-	}
-
-	private clearCommand(
-		interaction: ButtonInteraction,
-		_serverQueue: GuildQueue<QueueMetadata> | null,
-		serverPrefix: string,
-		bot: MusicBot
-	) {
-		handleCommand(interaction, [`${serverPrefix}clear`], bot)
-	}
-
-	private disconnectCommand(
-		interaction: ButtonInteraction,
-		_serverQueue: GuildQueue<QueueMetadata> | null,
-		serverPrefix: string,
-		bot: MusicBot
-	) {
-		handleCommand(interaction, [`${serverPrefix}disconnect`], bot)
 	}
 }
 

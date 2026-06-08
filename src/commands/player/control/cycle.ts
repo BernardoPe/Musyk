@@ -1,26 +1,16 @@
-import { GuildQueue, QueueRepeatMode } from "discord-player"
+import { QueueRepeatMode } from "discord-player"
 
 import { sendEmbed } from "@/embeds/channels.ts"
 import { successEmbed } from "@/embeds/status.ts"
-
-import type { GuildTextBasedChannel } from "discord.js"
-import type { Config, PlayerCommand, QueueMetadata } from "@/types.ts"
+import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
 
 class CycleCommand implements PlayerCommand {
 	public aliases = ["cycle"]
 	public name = "cycle"
 	public requiresPlayer = true
 	public adminCommand = false
-	public user = null
-	public guild = null
-	public msg = null
-
-	public execute(
-		serverQueue: GuildQueue<QueueMetadata>,
-		channel: GuildTextBasedChannel,
-		args: string[],
-		config: Config
-	) {
+	public execute(ctx: PlayerCommandContext) {
+		const { queue: serverQueue, channel, args, config } = ctx
 		let md = "none"
 		let mode = undefined
 

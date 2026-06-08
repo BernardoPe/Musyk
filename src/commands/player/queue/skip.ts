@@ -1,17 +1,12 @@
-import { GuildQueue } from "discord-player"
-
-import type { QueueMetadata, PlayerCommand } from "@/types.ts"
+import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
 
 class SkipCommand implements PlayerCommand {
 	aliases = ["skip"]
 	name = "skip"
 	requiresPlayer = true
 	adminCommand = false
-	user = null
-	guild = null
-	msg = null
-
-	execute(serverQueue: GuildQueue<QueueMetadata>) {
+	execute(ctx: PlayerCommandContext) {
+		const { queue: serverQueue } = ctx
 		serverQueue.node.skip()
 	}
 }

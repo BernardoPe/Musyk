@@ -1,26 +1,14 @@
-import { GuildQueue } from "discord-player"
-
 import { errorEmbed, successEmbed } from "@/embeds/status.ts"
 import { sendEmbed } from "@/embeds/channels.ts"
-
-import type { GuildTextBasedChannel } from "discord.js"
-import type { QueueMetadata, PlayerCommand, Config } from "@/types.ts"
+import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
 
 class FilterCommand implements PlayerCommand {
 	public adminCommand: boolean = false
 	public aliases: string[] = ["filter"]
 	public name: string = "filter"
 	public requiresPlayer: boolean = true
-	public user: string | null = null
-	public guild: string | null = null
-	public msg: string | null = null
-
-	public async execute(
-		serverQueue: GuildQueue<QueueMetadata>,
-		channel: GuildTextBasedChannel,
-		args: string[],
-		config: Config
-	) {
+	public async execute(ctx: PlayerCommandContext) {
+		const { queue: serverQueue, channel, args, config } = ctx
 		let filter = args[1]
 
 		if (!filter.includes("bassboost")) {

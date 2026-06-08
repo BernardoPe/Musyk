@@ -1,25 +1,14 @@
 import { sendEmbed } from "@/embeds/channels.ts"
-import { GuildQueue } from "discord-player"
 import { errorEmbed } from "@/embeds/status.ts"
-
-import type { QueueMetadata, PlayerCommand, Config } from "@/types.ts"
-import type { GuildTextBasedChannel } from "discord.js"
+import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
 
 class JumpCommand implements PlayerCommand {
 	public aliases = ["jump"]
 	public name = "jump"
 	public requiresPlayer = true
 	public adminCommand = false
-	public user = null
-	public guild = null
-	public msg = null
-
-	public execute(
-		serverQueue: GuildQueue<QueueMetadata>,
-		channel: GuildTextBasedChannel,
-		args: string[],
-		config: Config
-	) {
+	public execute(ctx: PlayerCommandContext) {
+		const { queue: serverQueue, channel, args, config } = ctx
 		const jumpPosition = Number.parseInt(args[1])
 
 		if (Number.isNaN(jumpPosition) || jumpPosition < 1 || jumpPosition > serverQueue.tracks.size) {

@@ -2,9 +2,11 @@ import type {
 	ButtonInteraction,
 	Client,
 	Events,
+	Guild,
+	GuildMember,
 	GuildTextBasedChannel,
-	InteractionCollector,
 	Message,
+	User,
 	VoiceBasedChannel,
 } from "discord.js"
 import { GuildQueue, GuildQueueEvent, Player } from "discord-player"
@@ -32,7 +34,7 @@ interface MusicBot {
  */
 interface GuildQueueEventHandler {
 	name: GuildQueueEvent
-	execute: (...args: any) => Promise<void> | void
+	execute(...args: any[]): Promise<void> | void
 }
 
 /**
@@ -40,11 +42,10 @@ interface GuildQueueEventHandler {
  *
  * @see	{@link https://discord.js.org/docs/packages/discord.js/14.16.3/Client:Class}
  * @see	{@link https://discord.js.org/docs/packages/discord.js/14.16.3/ClientEvents:Interface}
- * @see {@link https://discord.js.org/docs/packages/discord.js/14.16.3/ClientEvents:Interface}
  */
 interface ClientEventHandler {
 	name: Events
-	execute: (...args: any) => Promise<void> | void
+	execute(...args: any[]): Promise<void> | void
 }
 
 /**
@@ -54,31 +55,36 @@ interface ClientEventHandler {
  * @param aliases - The aliases of the command, allowing the command to be executed using different names
  * @param adminCommand - Whether the command is an admin command, requiring the user to have admin permissions
  * @param requiresPlayer - Whether the command requires a player to exist for the server
- * @param msg - The message that triggered the command
- * @param guild - The guild that the command was triggered in
- * @param user - The user that triggered the command
  */
 export interface BaseCommand {
 	name: string
 	aliases: string[]
 	adminCommand: boolean
 	requiresPlayer: boolean
-	user: string | null
-	msg: string | null
-	guild: string | null
+}
+
+export interface CommandContext {
+	bot: MusicBot
+	guild: Guild
+	channel: GuildTextBasedChannel
+	user: User
+	member: GuildMember | null
+	args: string[]
+	config: Config
+	raw: string
+	source: GuildMessage | ButtonInteraction
+}
+
+export interface PlayerCommandContext extends CommandContext {
+	queue: GuildQueue<QueueMetadata>
 }
 
 export interface PlayerCommand extends BaseCommand {
-	execute(
-		serverQueue: GuildQueue<QueueMetadata> | null,
-		channel: GuildTextBasedChannel,
-		args: string[],
-		config: Config
-	): Promise<void> | void
+	execute(ctx: PlayerCommandContext): Promise<void> | void
 }
 
 export interface BotCommand extends BaseCommand {
-	execute(bot: MusicBot, msg: GuildMessage, args: string[], config: Config): Promise<void> | void
+	execute(ctx: CommandContext): Promise<void> | void
 }
 
 /**
@@ -87,14 +93,12 @@ export interface BotCommand extends BaseCommand {
  * @param voiceChannel - The voice channel that the player is connected to
  * @param textChannel - The text channel that the player is connected to
  * @param playerEmbed - The message embed that displays the player
- * @param collector - The interaction collector for the player embed
  * @param updatingPlayer - Whether the player is currently being updated
  */
 type QueueMetadata = {
 	voiceChannel: VoiceBasedChannel | null
 	textChannel: GuildTextBasedChannel | null
 	playerEmbed: Message | null
-	collector: InteractionCollector<ButtonInteraction> | null
 	updatingPlayer: boolean | null
 }
 

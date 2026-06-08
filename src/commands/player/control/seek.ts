@@ -1,27 +1,15 @@
-import { GuildQueue } from "discord-player"
-
 import { sendEmbed } from "@/embeds/channels.ts"
 import { successEmbed } from "@/embeds/status.ts"
 import { validateTimestamp, millisecondsToTimestamp } from "@/utils/time.ts"
-
-import type { GuildTextBasedChannel } from "discord.js"
-import type { QueueMetadata, PlayerCommand, Config } from "@/types.ts"
+import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
 
 class SeekCommand implements PlayerCommand {
 	public aliases = ["seek"]
 	public name = "seek"
 	public requiresPlayer = true
 	public adminCommand = false
-	public user = null
-	public guild = null
-	public msg = null
-
-	public async execute(
-		serverQueue: GuildQueue<QueueMetadata>,
-		channel: GuildTextBasedChannel,
-		args: string[],
-		config: Config
-	) {
+	public async execute(ctx: PlayerCommandContext) {
+		const { queue: serverQueue, channel, args, config } = ctx
 		const time = validateTimestamp(args[1], serverQueue.node.totalDuration)
 
 		if (time === false) {
