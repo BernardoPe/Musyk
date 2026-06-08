@@ -1,5 +1,6 @@
 {
 	"tag": "pt-pt",
+	"name": "Português (Portugal)",
 	"shared": {
 		"not_playing": "Não está a tocar nenhuma música de momento",
 		"current_prefix": "O prefixo atual é **{prefix}**",
@@ -125,12 +126,19 @@
 			"autoplay_on": "Modo de reprodução automática ativado.",
 			"current_mode": "Modo atual: {mode}."
 		},
+		"clear": {
+			"cleared": "Fila limpa.",
+			"empty_queue": "A fila já está vazia."
+		},
+		"jump": {
+			"invalid_index": "Posição de faixa inválida."
+		},
 		"pause": {
 			"already_paused": "O player já está pausado.",
 			"paused": "Player pausado."
 		},
 		"resume": {
-			"already_resumed": "O player já está a tocar.",
+			"already_playing": "O player já está a tocar.",
 			"resumed": "Player retomado."
 		},
 		"seek": {

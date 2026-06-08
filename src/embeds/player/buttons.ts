@@ -1,20 +1,24 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js"
 
+const playerButtons: { [key: string]: string } = {
+	skip: "⏭️",
+	pause: "⏯️",
+	stop: "⏹️",
+	increaseVolume: "🔊",
+	decreaseVolume: "🔉",
+	shuffle: "🔀",
+	reverse: "🔃",
+	queue: "🕒",
+	cycle: "🔄",
+	autoplay: "🤖",
+	clear: "🗑️",
+	disconnect: "🔌",
+}
+
+export const PLAYER_BUTTON_IDS = new Set(Object.keys(playerButtons))
+
 function createButtons(): ActionRowBuilder<ButtonBuilder>[] {
-	const commands: { [key: string]: string } = {
-		skip: "⏭️",
-		pause: "⏯️",
-		stop: "⏹️",
-		increaseVolume: "🔊",
-		decreaseVolume: "🔉",
-		shuffle: "🔀",
-		reverse: "🔃",
-		queue: "🕒",
-		cycle: "🔄",
-		autoplay: "🤖",
-		clear: "🗑️",
-		disconnect: "🔌",
-	}
+	const commands = playerButtons
 
 	const commandNames = Object.keys(commands)
 

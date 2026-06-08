@@ -1,5 +1,6 @@
 import { REST, Routes, SlashCommandBuilder } from "discord.js"
 import "dotenv/config"
+import { languageService } from "@/storage/services/language.ts"
 
 const langsCommand = new SlashCommandBuilder()
 	.setName("language")
@@ -9,11 +10,7 @@ const langsCommand = new SlashCommandBuilder()
 			.setName("language")
 			.setDescription("The language you want to set")
 			.setRequired(true)
-			.addChoices(
-				{ name: "English", value: "en" },
-				{ name: "Português (Portugal)", value: "pt-pt" },
-				{ name: "Current", value: "current" }
-			)
+			.addChoices(...languageService.getLanguageChoices(), { name: "Current", value: "current" })
 	)
 	.toJSON()
 

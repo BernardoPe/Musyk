@@ -6,6 +6,8 @@ import { helpEmbeds } from "@/embeds/help.ts"
 import { createLink } from "@/embeds/links.ts"
 import { serverRepository } from "@/storage/repositories/server.ts"
 import { logger } from "@/utils/logger/logger.ts"
+import { MAX_VOLUME, MIN_VOLUME, VOLUME_STEP } from "@/constants.ts"
+import { PLAYER_BUTTON_IDS } from "@/embeds/player/buttons.ts"
 
 import type { Language } from "@/langs"
 import type { ClientEventHandler, MusicBot, QueueMetadata } from "@/types.ts"
@@ -56,15 +58,17 @@ class InteractionCreateHandler implements ClientEventHandler {
 	) {
 		const { customId } = interaction
 
+		if (!PLAYER_BUTTON_IDS.has(customId)) return
+
 		interaction.deferUpdate().then(() => {
 			switch (customId) {
 				case "increaseVolume": {
-					const volume = serverQueue.node.volume === 200 ? 200 : serverQueue.node.volume + 20
+					const volume = Math.min(MAX_VOLUME, serverQueue.node.volume + VOLUME_STEP)
 					serverQueue.node.setVolume(volume)
 					return
 				}
 				case "decreaseVolume": {
-					const volume = serverQueue.node.volume === 0 ? 0 : serverQueue.node.volume - 20
+					const volume = Math.max(MIN_VOLUME, serverQueue.node.volume - VOLUME_STEP)
 					serverQueue.node.setVolume(volume)
 					return
 				}

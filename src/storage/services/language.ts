@@ -5,33 +5,45 @@ import { logger } from "@/utils/logger/logger.ts"
 
 import type { Language } from "@/langs"
 
-const allLanguages: Language[] = [en as unknown as Language, ptPt as unknown as Language]
+function validateLanguage(lang: Language, source: string): Language {
+	const required = ["tag", "name", "shared", "commands", "embeds"] as const
+	const missing = required.filter((key) => lang[key] == null)
+	if (missing.length > 0) {
+		throw new Error(`Invalid language file '${source}': missing keys ${missing.join(", ")}`)
+	}
+	return lang
+}
+
+const allLanguages: Language[] = [validateLanguage(en, "en.json"), validateLanguage(ptPt, "pt-pt.json")]
 
 class LanguageService {
 	private readonly languages: Map<string, Language> = new Map()
 
 	constructor() {
 		for (const lang of allLanguages) {
-			if (lang.tag) {
-				this.languages.set(lang.tag, lang)
-				logger.info(`[LANG] Loaded language: ${lang.tag}`)
-			}
+			this.languages.set(lang.tag, lang)
+			logger.info(`[LANG] Loaded language: ${lang.tag}`)
 		}
 	}
 
 	public async getLanguage(tag: string): Promise<Language> {
 		const language = this.languages.get(tag)
 		if (!language) {
-			console.warn(`Language '${tag}' not found, falling back to '${DEFAULT_LANGUAGE}'`)
+			logger.warn(`Language '${tag}' not found, falling back to '${DEFAULT_LANGUAGE}'`)
 			return this.languages.get(DEFAULT_LANGUAGE) || this.getDefaultLanguage()
 		}
 
 		return language
 	}
 
+	public getLanguageChoices(): { name: string; value: string }[] {
+		return Array.from(this.languages.values()).map((lang) => ({ name: lang.name, value: lang.tag }))
+	}
+
 	private getDefaultLanguage(): Language {
 		return {
 			tag: DEFAULT_LANGUAGE,
+			name: "English",
 			shared: { not_playing: "No music is currently playing" },
 			commands: {},
 			embeds: {},

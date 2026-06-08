@@ -9,6 +9,7 @@ import { adminService } from "@/storage/services/admin.ts"
 
 import type { GuildMember, GuildTextBasedChannel } from "discord.js"
 import type { GuildQueue } from "discord-player"
+import { EMBED_TIMEOUT_MS } from "@/constants.ts"
 import type {
 	BotCommand,
 	CommandContext,
@@ -53,7 +54,7 @@ async function dispatch(
 		const queue = useQueue(guild.id) as GuildQueue<QueueMetadata> | null
 		if (!queue?.isPlaying()) {
 			const embed = errorEmbed(null, config.lang.shared.not_playing)
-			return sendEmbed(channel, { embeds: [embed] }, 20000)
+			return sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 		}
 		return (command as PlayerCommand).execute({ ...ctx, queue })
 	}

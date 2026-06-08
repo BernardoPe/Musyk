@@ -1,6 +1,7 @@
 import { errorEmbed, successEmbed } from "@/embeds/status.ts"
 import { sendEmbed } from "@/embeds/channels.ts"
 import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
+import { EMBED_TIMEOUT_MS } from "@/constants.ts"
 
 class FilterCommand implements PlayerCommand {
 	public adminCommand: boolean = false
@@ -18,13 +19,13 @@ class FilterCommand implements PlayerCommand {
 		if (filter === "disableall") {
 			await serverQueue.filters.ffmpeg.setFilters(false)
 			const embed = successEmbed(null, config.lang.commands.filter.disabled_all)
-			sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 			return
 		}
 
 		if (!serverQueue.filters.ffmpeg.isValidFilter(filter)) {
 			const embed = errorEmbed(null, config.lang.commands.filter.invalid_filter)
-			sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 			return
 		}
 
@@ -32,12 +33,12 @@ class FilterCommand implements PlayerCommand {
 
 		if (serverQueue.filters.ffmpeg.isEnabled(filter)) {
 			const embed = successEmbed(null, config.lang.commands.filter.enabled_single.replace("{filter}", filter))
-			sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 			return
 		}
 
 		const embed = successEmbed(null, config.lang.commands.filter.disabled_single.replace("{filter}", filter))
-		sendEmbed(channel, { embeds: [embed] }, 20000)
+		sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 	}
 }
 

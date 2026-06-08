@@ -2,6 +2,7 @@ import { sendEmbed } from "@/embeds/channels.ts"
 import { successEmbed } from "@/embeds/status.ts"
 import { validateTimestamp, millisecondsToTimestamp } from "@/utils/time.ts"
 import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
+import { EMBED_TIMEOUT_MS } from "@/constants.ts"
 
 class SeekCommand implements PlayerCommand {
 	public aliases = ["seek"]
@@ -14,13 +15,13 @@ class SeekCommand implements PlayerCommand {
 
 		if (time === false) {
 			const embed = successEmbed(null, config.lang.commands.seek.invalid_time_format.replace("{time}", args[1]))
-			sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 			return
 		}
 
 		if (time === -1) {
 			const embed = successEmbed(null, config.lang.commands.seek.invalid_time.replace("{time}", args[1]))
-			sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 			return
 		}
 
@@ -32,7 +33,7 @@ class SeekCommand implements PlayerCommand {
 
 		const embed = successEmbed(null, config.lang.commands.seek.seeked.replace("{time}", timestamp + "/" + dur))
 
-		sendEmbed(channel, { embeds: [embed] }, 20000)
+		sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 	}
 }
 

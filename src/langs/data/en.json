@@ -1,5 +1,6 @@
 {
 	"tag": "en",
+	"name": "English",
 	"shared": {
 		"not_playing": "Not currently playing any songs",
 		"current_prefix": "Current prefix is **{prefix}**",
@@ -125,12 +126,19 @@
 			"autoplay_on": "Autoplay mode activated.",
 			"current_mode": "Current mode: {mode}."
 		},
+		"clear": {
+			"cleared": "Cleared the queue.",
+			"empty_queue": "The queue is already empty."
+		},
+		"jump": {
+			"invalid_index": "Invalid track position."
+		},
 		"pause": {
 			"already_paused": "The player is already paused.",
 			"paused": "Paused the player."
 		},
 		"resume": {
-			"already_resumed": "The player is already playing.",
+			"already_playing": "The player is already playing.",
 			"resumed": "Resumed the player."
 		},
 		"seek": {

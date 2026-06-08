@@ -2,6 +2,7 @@ import { sendEmbed } from "@/embeds/channels.ts"
 import { errorEmbed, successEmbed } from "@/embeds/status.ts"
 import { updatePlayer } from "@/embeds/player/playing.ts"
 import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
+import { EMBED_TIMEOUT_MS } from "@/constants.ts"
 
 class RemoveCommand implements PlayerCommand {
 	public aliases = ["remove"]
@@ -13,7 +14,7 @@ class RemoveCommand implements PlayerCommand {
 		const value = Number.parseInt(args[1])
 		if (Number.isNaN(value)) {
 			const embed = errorEmbed(null, config.lang.commands.shared.value_must_be_number)
-			sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 			return
 		}
 		const tracks = serverQueue.tracks.toArray()
@@ -22,7 +23,7 @@ class RemoveCommand implements PlayerCommand {
 				null,
 				config.lang.commands.remove.invalid_index.replace("{queueLength}", tracks.length.toString())
 			)
-			sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 			return
 		}
 		const song = serverQueue.node.remove(tracks[value - 1])
@@ -31,7 +32,7 @@ class RemoveCommand implements PlayerCommand {
 			config.lang.commands.remove.removed.replace("{song}", `[${song!.title}](${song!.url})`)
 		)
 		updatePlayer(serverQueue, config.lang)
-		sendEmbed(channel, { embeds: [embed] }, 20000)
+		sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 	}
 }
 

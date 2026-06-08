@@ -10,6 +10,7 @@ import type {
 	VoiceBasedChannel,
 } from "discord.js"
 import { GuildQueue, GuildQueueEvent, Player } from "discord-player"
+import type { SearchQueryType } from "discord-player"
 import type { Language } from "@/langs"
 
 /**
@@ -117,6 +118,13 @@ type PlayerConfig = {
 	leaveOnEndCooldown: number
 }
 
+type PlayerConfigUpdate = {
+	searchEngine?: SearchQueryType
+	volume?: number
+	leaveOnEnd?: boolean
+	leaveOnEndCooldown?: number
+}
+
 /**
  * Represents the configuration information for a server
  *
@@ -135,4 +143,13 @@ type Config = {
  */
 type GuildMessage = Message<true>
 
-export type { MusicBot, GuildQueueEventHandler, ClientEventHandler, QueueMetadata, GuildMessage, Config, PlayerConfig }
+export type {
+	MusicBot,
+	GuildQueueEventHandler,
+	ClientEventHandler,
+	QueueMetadata,
+	GuildMessage,
+	Config,
+	PlayerConfig,
+	PlayerConfigUpdate,
+}

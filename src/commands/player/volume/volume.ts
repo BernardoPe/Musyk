@@ -1,6 +1,7 @@
 import { sendEmbed } from "@/embeds/channels.ts"
 import { errorEmbed, successEmbed } from "@/embeds/status.ts"
 import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
+import { EMBED_TIMEOUT_MS, MAX_VOLUME } from "@/constants.ts"
 
 class VolumeCommand implements PlayerCommand {
 	public aliases = ["volume"]
@@ -14,7 +15,7 @@ class VolumeCommand implements PlayerCommand {
 				null,
 				config.lang.commands.volume.current_volume.replace("{volume}", serverQueue.node.volume.toString())
 			)
-			sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 			return
 		}
 
@@ -22,19 +23,19 @@ class VolumeCommand implements PlayerCommand {
 
 		if (Number.isNaN(volume)) {
 			const embed = errorEmbed(null, config.lang.commands.shared.value_must_be_number)
-			sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 			return
 		}
 
-		if (volume > 200 || volume < 1) {
+		if (volume > MAX_VOLUME || volume < 1) {
 			const embed = errorEmbed(null, config.lang.commands.volume.invalid_volume)
-			sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 			return
 		}
 
 		serverQueue.node.setVolume(volume)
 		const embed = successEmbed(null, config.lang.commands.volume.volume_set.replace("{volume}", volume.toString()))
-		sendEmbed(channel, { embeds: [embed] }, 20000)
+		sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 	}
 }
 

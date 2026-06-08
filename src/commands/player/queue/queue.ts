@@ -3,6 +3,7 @@ import paginate from "@/embeds/paginator.ts"
 import { createQueueEmbed } from "@/embeds/player/queue.ts"
 import { errorEmbed } from "@/embeds/status.ts"
 import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
+import { EMBED_TIMEOUT_MS } from "@/constants.ts"
 
 class QueueCommand implements PlayerCommand {
 	public aliases = ["queue"]
@@ -13,7 +14,7 @@ class QueueCommand implements PlayerCommand {
 		const { queue: serverQueue, channel, config } = ctx
 		if (serverQueue.isEmpty()) {
 			const embed = errorEmbed(null, config.lang.commands.shared.empty_queue)
-			sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 			return
 		}
 		const pages = createQueueEmbed(serverQueue, config.lang)

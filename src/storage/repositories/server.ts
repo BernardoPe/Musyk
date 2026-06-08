@@ -6,26 +6,13 @@ import { languageService } from "@/storage/services/language.ts"
 
 import type { SearchQueryType } from "discord-player"
 import type { Language } from "@/langs"
-
-export interface PlayerConfig {
-	searchEngine: string
-	volume: number
-	leaveOnEnd: boolean
-	leaveOnEndCooldown: number
-}
+import type { PlayerConfig, PlayerConfigUpdate } from "@/types.ts"
 
 export interface ServerInfo {
 	serverId: string
 	prefix: string
 	lang: Language
 	playerConfig: PlayerConfig
-}
-
-export interface PlayerConfigUpdate {
-	searchEngine?: SearchQueryType
-	volume?: number
-	leaveOnEnd?: boolean
-	leaveOnEndCooldown?: number
 }
 
 class ServerRepository {

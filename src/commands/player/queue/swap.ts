@@ -2,6 +2,7 @@ import { sendEmbed } from "@/embeds/channels.ts"
 import { errorEmbed, successEmbed } from "@/embeds/status.ts"
 import { updatePlayer } from "@/embeds/player/playing.ts"
 import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
+import { EMBED_TIMEOUT_MS } from "@/constants.ts"
 
 class SwapCommand implements PlayerCommand {
 	public aliases = ["swap"]
@@ -15,13 +16,13 @@ class SwapCommand implements PlayerCommand {
 
 		if (Number.isNaN(swapPos1) || swapPos1 < 1 || swapPos1 > serverQueue.tracks.size) {
 			const embed = errorEmbed(null, config.lang.commands.swap.invalid_position_1)
-			sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 			return
 		}
 
 		if (Number.isNaN(swapPos2) || swapPos2 < 1 || swapPos2 > serverQueue.tracks.size) {
 			const embed = errorEmbed(null, config.lang.commands.swap.invalid_position_2)
-			sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 			return
 		}
 
@@ -37,7 +38,7 @@ class SwapCommand implements PlayerCommand {
 				.replace("{song1}", `[${song1.cleanTitle}](${song1.url})`)
 				.replace("{song2}", `[${song2.cleanTitle}](${song2.url})`)
 		)
-		sendEmbed(channel, { embeds: [embed] }, 20000)
+		sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 
 		if (swapPos1 === 1 || swapPos2 === 1) updatePlayer(serverQueue, config.lang)
 	}

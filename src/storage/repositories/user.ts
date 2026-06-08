@@ -1,27 +1,14 @@
 import { User } from "discord.js"
 import prisma from "@/storage/source.ts"
 import { CacheType, doCachedQuery, invalidateCache } from "@/storage/cache.ts"
-import { DEFAULT_USER_PLAYER_CONFIG } from "@/storage/constants/user.ts"
+import { DEFAULT_PLAYER_CONFIG } from "@/storage/constants/server.ts"
 
 import type { SearchQueryType } from "discord-player"
-
-export interface UserPlayerConfig {
-	searchEngine: string
-	volume: number
-	leaveOnEnd: boolean
-	leaveOnEndCooldown: number
-}
+import type { PlayerConfig, PlayerConfigUpdate } from "@/types.ts"
 
 export interface UserInfo {
 	userId: string
-	playerConfig: UserPlayerConfig | null
-}
-
-export interface UserPlayerConfigUpdate {
-	searchEngine?: SearchQueryType
-	volume?: number
-	leaveOnEnd?: boolean
-	leaveOnEndCooldown?: number
+	playerConfig: PlayerConfig | null
 }
 
 class UserRepository {
@@ -57,8 +44,8 @@ class UserRepository {
 		})
 	}
 
-	async createPlayerConfig(user: User, config: Partial<UserPlayerConfigUpdate> = {}): Promise<void> {
-		const finalConfig = { ...DEFAULT_USER_PLAYER_CONFIG, ...config }
+	async createPlayerConfig(user: User, config: Partial<PlayerConfigUpdate> = {}): Promise<void> {
+		const finalConfig = { ...DEFAULT_PLAYER_CONFIG, ...config }
 
 		await prisma.user.update({
 			where: { userId: user.id },
@@ -72,7 +59,7 @@ class UserRepository {
 		this.invalidateUserCache(user.id)
 	}
 
-	async updatePlayerConfig(user: User, configUpdate: UserPlayerConfigUpdate): Promise<void> {
+	async updatePlayerConfig(user: User, configUpdate: PlayerConfigUpdate): Promise<void> {
 		const userInfo = await this.getOrPut(user)
 
 		if (!userInfo.playerConfig) {

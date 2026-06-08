@@ -3,6 +3,7 @@ import { QueueRepeatMode } from "discord-player"
 import { sendEmbed } from "@/embeds/channels.ts"
 import { successEmbed } from "@/embeds/status.ts"
 import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
+import { EMBED_TIMEOUT_MS } from "@/constants.ts"
 
 class CycleCommand implements PlayerCommand {
 	public aliases = ["cycle"]
@@ -45,7 +46,7 @@ class CycleCommand implements PlayerCommand {
 		const embed = mode
 			? successEmbed(null, mode)
 			: successEmbed(null, config.lang.commands.cycle.current_mode.replace("{mode}", md))
-		sendEmbed(channel, { embeds: [embed] }, 20000)
+		sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 	}
 }
 

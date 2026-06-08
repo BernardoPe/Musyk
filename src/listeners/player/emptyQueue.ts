@@ -3,6 +3,7 @@ import { GuildQueueEventHandler, QueueMetadata } from "@/types.ts"
 import { sendEmbed } from "@/embeds/channels.ts"
 import { leavingEmbed } from "@/embeds/player/queue.ts"
 import { serverRepository } from "@/storage/repositories/server.ts"
+import { EMBED_TIMEOUT_LONG_MS } from "@/constants.ts"
 
 class EmptyQueueHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.EmptyQueue
@@ -21,7 +22,7 @@ class EmptyQueueHandler implements GuildQueueEventHandler {
 
 		const embed = leavingEmbed(server.lang)
 
-		sendEmbed(channel, { embeds: [embed] }, 60000)
+		sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_LONG_MS)
 	}
 }
 

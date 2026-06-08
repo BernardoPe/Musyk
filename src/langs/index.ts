@@ -3,6 +3,7 @@ import type { EmbedsLangConfig } from "@/langs/embeds.ts"
 
 export interface Language {
 	tag: string
+	name: string
 	shared: SharedLangConfig
 	commands: CommandsLangConfig
 	embeds: EmbedsLangConfig

@@ -1,29 +1,25 @@
-import { Collection, Colors, EmbedBuilder, GuildMember } from "discord.js"
 import { logger } from "@/utils/logger/logger.ts"
-import bot from "@/bot.ts"
 
-import type { GuildTextBasedChannel, Snowflake } from "discord.js"
-import type { Language } from "@/langs"
+import type { GuildTextBasedChannel, MessageCreateOptions, MessagePayload } from "discord.js"
 
-function leftEmbed(lang: Language): EmbedBuilder {
-	return new EmbedBuilder().setDescription(lang.embeds.left.description).setColor(Colors.Red)
-}
-
-function sendEmbed(channel: GuildTextBasedChannel, info: any, timeout: number | null = null) {
+function sendEmbed(
+	channel: GuildTextBasedChannel,
+	info: string | MessagePayload | MessageCreateOptions,
+	timeout: number | null = null
+) {
 	if (!channel) {
 		logger.error("Channel not found")
 		return
 	}
 
-	const members: Collection<Snowflake, GuildMember> = channel.members as Collection<Snowflake, GuildMember>
-	const botPresent = members.get(bot.client.application?.id as Snowflake)
+	const botMember = channel.guild.members.me
 
-	if (!botPresent) {
+	if (!botMember) {
 		logger.error("Bot not found in the channel")
 		return
 	}
 
-	if (!channel.permissionsFor(botPresent).has("SendMessages")) {
+	if (!channel.permissionsFor(botMember).has("SendMessages")) {
 		logger.error("Bot doesn't have permission to send messages")
 		return
 	}
@@ -38,4 +34,4 @@ function sendEmbed(channel: GuildTextBasedChannel, info: any, timeout: number | 
 	})
 }
 
-export { sendEmbed, leftEmbed }
+export { sendEmbed }

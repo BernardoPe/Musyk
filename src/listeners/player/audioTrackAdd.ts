@@ -4,6 +4,7 @@ import { songQueuedEmbed } from "@/embeds/player/queue.ts"
 import { sendEmbed } from "@/embeds/channels.ts"
 import { updatePlayer } from "@/embeds/player/playing.ts"
 import { serverRepository } from "@/storage/repositories/server.ts"
+import { EMBED_TIMEOUT_LONG_MS } from "@/constants.ts"
 
 class AudioTrackAddHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.AudioTrackAdd
@@ -17,7 +18,7 @@ class AudioTrackAddHandler implements GuildQueueEventHandler {
 
 		const embed = songQueuedEmbed(track, queue, server.lang)
 
-		sendEmbed(queue.metadata.textChannel!, { embeds: [embed] }, 60000)
+		sendEmbed(queue.metadata.textChannel!, { embeds: [embed] }, EMBED_TIMEOUT_LONG_MS)
 	}
 }
 

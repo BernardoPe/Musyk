@@ -1,7 +1,9 @@
 import { GuildQueueEventHandler, QueueMetadata } from "@/types.ts"
-import { sendEmbed, leftEmbed } from "@/embeds/channels.ts"
+import { sendEmbed } from "@/embeds/channels.ts"
+import { leftEmbed } from "@/embeds/player/queue.ts"
 import { GuildQueue, GuildQueueEvent, Util } from "discord-player"
 import { serverRepository } from "@/storage/repositories/server.ts"
+import { EMBED_TIMEOUT_MS } from "@/constants.ts"
 
 class QueueDeleteHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.QueueDelete
@@ -20,7 +22,7 @@ class QueueDeleteHandler implements GuildQueueEventHandler {
 
 		const embed = leftEmbed(server.lang)
 
-		sendEmbed(channel!, { embeds: [embed] }, 20000)
+		sendEmbed(channel!, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 	}
 }
 

@@ -10,6 +10,10 @@ function leavingEmbed(lang: Language): EmbedBuilder {
 	return new EmbedBuilder().setDescription(lang.embeds.leaving.description).setColor(Colors.Red)
 }
 
+function leftEmbed(lang: Language): EmbedBuilder {
+	return new EmbedBuilder().setDescription(lang.embeds.left.description).setColor(Colors.Red)
+}
+
 function createQueueEmbed(serverQueue: GuildQueue, lang: Language): EmbedBuilder[] {
 	const pages: EmbedBuilder[] = []
 	const tracks = serverQueue.tracks.toArray()
@@ -116,4 +120,4 @@ function songQueuedEmbed(song: Track<RawTrackData>, queue: GuildQueue<QueueMetad
 	return embed
 }
 
-export { createQueueEmbed, queuePlaylistEmbed, songQueuedEmbed, leavingEmbed }
+export { createQueueEmbed, queuePlaylistEmbed, songQueuedEmbed, leavingEmbed, leftEmbed }

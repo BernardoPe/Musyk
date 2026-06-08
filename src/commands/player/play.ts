@@ -6,6 +6,7 @@ import { YoutubeiExtractor } from "discord-player-youtubei"
 
 import type { GuildTextBasedChannel, VoiceBasedChannel } from "discord.js"
 import type { MusicBot, QueueMetadata, BotCommand, CommandContext, Config } from "@/types.ts"
+import { EMBED_TIMEOUT_MS } from "@/constants.ts"
 
 class PlayCommand implements BotCommand {
 	adminCommand: boolean = false
@@ -22,7 +23,7 @@ class PlayCommand implements BotCommand {
 
 		if (args.length === 1) {
 			const embed = errorEmbed(null, config.lang.commands.play.provide_search)
-			sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 			return
 		}
 
@@ -30,7 +31,7 @@ class PlayCommand implements BotCommand {
 
 		if (!voiceChannel) {
 			const embed = errorEmbed(null, config.lang.commands.play.need_to_be_in_voice)
-			sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 			return
 		}
 
@@ -38,7 +39,7 @@ class PlayCommand implements BotCommand {
 
 		if (!permissions.has("Connect") || !permissions.has("Speak")) {
 			const embed = errorEmbed(null, config.lang.commands.play.need_permissions)
-			sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 			return
 		}
 
@@ -47,7 +48,7 @@ class PlayCommand implements BotCommand {
 
 		if (queue.connection && queue.channel !== voiceChannel) {
 			const embed = errorEmbed(null, config.lang.commands.play.already_connected)
-			sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 			return
 		}
 
@@ -81,7 +82,7 @@ class PlayCommand implements BotCommand {
 
 		if (result.tracks.length === 0) {
 			const embed = errorEmbed(null, config.lang.commands.play.no_results)
-			sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 			return
 		}
 
@@ -96,7 +97,7 @@ class PlayCommand implements BotCommand {
 		} catch (e) {
 			logger.error(e)
 			const embed = errorEmbed(null, config.lang.commands.play.error)
-			sendEmbed(channel, { embeds: [embed] }, 20000)
+			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 		}
 	}
 
