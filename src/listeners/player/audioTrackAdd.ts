@@ -1,9 +1,9 @@
 import { GuildQueue, GuildQueueEvent, RawTrackData, Track } from "discord-player"
-import { GuildQueueEventHandler, QueueMetadata } from "../../types.ts"
-import { songQueuedEmbed } from "../../embeds/player/queue.ts"
-import { sendEmbed } from "../../embeds/channels.ts"
-import { updatePlayer } from "../../embeds/player/playing.ts"
-import { serverRepository } from "../../storage/repositories/server.ts"
+import { GuildQueueEventHandler, QueueMetadata } from "@/types.ts"
+import { songQueuedEmbed } from "@/embeds/player/queue.ts"
+import { sendEmbed } from "@/embeds/channels.ts"
+import { updatePlayer } from "@/embeds/player/playing.ts"
+import { serverRepository } from "@/storage/repositories/server.ts"
 
 class AudioTrackAddHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.AudioTrackAdd

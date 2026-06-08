@@ -1,10 +1,10 @@
 import { GuildQueue, GuildQueueEvent } from "discord-player"
-import { GuildQueueEventHandler, QueueMetadata } from "../../types.ts"
+import { GuildQueueEventHandler, QueueMetadata } from "@/types.ts"
 import { ButtonInteraction, InteractionCollector } from "discord.js"
-import { createButtons } from "../../embeds/player/buttons.ts"
-import { nowPlayingEmbed, updatePlayer } from "../../embeds/player/playing.ts"
-import { sendEmbed } from "../../embeds/channels.ts"
-import { serverRepository } from "../../storage/repositories/server.ts"
+import { createButtons } from "@/embeds/player/buttons.ts"
+import { nowPlayingEmbed, updatePlayer } from "@/embeds/player/playing.ts"
+import { sendEmbed } from "@/embeds/channels.ts"
+import { serverRepository } from "@/storage/repositories/server.ts"
 
 class PlayerStartHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.PlayerStart

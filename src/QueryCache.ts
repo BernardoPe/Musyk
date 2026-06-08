@@ -1,5 +1,5 @@
 import { DiscordPlayerQueryResultCache, SearchResult } from "discord-player"
-import { logger } from "./utils/logger/logger.ts"
+import { logger } from "@/utils/logger/logger.ts"
 
 import type { Player, Playlist, QueryCacheProvider, QueryCacheResolverContext, Track } from "discord-player"
 
@@ -18,8 +18,6 @@ export class QueryCache implements QueryCacheProvider<CachedTrack> {
 
 	private readonly cleanupExpiredEntries = () => {
 		const now = Date.now()
-		// eslint-disable-next-line
-		// @ts-ignore
 		for (const [key, value] of QueryCache.resultCache.entries()) {
 			if (value.expireAfter < now) {
 				QueryCache.resultCache.delete(key)
@@ -27,14 +25,18 @@ export class QueryCache implements QueryCacheProvider<CachedTrack> {
 		}
 	}
 
+	private static cacheKey(queryType: string | null | undefined, value: string | null | undefined): string {
+		return `${queryType}:${(value ?? "").toLowerCase()}`
+	}
+
 	public async getData(): Promise<DiscordPlayerQueryResultCache<CachedTrack>[]> {
 		return Array.from(QueryCache.resultCache.values())
 	}
 
 	public async resolve(context: QueryCacheResolverContext): Promise<SearchResult> {
-		const queryKey = `${context.queryType}:${context.query.toLowerCase()}`
+		const queryKey = QueryCache.cacheKey(context.queryType, context.query)
 		const res = QueryCache.resultCache.get(queryKey)
-		const tracks = res ? [res.data.track] : this.findTracksByAlias(queryKey)
+		const tracks = res ? [res.data.track] : this.findTracksByAlias(context.query.toLowerCase())
 
 		logger.info(`[CACHE]: Cache ${tracks.length > 0 ? "hit" : "miss"} for query ${context.query}`)
 
@@ -56,7 +58,7 @@ export class QueryCache implements QueryCacheProvider<CachedTrack> {
 	public async addData(data: SearchResult) {
 		if (data.hasPlaylist()) {
 			QueryCache.resultCache.set(
-				data.query.toLowerCase(),
+				QueryCache.cacheKey(data.queryType, data.query),
 				new DiscordPlayerQueryResultCache(
 					{
 						track: data.tracks[0],
@@ -71,14 +73,18 @@ export class QueryCache implements QueryCacheProvider<CachedTrack> {
 
 		const isURL = URL.canParse(data.query)
 		data.tracks.forEach((trackData) => {
-			const key = trackData.url.toLowerCase()
-			if (isURL && !QueryCache.resultCache.has(key)) {
+			const key = QueryCache.cacheKey(trackData.queryType, trackData.url)
+			const existingCache = QueryCache.resultCache.get(key)
+			if (isURL && !existingCache) {
 				this.addToCache(trackData, undefined, new Set([data.query.toLowerCase()]))
 			} else {
-				const existingCache = QueryCache.resultCache.get(key)
 				const queryAliases = existingCache
 					? existingCache.data.queryAliases.add(data.query.toLowerCase())
-					: new Set([data.query.toLowerCase(), trackData.url, trackData.cleanTitle])
+					: new Set([
+							data.query.toLowerCase(),
+							trackData.url.toLowerCase(),
+							trackData.cleanTitle.toLowerCase(),
+						])
 				this.addToCache(trackData, trackData.playlist, queryAliases)
 			}
 		})
@@ -86,7 +92,7 @@ export class QueryCache implements QueryCacheProvider<CachedTrack> {
 
 	private addToCache(trackData: Track, playlist: Playlist | null | undefined, queryAliases: Set<string>): void {
 		QueryCache.resultCache.set(
-			`${trackData.queryType}:${trackData.url.toLowerCase()}`,
+			QueryCache.cacheKey(trackData.queryType, trackData.url),
 			new DiscordPlayerQueryResultCache({ track: trackData, playlist, queryAliases }, EXPIRE_AFTER)
 		)
 	}

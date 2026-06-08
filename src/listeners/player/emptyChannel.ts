@@ -1,4 +1,4 @@
-import { GuildQueueEventHandler } from "../../types.ts"
+import { GuildQueueEventHandler } from "@/types.ts"
 import { GuildQueue, GuildQueueEvent } from "discord-player"
 
 class EmptyChannelHandler implements GuildQueueEventHandler {

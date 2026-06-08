@@ -27,17 +27,27 @@ export default defineConfig([
 
     languageOptions: {
         parser: tsParser,
-        ecmaVersion: 2020,
+        ecmaVersion: 2022,
         sourceType: "module",
     },
 
     rules: {
         quotes: ["error", "double"],
         semi: ["error", "never"],
-        "no-explicit-any": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-require-imports": "off",
         "@typescript-eslint/no-unused-vars": "warn",
+        "no-restricted-imports": [
+            "error",
+            {
+                patterns: [
+                    {
+                        group: ["../*", "./*"],
+                        message: "Use the @/ alias for intra-src imports instead of relative paths.",
+                    },
+                ],
+            },
+        ],
     },
 }, {
     files: ["**/*.ts", "**/*.tsx"],

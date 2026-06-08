@@ -3,8 +3,8 @@ import { GuildQueue, Track } from "discord-player"
 
 import type { Snowflake } from "discord.js"
 import type { RawTrackData } from "discord-player"
-import type { QueueMetadata } from "../../types.ts"
-import type { Language } from "../../langs"
+import type { QueueMetadata } from "@/types.ts"
+import type { Language } from "@/langs"
 
 function getEmoji(source: string, embed?: EmbedBuilder): string {
 	let emoji: Snowflake

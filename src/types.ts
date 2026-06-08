@@ -8,7 +8,7 @@ import type {
 	VoiceBasedChannel,
 } from "discord.js"
 import { GuildQueue, GuildQueueEvent, Player } from "discord-player"
-import type { Language } from "./langs"
+import type { Language } from "@/langs"
 
 /**
  * Represents the discord bot client, extended with the discord-player player

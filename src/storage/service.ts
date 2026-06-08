@@ -1,20 +1,10 @@
 import { Guild, User } from "discord.js"
-import prisma from "./source.ts"
-import { userRepository } from "./repositories/user.ts"
-import { serverRepository } from "./repositories/server.ts"
+import { userRepository } from "@/storage/repositories/user.ts"
+import { serverRepository } from "@/storage/repositories/server.ts"
 
 async function getCommandInfo(user: User, server: Guild) {
-	return prisma.$transaction(
-		async () => {
-			const userInfo = await userRepository.getOrPut(user)
-			const serverInfo = await serverRepository.getOrPut(server)
-			return { userInfo, serverInfo }
-		},
-		{
-			maxWait: 2000,
-			timeout: 5000,
-		}
-	)
+	const [userInfo, serverInfo] = await Promise.all([userRepository.getOrPut(user), serverRepository.getOrPut(server)])
+	return { userInfo, serverInfo }
 }
 
 export { getCommandInfo }

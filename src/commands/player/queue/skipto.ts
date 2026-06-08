@@ -1,9 +1,9 @@
-import { sendEmbed } from "../../../embeds/channels.ts"
+import { sendEmbed } from "@/embeds/channels.ts"
 import { GuildQueue } from "discord-player"
-import { errorEmbed } from "../../../embeds/status.ts"
+import { errorEmbed } from "@/embeds/status.ts"
 
 import type { GuildTextBasedChannel } from "discord.js"
-import type { QueueMetadata, PlayerCommand, Config } from "../../../types.ts"
+import type { QueueMetadata, PlayerCommand, Config } from "@/types.ts"
 
 class SkipToCommand implements PlayerCommand {
 	public aliases = ["skipto"]

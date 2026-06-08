@@ -1,9 +1,9 @@
 import { Collection, Colors, EmbedBuilder, GuildMember } from "discord.js"
-import { logger } from "../utils/logger/logger.ts"
-import bot from "../bot.ts"
+import { logger } from "@/utils/logger/logger.ts"
+import bot from "@/bot.ts"
 
 import type { GuildTextBasedChannel, Snowflake } from "discord.js"
-import type { Language } from "../langs"
+import type { Language } from "@/langs"
 
 function leftEmbed(lang: Language): EmbedBuilder {
 	return new EmbedBuilder().setDescription(lang.embeds.left.description).setColor(Colors.Red)

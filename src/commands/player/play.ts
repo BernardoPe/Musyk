@@ -1,11 +1,11 @@
-import { sendEmbed } from "../../embeds/channels.ts"
+import { sendEmbed } from "@/embeds/channels.ts"
 import { GuildQueue, SearchQueryType } from "discord-player"
-import { logger } from "../../utils/logger/logger.ts"
-import { errorEmbed } from "../../embeds/status.ts"
+import { logger } from "@/utils/logger/logger.ts"
+import { errorEmbed } from "@/embeds/status.ts"
 import { YoutubeiExtractor } from "discord-player-youtubei"
 
 import type { GuildTextBasedChannel, VoiceBasedChannel } from "discord.js"
-import type { MusicBot, QueueMetadata, BotCommand, GuildMessage, Config } from "../../types.ts"
+import type { MusicBot, QueueMetadata, BotCommand, GuildMessage, Config } from "@/types.ts"
 
 class PlayCommand implements BotCommand {
 	adminCommand: boolean = false

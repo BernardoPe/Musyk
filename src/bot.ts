@@ -3,14 +3,14 @@ import { YoutubeiExtractor } from "discord-player-youtubei"
 import { DeezerExtractor } from "discord-player-deezer"
 import { Client, GatewayIntentBits } from "discord.js"
 import "dotenv/config"
-import { logger } from "./utils/logger/logger.ts"
-import { QueryCache } from "./QueryCache.ts"
+import { logger } from "@/utils/logger/logger.ts"
+import { QueryCache } from "@/QueryCache.ts"
 import { SpotifyExtractor } from "discord-player-spotify"
-import { clientListeners, playerListeners } from "./listeners"
-import { commandRegistry } from "./commands"
+import { clientListeners, playerListeners } from "@/listeners"
+import { commandRegistry } from "@/commands"
 
 import type { ClientEvents } from "discord.js"
-import type { BaseCommand } from "./types.ts"
+import type { BaseCommand } from "@/types.ts"
 
 class MusicBot {
 	client: Client
@@ -82,15 +82,15 @@ class MusicBot {
 }
 
 process.on("uncaughtException", (error) => {
-	console.error("There was an uncaught error", error, error.stack)
+	logger.error(`Uncaught exception: ${error?.stack ?? error}`)
 })
 
-process.on("unhandledRejection", (reason, promise) => {
-	console.error("Unhandled Rejection at:", promise)
+process.on("unhandledRejection", (reason) => {
+	logger.error(`Unhandled rejection: ${reason instanceof Error ? reason.stack : reason}`)
 })
 
 const bot = new MusicBot()
 
-bot.initialize().then((_) => logger.info("Bot initialized"))
+bot.initialize().then(() => logger.info("Bot initialized"))
 
 export default bot

@@ -1,6 +1,6 @@
 import { GuildQueue, GuildQueueEvent } from "discord-player"
-import { logger } from "../../utils/logger/logger.ts"
-import { GuildQueueEventHandler } from "../../types.ts"
+import { logger } from "@/utils/logger/logger.ts"
+import { GuildQueueEventHandler } from "@/types.ts"
 
 class DebugHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.Debug

@@ -1,7 +1,7 @@
 import { User } from "discord.js"
-import prisma from "../source.ts"
-import { CacheType, doCachedQuery, invalidateCache } from "../cache.ts"
-import { DEFAULT_USER_PLAYER_CONFIG } from "../constants/user.ts"
+import prisma from "@/storage/source.ts"
+import { CacheType, doCachedQuery, invalidateCache } from "@/storage/cache.ts"
+import { DEFAULT_USER_PLAYER_CONFIG } from "@/storage/constants/user.ts"
 
 import type { SearchQueryType } from "discord-player"
 

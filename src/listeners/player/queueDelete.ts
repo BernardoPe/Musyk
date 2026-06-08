@@ -1,7 +1,7 @@
-import { GuildQueueEventHandler, QueueMetadata } from "../../types.ts"
-import { sendEmbed, leftEmbed } from "../../embeds/channels.ts"
+import { GuildQueueEventHandler, QueueMetadata } from "@/types.ts"
+import { sendEmbed, leftEmbed } from "@/embeds/channels.ts"
 import { GuildQueue, GuildQueueEvent, Util } from "discord-player"
-import { serverRepository } from "../../storage/repositories/server.ts"
+import { serverRepository } from "@/storage/repositories/server.ts"
 
 class QueueDeleteHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.QueueDelete

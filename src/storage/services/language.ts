@@ -1,9 +1,9 @@
-import en from "../../langs/data/en.json"
-import ptPt from "../../langs/data/pt-pt.json"
-import { DEFAULT_LANGUAGE } from "../constants/server.ts"
-import { logger } from "../../utils/logger/logger.ts"
+import en from "@/langs/data/en.json"
+import ptPt from "@/langs/data/pt-pt.json"
+import { DEFAULT_LANGUAGE } from "@/storage/constants/server.ts"
+import { logger } from "@/utils/logger/logger.ts"
 
-import type { Language } from "../../langs"
+import type { Language } from "@/langs"
 
 const allLanguages: Language[] = [en as unknown as Language, ptPt as unknown as Language]
 

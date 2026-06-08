@@ -1,8 +1,8 @@
 import { GuildQueue, Util, GuildQueueEvent } from "discord-player"
-import { GuildQueueEventHandler, QueueMetadata } from "../../types.ts"
-import { sendEmbed } from "../../embeds/channels.ts"
-import { leavingEmbed } from "../../embeds/player/queue.ts"
-import { serverRepository } from "../../storage/repositories/server.ts"
+import { GuildQueueEventHandler, QueueMetadata } from "@/types.ts"
+import { sendEmbed } from "@/embeds/channels.ts"
+import { leavingEmbed } from "@/embeds/player/queue.ts"
+import { serverRepository } from "@/storage/repositories/server.ts"
 
 class EmptyQueueHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.EmptyQueue

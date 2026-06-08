@@ -1,7 +1,7 @@
-import { GuildQueueEventHandler, QueueMetadata } from "../../types.ts"
+import { GuildQueueEventHandler, QueueMetadata } from "@/types.ts"
 import { GuildQueue, GuildQueueEvent } from "discord-player"
-import { updatePlayer } from "../../embeds/player/playing.ts"
-import { serverRepository } from "../../storage/repositories/server.ts"
+import { updatePlayer } from "@/embeds/player/playing.ts"
+import { serverRepository } from "@/storage/repositories/server.ts"
 
 class PlayerResumeHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.PlayerResume

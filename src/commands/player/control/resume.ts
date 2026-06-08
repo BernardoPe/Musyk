@@ -1,10 +1,10 @@
 import { GuildQueue } from "discord-player"
 
-import { sendEmbed } from "../../../embeds/channels.ts"
-import { errorEmbed, successEmbed } from "../../../embeds/status.ts"
+import { sendEmbed } from "@/embeds/channels.ts"
+import { errorEmbed, successEmbed } from "@/embeds/status.ts"
 
 import type { GuildTextBasedChannel } from "discord.js"
-import type { Config, PlayerCommand, QueueMetadata } from "../../../types.ts"
+import type { Config, PlayerCommand, QueueMetadata } from "@/types.ts"
 
 class ResumeCommand implements PlayerCommand {
 	aliases = ["resume"]

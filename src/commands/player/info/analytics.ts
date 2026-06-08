@@ -1,7 +1,7 @@
-import paginate from "../../../embeds/paginator.ts"
-import { playerAnalyticsEmbed } from "../../../embeds/analytics.ts"
+import paginate from "@/embeds/paginator.ts"
+import { playerAnalyticsEmbed } from "@/embeds/analytics.ts"
 
-import type { GuildMessage, BotCommand, MusicBot, Config } from "../../../types.ts"
+import type { GuildMessage, BotCommand, MusicBot, Config } from "@/types.ts"
 
 class AnalyticsCommand implements BotCommand {
 	public aliases = ["analytics", "stats"]
