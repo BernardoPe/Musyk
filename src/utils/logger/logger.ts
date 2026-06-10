@@ -1,30 +1,21 @@
 import * as winston from "winston"
+import path from "node:path"
 
-const timestamp = winston.format.timestamp
+const level = process.env.LOG_LEVEL || "info"
+const logFile = process.env.LOG_FILE || path.join(process.cwd(), "logs.log")
+
+const logFormat = winston.format.printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`)
 
 const logger = winston.createLogger({
-	level: process.env.LOG_LEVEL || "info",
-	format: winston.format.combine(
-		winston.format.combine(timestamp(), winston.format.simple()),
-		winston.format.printf((info) => `[${info.timestamp}] ${info.message}`)
-	),
+	level,
+	format: winston.format.timestamp(),
 	transports: [
 		new winston.transports.File({
-			filename: "../logs.log",
-			level: process.env.LOG_LEVEL || "info",
-			format: winston.format.combine(
-				winston.format.timestamp(),
-				winston.format.simple(),
-				winston.format.printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`)
-			),
+			filename: logFile,
+			format: logFormat,
 		}),
 		new winston.transports.Console({
-			level: process.env.LOG_LEVEL || "info",
-			format: winston.format.combine(
-				winston.format.colorize(),
-				winston.format.simple(),
-				winston.format.printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`)
-			),
+			format: winston.format.combine(winston.format.colorize(), logFormat),
 		}),
 	],
 })

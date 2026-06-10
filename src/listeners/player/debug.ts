@@ -5,11 +5,9 @@ import { GuildQueueEventHandler } from "@/types.ts"
 class DebugHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.Debug
 
-	public execute(queue: GuildQueue, message: string) {
-		const date = new Date()
-		const time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+	public execute(_queue: GuildQueue, message: string) {
 		logger.debug(
-			`${time} -------------------------------\n\n\n${message}\n\n\n--------------------------------------\n\n\n`
+			`-------------------------------\n\n\n${message}\n\n\n--------------------------------------\n\n\n`
 		)
 	}
 }

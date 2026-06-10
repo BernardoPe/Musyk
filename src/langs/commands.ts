@@ -68,6 +68,7 @@ interface RemoveLangConfig {
 
 interface ReverseLangConfig {
 	reversed: string
+	only_one_song: string
 }
 
 interface ShuffleLangConfig {

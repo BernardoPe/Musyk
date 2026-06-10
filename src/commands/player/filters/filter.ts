@@ -1,44 +1,39 @@
-import { errorEmbed, successEmbed } from "@/embeds/status.ts"
-import { sendEmbed } from "@/embeds/channels.ts"
+import { replyError, replySuccess } from "@/commands/validation.ts"
 import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
-import { EMBED_TIMEOUT_MS } from "@/constants.ts"
 
 class FilterCommand implements PlayerCommand {
 	public adminCommand: boolean = false
 	public aliases: string[] = ["filter"]
 	public name: string = "filter"
-	public requiresPlayer: boolean = true
+	public readonly requiresPlayer = true as const
 	public async execute(ctx: PlayerCommandContext) {
 		const { queue: serverQueue, channel, args, config } = ctx
 		let filter = args[1]
+
+		if (!filter) {
+			return replyError(channel, config.lang.commands.filter.invalid_filter)
+		}
+
+		if (filter === "disableall") {
+			await serverQueue.filters.ffmpeg.setFilters(false)
+			return replySuccess(channel, config.lang.commands.filter.disabled_all)
+		}
 
 		if (!filter.includes("bassboost")) {
 			filter = "bassboost_low"
 		}
 
-		if (filter === "disableall") {
-			await serverQueue.filters.ffmpeg.setFilters(false)
-			const embed = successEmbed(null, config.lang.commands.filter.disabled_all)
-			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
-			return
-		}
-
 		if (!serverQueue.filters.ffmpeg.isValidFilter(filter)) {
-			const embed = errorEmbed(null, config.lang.commands.filter.invalid_filter)
-			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
-			return
+			return replyError(channel, config.lang.commands.filter.invalid_filter)
 		}
 
 		await serverQueue.filters.ffmpeg.toggle([filter])
 
 		if (serverQueue.filters.ffmpeg.isEnabled(filter)) {
-			const embed = successEmbed(null, config.lang.commands.filter.enabled_single.replace("{filter}", filter))
-			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
-			return
+			return replySuccess(channel, config.lang.commands.filter.enabled_single.replace("{filter}", filter))
 		}
 
-		const embed = successEmbed(null, config.lang.commands.filter.disabled_single.replace("{filter}", filter))
-		sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
+		replySuccess(channel, config.lang.commands.filter.disabled_single.replace("{filter}", filter))
 	}
 }
 

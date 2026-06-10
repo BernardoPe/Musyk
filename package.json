@@ -7,7 +7,8 @@
 		"deploy-commands:prod": "node dist/slash-command-deployment.js",
 		"db:generate": "prisma generate --schema=./src/storage/schema.prisma",
 		"db:push": "prisma db push --schema=./src/storage/schema.prisma",
-		"lint": "eslint src/**/*.{ts,tsx,md} --no-error-on-unmatched-pattern && prettier --check src/**/*.{ts,tsx,md} --no-error-on-unmatched-pattern",
+		"lint": "eslint src/**/*.{ts,tsx,md} --no-error-on-unmatched-pattern && prettier --check src/**/*.{ts,tsx,md} --no-error-on-unmatched-pattern && npm run lang:check",
+		"lang:check": "tsx scripts/check-lang-parity.ts",
 		"lint:fix": "eslint src/**/*.{ts,tsx,md} --fix --no-error-on-unmatched-pattern",
 		"lint:staged": "eslint src/**/*.{ts,tsx,md} --fix --no-error-on-unmatched-pattern",
 		"prettier": "prettier --write src/**/*.{ts,tsx,md} --no-error-on-unmatched-pattern",
@@ -56,7 +57,8 @@
 		"prettier": "^3.3.3",
 		"prisma": "^7.4.2",
 		"tsup": "^8.5.0",
-		"tsx": "^4.21.0"
+		"tsx": "^4.21.0",
+		"typescript": "^5.9.3"
 	},
 	"type": "module"
 }

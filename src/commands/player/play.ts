@@ -1,20 +1,19 @@
-import { sendEmbed } from "@/embeds/channels.ts"
 import { GuildQueue, SearchQueryType } from "discord-player"
 import { logger } from "@/utils/logger/logger.ts"
-import { errorEmbed } from "@/embeds/status.ts"
+import { replyError } from "@/commands/validation.ts"
 import { YoutubeiExtractor } from "discord-player-youtubei"
 
 import type { GuildTextBasedChannel, VoiceBasedChannel } from "discord.js"
 import type { MusicBot, QueueMetadata, BotCommand, CommandContext, Config } from "@/types.ts"
-import { EMBED_TIMEOUT_MS } from "@/constants.ts"
 
 class PlayCommand implements BotCommand {
 	adminCommand: boolean = false
 	aliases: string[] = ["p", "play"]
 	name: string = "play"
-	requiresPlayer: boolean = false
+	public readonly requiresPlayer = false as const
 	private readonly searchEngines = {
 		"-yt": "youtube",
+		"-sp": "spotifySearch",
 	}
 
 	public async execute(ctx: CommandContext) {
@@ -22,34 +21,27 @@ class PlayCommand implements BotCommand {
 		let args = ctx.args
 
 		if (args.length === 1) {
-			const embed = errorEmbed(null, config.lang.commands.play.provide_search)
-			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
-			return
+			return replyError(channel, config.lang.commands.play.provide_search)
 		}
 
-		const voiceChannel = member!.voice.channel
+		const voiceChannel = member?.voice.channel
 
 		if (!voiceChannel) {
-			const embed = errorEmbed(null, config.lang.commands.play.need_to_be_in_voice)
-			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
-			return
+			return replyError(channel, config.lang.commands.play.need_to_be_in_voice)
 		}
 
-		const permissions = voiceChannel.permissionsFor(bot.client.user!)!
+		const botUser = bot.client.user
+		const permissions = botUser && voiceChannel.permissionsFor(botUser)
 
-		if (!permissions.has("Connect") || !permissions.has("Speak")) {
-			const embed = errorEmbed(null, config.lang.commands.play.need_permissions)
-			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
-			return
+		if (!permissions || !permissions.has("Connect") || !permissions.has("Speak")) {
+			return replyError(channel, config.lang.commands.play.need_permissions)
 		}
 
 		const queue: GuildQueue<QueueMetadata> =
 			bot.player.queues.get(guild.id) || this.createQueue(bot, channel, voiceChannel, config)
 
 		if (queue.connection && queue.channel !== voiceChannel) {
-			const embed = errorEmbed(null, config.lang.commands.play.already_connected)
-			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
-			return
+			return replyError(channel, config.lang.commands.play.already_connected)
 		}
 
 		if (!queue.connection) {
@@ -61,7 +53,7 @@ class PlayCommand implements BotCommand {
 			}
 		}
 
-		args.shift() // Remove the command from the args
+		args.shift()
 
 		const searchArg = args.find((arg) => arg in this.searchEngines) as keyof typeof this.searchEngines | undefined
 
@@ -81,13 +73,11 @@ class PlayCommand implements BotCommand {
 		const song = result.tracks[0]
 
 		if (result.tracks.length === 0) {
-			const embed = errorEmbed(null, config.lang.commands.play.no_results)
-			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
-			return
+			return replyError(channel, config.lang.commands.play.no_results)
 		}
 
 		try {
-			if (!queue.isPlaying() && !queue.dispatcher!.isBuffering()) {
+			if (!queue.isPlaying() && !queue.dispatcher?.isBuffering()) {
 				await queue.play(song)
 			} else if (result.playlist) {
 				queue.addTrack(result.playlist)
@@ -96,8 +86,7 @@ class PlayCommand implements BotCommand {
 			}
 		} catch (e) {
 			logger.error(e)
-			const embed = errorEmbed(null, config.lang.commands.play.error)
-			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
+			replyError(channel, config.lang.commands.play.error)
 		}
 	}
 

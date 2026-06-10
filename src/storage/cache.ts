@@ -9,8 +9,8 @@ type CacheType = (typeof CacheType)[keyof typeof CacheType]
 
 type CachedValue = ServerInfo | UserInfo
 
-const serverCache = new Map<string, ServerInfo>()
-const userCache = new Map<string, UserInfo>()
+const serverCache = new Map<string, Promise<ServerInfo>>()
+const userCache = new Map<string, Promise<UserInfo>>()
 
 async function doCachedQuery<T extends CachedValue>(
 	id: string,
@@ -18,17 +18,18 @@ async function doCachedQuery<T extends CachedValue>(
 	ttl: number,
 	request: () => Promise<T>
 ): Promise<T> {
-	const cache: Map<string, CachedValue> = cacheType === CacheType.Server ? serverCache : userCache
+	const cache: Map<string, Promise<CachedValue>> = cacheType === CacheType.Server ? serverCache : userCache
 	const cached = cache.get(id)
 	if (cached) {
-		return cached as T
+		return cached as Promise<T>
 	}
-	const data = await request()
-	cache.set(id, data)
+	const pending = request()
+	cache.set(id, pending)
+	pending.catch(() => cache.delete(id))
 	if (ttl > 0) {
 		setTimeout(() => cache.delete(id), ttl)
 	}
-	return data
+	return pending
 }
 
 function invalidateCache(id: string, cacheType: CacheType) {

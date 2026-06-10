@@ -6,7 +6,7 @@ class PlayerErrorHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.PlayerError
 
 	public execute(queue: GuildQueue, error: Error, track: Track) {
-		logger.error(`${queue.guild.name} | ${error} | ${track.cleanTitle}`)
+		logger.error(`${queue.guild.name} | ${error.stack ?? error} | ${track.cleanTitle}`)
 	}
 }
 

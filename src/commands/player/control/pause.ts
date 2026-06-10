@@ -1,23 +1,22 @@
-import { sendEmbed } from "@/embeds/channels.ts"
-import { errorEmbed, successEmbed } from "@/embeds/status.ts"
+import { replyError, replySuccess } from "@/commands/validation.ts"
 import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
-import { EMBED_TIMEOUT_MS } from "@/constants.ts"
 
 class PauseCommand implements PlayerCommand {
 	public aliases = ["pause"]
 	public name = "pause"
-	public requiresPlayer = true
+	public readonly requiresPlayer = true as const
 	public adminCommand = false
 	public execute(ctx: PlayerCommandContext) {
 		const { queue: serverQueue, channel, config } = ctx
-		if (serverQueue.dispatcher!.paused) {
-			const embed = errorEmbed(null, config.lang.commands.pause.already_paused)
-			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
-			return
+		const dispatcher = serverQueue.dispatcher
+		if (!dispatcher) {
+			return replyError(channel, config.lang.shared.not_playing)
 		}
-		const embed = successEmbed(null, config.lang.commands.pause.paused)
-		serverQueue.dispatcher!.pause()
-		sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
+		if (dispatcher.paused) {
+			return replyError(channel, config.lang.commands.pause.already_paused)
+		}
+		dispatcher.pause()
+		replySuccess(channel, config.lang.commands.pause.paused)
 	}
 }
 

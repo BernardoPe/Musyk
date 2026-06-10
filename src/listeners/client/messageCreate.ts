@@ -6,10 +6,10 @@ import type { ClientEventHandler, GuildMessage, MusicBot } from "@/types.ts"
 class MessageCreateHandler implements ClientEventHandler {
 	public name = Events.MessageCreate
 
-	public execute(msg: GuildMessage, bot: MusicBot) {
+	public async execute(msg: GuildMessage, bot: MusicBot) {
 		if (msg.author.bot) return
 		const args = msg.content.split(/ +/)
-		handleMessageCommand(bot, msg, args)
+		await handleMessageCommand(bot, msg, args)
 	}
 }
 

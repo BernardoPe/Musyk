@@ -134,3 +134,7 @@ src/generated
 
 # Cache
 /.dpy
+yarn.lock
+
+.idea/
+.serena/

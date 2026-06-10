@@ -4,28 +4,21 @@ import { useQueue } from "discord-player"
 import { sendEmbed } from "@/embeds/channels.ts"
 import { logger } from "@/utils/logger/logger.ts"
 import { errorEmbed } from "@/embeds/status.ts"
-import { getCommandInfo } from "@/storage/service.ts"
+import { resolveConfig } from "@/storage/service.ts"
 import { adminService } from "@/storage/services/admin.ts"
 
-import type { GuildMember, GuildTextBasedChannel } from "discord.js"
+import type { ChatInputCommandInteraction, GuildMember, GuildTextBasedChannel } from "discord.js"
 import type { GuildQueue } from "discord-player"
 import { EMBED_TIMEOUT_MS } from "@/constants.ts"
-import type {
-	BotCommand,
-	CommandContext,
-	Config,
-	GuildMessage,
-	MusicBot,
-	PlayerCommand,
-	QueueMetadata,
-} from "@/types.ts"
+import type { CommandContext, Config, GuildMessage, MusicBot, QueueMetadata } from "@/types.ts"
 
 async function dispatch(
 	bot: MusicBot,
 	commandName: string,
 	args: string[],
 	source: GuildMessage | ButtonInteraction,
-	raw: string
+	raw: string,
+	preResolved?: Config
 ) {
 	const command = bot.commands[commandName]
 	if (!command) return
@@ -39,35 +32,74 @@ async function dispatch(
 
 	if (command.adminCommand && !adminService.isAdmin(user.id)) return
 
-	const { userInfo, serverInfo } = await getCommandInfo(user, guild)
-	const config: Config = {
-		prefix: serverInfo.prefix,
-		lang: serverInfo.lang,
-		playerConfig: userInfo.playerConfig || serverInfo.playerConfig,
-	}
+	let config: Config | null = null
+	try {
+		config = preResolved ?? (await resolveConfig(user, guild))
 
-	logger.info(`[COMMAND]: ${command.name} | ${raw} | User: ${user.username} | Guild: ${guild.name}`)
+		logger.info(`[COMMAND]: ${command.name} | ${raw} | User: ${user.username} | Guild: ${guild.name}`)
 
-	const ctx: CommandContext = { bot, guild, channel, user, member, args, config, raw, source }
+		const ctx: CommandContext = { bot, guild, channel, user, member, args, config, raw, source }
 
-	if (command.requiresPlayer) {
-		const queue = useQueue(guild.id) as GuildQueue<QueueMetadata> | null
-		if (!queue?.isPlaying()) {
-			const embed = errorEmbed(null, config.lang.shared.not_playing)
-			return sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
+		if (command.requiresPlayer) {
+			const queue = useQueue(guild.id) as GuildQueue<QueueMetadata> | null
+			if (!queue || !queue.currentTrack) {
+				const embed = errorEmbed(null, config.lang.shared.not_playing)
+				void sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
+				return
+			}
+			await command.execute({ ...ctx, queue })
+			return
 		}
-		return (command as PlayerCommand).execute({ ...ctx, queue })
-	}
 
-	return (command as BotCommand).execute(ctx)
+		await command.execute(ctx)
+	} catch (error) {
+		logger.error(
+			`[COMMAND]: ${command.name} failed | Guild: ${guild.id} | ${error instanceof Error ? error.stack : error}`
+		)
+		const message = config?.lang.shared.command_error ?? "An error occurred while executing the command"
+		const embed = errorEmbed(null, message)
+		void sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
+	}
 }
 
 async function handleMessageCommand(bot: MusicBot, msg: GuildMessage, args: string[]) {
 	if (msg.author.bot || !args[0]) return
-	const { serverInfo } = await getCommandInfo(msg.author, msg.guild)
-	if (!args[0].startsWith(serverInfo.prefix)) return
-	const commandName = args[0].slice(serverInfo.prefix.length).toLowerCase()
-	return dispatch(bot, commandName, args, msg, msg.content)
+	const config = await resolveConfig(msg.author, msg.guild)
+	if (!args[0].startsWith(config.prefix)) return
+	const commandName = args[0].slice(config.prefix.length).toLowerCase()
+	return dispatch(bot, commandName, args, msg, msg.content, config)
 }
 
-export { dispatch, handleMessageCommand }
+async function dispatchSlash(bot: MusicBot, interaction: ChatInputCommandInteraction) {
+	const command = bot.slashCommands[interaction.commandName]
+	if (!command) {
+		logger.warn(`[SLASH]: Unknown command ${interaction.commandName}`)
+		return
+	}
+
+	const guild = interaction.guild!
+	const user = interaction.user
+
+	let config: Config | null = null
+	try {
+		config = await resolveConfig(user, guild)
+
+		logger.info(`[SLASH]: ${command.slashName} | User: ${user.username} | Guild: ${guild.name}`)
+
+		await command.executeSlash(interaction, { bot, guild, user, config })
+	} catch (error) {
+		logger.error(
+			`[SLASH]: ${command.slashName} failed | Guild: ${guild.id} | ${error instanceof Error ? error.stack : error}`
+		)
+		const message = config?.lang.shared.command_error ?? "An error occurred while executing the command"
+		const embed = errorEmbed(null, message)
+		const payload = { embeds: [embed], flags: "Ephemeral" as const }
+		if (interaction.replied || interaction.deferred) {
+			await interaction.followUp(payload).catch(() => {})
+		} else {
+			await interaction.reply(payload).catch(() => {})
+		}
+	}
+}
+
+export { dispatch, dispatchSlash, handleMessageCommand }

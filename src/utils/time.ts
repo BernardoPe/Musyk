@@ -1,4 +1,4 @@
-function validateTimestamp(timestamp: string, maxDuration: number): number | boolean {
+function validateTimestamp(timestamp: string, maxDuration: number): number | false {
 	const timestampComponents = timestamp.split(":").map(Number)
 	const numComponents = timestampComponents.length
 

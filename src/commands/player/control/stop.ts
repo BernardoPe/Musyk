@@ -4,7 +4,7 @@ import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
 class StopCommand implements PlayerCommand {
 	public aliases = ["stop"]
 	public name = "stop"
-	public requiresPlayer = true
+	public readonly requiresPlayer = true as const
 	public adminCommand = false
 	execute(ctx: PlayerCommandContext) {
 		const { queue: serverQueue } = ctx

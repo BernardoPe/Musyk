@@ -1,8 +1,13 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from "discord.js"
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, EmbedBuilder } from "discord.js"
 
 import type { GuildTextBasedChannel } from "discord.js"
 
-async function paginate(channel: GuildTextBasedChannel, pages: EmbedBuilder[], buttons: ButtonBuilder[] = []) {
+async function paginate(
+	channel: GuildTextBasedChannel,
+	pages: EmbedBuilder[],
+	buttons: ButtonBuilder[] = [],
+	requesterId?: string
+) {
 	if (!channel || !pages || pages.length <= 0) return
 
 	let index = 0
@@ -29,6 +34,8 @@ async function paginate(channel: GuildTextBasedChannel, pages: EmbedBuilder[], b
 	})
 
 	const col = data.createMessageComponentCollector({
+		componentType: ComponentType.Button,
+		filter: (i) => !requesterId || i.user.id === requesterId,
 		time: 60000,
 	})
 
@@ -37,18 +44,19 @@ async function paginate(channel: GuildTextBasedChannel, pages: EmbedBuilder[], b
 		else if (i.customId === "2") index++
 		else return col.stop()
 
+		index = Math.min(Math.max(index, 0), pages.length - 1)
+
 		button1.setDisabled(index === 0)
 		button2.setDisabled(index === pages.length - 1)
 
-		data.edit({
+		i.update({
 			components: [row],
 			embeds: [pages[index]],
-		})
+		}).catch(() => col.stop())
 	})
 
 	col.on("end", () => {
-		data.delete()
-		col.stop()
+		data.delete().catch(() => {})
 	})
 }
 

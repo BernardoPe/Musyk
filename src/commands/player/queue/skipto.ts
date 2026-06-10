@@ -1,24 +1,20 @@
-import { sendEmbed } from "@/embeds/channels.ts"
-import { errorEmbed } from "@/embeds/status.ts"
+import { parseIntInRange, replyError } from "@/commands/validation.ts"
 import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
-import { EMBED_TIMEOUT_MS } from "@/constants.ts"
 
 class SkipToCommand implements PlayerCommand {
 	public aliases = ["skipto"]
 	public name = "skipto"
-	public requiresPlayer = true
+	public readonly requiresPlayer = true as const
 	public adminCommand = false
 	public execute(ctx: PlayerCommandContext) {
 		const { queue: serverQueue, channel, args, config } = ctx
-		const skipPos = Number.parseInt(args[1])
+		const skipPos = parseIntInRange(args[1], 1, serverQueue.tracks.size)
 
-		if (Number.isNaN(skipPos) || skipPos < 1 || skipPos > serverQueue.tracks.size) {
-			const embed = errorEmbed(null, config.lang.commands.shared.invalid_position)
-			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
-			return
+		if (skipPos === null) {
+			return replyError(channel, config.lang.commands.shared.invalid_position)
 		}
 
-		serverQueue?.node.skipTo(skipPos - 1)
+		serverQueue.node.skipTo(skipPos - 1)
 	}
 }
 

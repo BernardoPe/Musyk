@@ -1,10 +1,8 @@
 import { User } from "discord.js"
 import prisma from "@/storage/source.ts"
 import { CacheType, doCachedQuery, invalidateCache } from "@/storage/cache.ts"
-import { DEFAULT_PLAYER_CONFIG } from "@/storage/constants/server.ts"
 
-import type { SearchQueryType } from "discord-player"
-import type { PlayerConfig, PlayerConfigUpdate } from "@/types.ts"
+import type { PlayerConfig } from "@/types.ts"
 
 export interface UserInfo {
 	userId: string
@@ -44,71 +42,7 @@ class UserRepository {
 		})
 	}
 
-	async createPlayerConfig(user: User, config: Partial<PlayerConfigUpdate> = {}): Promise<void> {
-		const finalConfig = { ...DEFAULT_PLAYER_CONFIG, ...config }
-
-		await prisma.user.update({
-			where: { userId: user.id },
-			data: {
-				playerConfig: {
-					create: finalConfig,
-				},
-			},
-		})
-
-		this.invalidateUserCache(user.id)
-	}
-
-	async updatePlayerConfig(user: User, configUpdate: PlayerConfigUpdate): Promise<void> {
-		const userInfo = await this.getOrPut(user)
-
-		if (!userInfo.playerConfig) {
-			await this.createPlayerConfig(user, configUpdate)
-			return
-		}
-
-		await prisma.user.update({
-			where: { userId: user.id },
-			data: {
-				playerConfig: {
-					update: configUpdate,
-				},
-			},
-		})
-
-		this.invalidateUserCache(user.id)
-	}
-
-	async updateSearchEngine(user: User, searchEngine: SearchQueryType): Promise<void> {
-		await this.updatePlayerConfig(user, { searchEngine })
-	}
-
-	async updateVolume(user: User, volume: number): Promise<void> {
-		await this.updatePlayerConfig(user, { volume })
-	}
-
-	async updateLeaveOnEnd(user: User, leaveOnEnd: boolean): Promise<void> {
-		await this.updatePlayerConfig(user, { leaveOnEnd })
-	}
-
-	async updateLeaveOnEndCooldown(user: User, leaveOnEndCooldown: number): Promise<void> {
-		await this.updatePlayerConfig(user, { leaveOnEndCooldown })
-	}
-
-	async deletePlayerConfig(user: User): Promise<void> {
-		await prisma.user.update({
-			where: { userId: user.id },
-			data: {
-				playerConfig: {
-					delete: true,
-				},
-			},
-		})
-
-		this.invalidateUserCache(user.id)
-	}
-
-	private invalidateUserCache(userId: string): void {
+	invalidateUserCache(userId: string): void {
 		invalidateCache(userId, CacheType.User)
 	}
 }

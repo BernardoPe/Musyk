@@ -1,32 +1,26 @@
 import { GuildQueue, Track } from "discord-player"
 
-import { sendEmbed } from "@/embeds/channels.ts"
-import { errorEmbed, successEmbed } from "@/embeds/status.ts"
-import { updatePlayer } from "@/embeds/player/playing.ts"
+import { replyError, replySuccess } from "@/commands/validation.ts"
+import { refreshPlayer } from "@/handlers/playerUi.ts"
 import type { PlayerCommand, QueueMetadata, PlayerCommandContext } from "@/types.ts"
-import { EMBED_TIMEOUT_MS } from "@/constants.ts"
 
 class ReverseCommand implements PlayerCommand {
 	aliases = ["reverse"]
 	name = "reverse"
-	requiresPlayer = true
+	public readonly requiresPlayer = true as const
 	adminCommand = false
+
 	execute(ctx: PlayerCommandContext) {
 		const { queue: serverQueue, channel, config } = ctx
 		if (serverQueue.isEmpty()) {
-			const embed = errorEmbed(null, config.lang.commands.shared.empty_queue)
-			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
-			return
+			return replyError(channel, config.lang.commands.shared.empty_queue)
 		}
 		if (serverQueue.tracks.size === 1) {
-			const embed = errorEmbed(null, "Queue has only one song")
-			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
-			return
+			return replyError(channel, config.lang.commands.reverse.only_one_song)
 		}
 		this.reverse(serverQueue, serverQueue.tracks.toArray())
-		updatePlayer(serverQueue, config.lang)
-		const embed = successEmbed(null, "Reversed the queue")
-		sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
+		refreshPlayer(serverQueue, config.lang)
+		replySuccess(channel, config.lang.commands.reverse.reversed)
 	}
 
 	private reverse(serverQueue: GuildQueue<QueueMetadata>, array: Track[]) {

@@ -16,9 +16,11 @@ const compat = new FlatCompat({
 
 export default defineConfig([
 {
-    ignores: ["**/generated/**"],
+    ignores: ["**/generated/**", "dist/**", "scripts/**"],
 },
 {
+    files: ["**/*.ts", "**/*.tsx"],
+
     extends: compat.extends("eslint:recommended", "prettier", "plugin:@typescript-eslint/recommended"),
 
     plugins: {
@@ -29,6 +31,12 @@ export default defineConfig([
         parser: tsParser,
         ecmaVersion: 2022,
         sourceType: "module",
+        parserOptions: {
+            projectService: {
+                allowDefaultProject: ["tsup.config.ts"],
+            },
+            tsconfigRootDir: __dirname,
+        },
     },
 
     rules: {
@@ -36,7 +44,8 @@ export default defineConfig([
         semi: ["error", "never"],
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-require-imports": "off",
-        "@typescript-eslint/no-unused-vars": "warn",
+        "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+        "@typescript-eslint/no-floating-promises": "error",
         "no-restricted-imports": [
             "error",
             {

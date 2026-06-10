@@ -1,14 +1,11 @@
 import { Colors, EmbedBuilder } from "discord.js"
+import { BOT_OWNER, FILTERS_EMBED_COLOR } from "@/constants.ts"
 
 import type { Language } from "@/langs"
 
 function helpEmbeds(lang: Language): EmbedBuilder[] {
 	const embed1 = new EmbedBuilder()
-		.setAuthor({
-			name: "Syken",
-			url: "https://discord.com/users/259810801219534849",
-			iconURL: "https://cdn.discordapp.com/avatars/259810801219534849/9a98973995330392dd7ed83feac84106.webp",
-		})
+		.setAuthor({ ...BOT_OWNER })
 		.setTitle(lang.embeds.help.intro.title)
 		.setDescription(lang.embeds.help.intro.description)
 		.setColor(Colors.Blue)
@@ -44,7 +41,7 @@ function helpEmbeds(lang: Language): EmbedBuilder[] {
 	const embed5 = new EmbedBuilder()
 		.setTitle(lang.embeds.help.filters.title)
 		.setDescription(lang.embeds.help.filters.description)
-		.setColor(0x58b9ff)
+		.setColor(FILTERS_EMBED_COLOR)
 
 	const embed6 = new EmbedBuilder()
 		.setTitle(lang.embeds.help.additional_info.title)

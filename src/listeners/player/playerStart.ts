@@ -1,8 +1,6 @@
 import { GuildQueue, GuildQueueEvent } from "discord-player"
 import { GuildQueueEventHandler, QueueMetadata } from "@/types.ts"
-import { createButtons } from "@/embeds/player/buttons.ts"
-import { nowPlayingEmbed, updatePlayer } from "@/embeds/player/playing.ts"
-import { sendEmbed } from "@/embeds/channels.ts"
+import { showPlayer } from "@/handlers/playerUi.ts"
 import { serverRepository } from "@/storage/repositories/server.ts"
 
 class PlayerStartHandler implements GuildQueueEventHandler {
@@ -10,23 +8,7 @@ class PlayerStartHandler implements GuildQueueEventHandler {
 
 	public async execute(queue: GuildQueue<QueueMetadata>) {
 		const server = await serverRepository.getOrPut(queue.guild)
-		if (queue.metadata.playerEmbed === null) {
-			const embed = nowPlayingEmbed(queue, server.lang)
-			const buttons = createButtons()
-			const data = await sendEmbed(queue.metadata.textChannel!, {
-				embeds: [embed],
-				components: buttons,
-			})
-
-			queue.setMetadata({
-				textChannel: queue.metadata.textChannel,
-				voiceChannel: queue.metadata.voiceChannel,
-				playerEmbed: data ?? null,
-				updatingPlayer: queue.metadata.updatingPlayer,
-			})
-		} else {
-			updatePlayer(queue, server.lang)
-		}
+		await showPlayer(queue, server.lang)
 	}
 }
 

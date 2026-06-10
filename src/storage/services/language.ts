@@ -30,24 +30,18 @@ class LanguageService {
 		const language = this.languages.get(tag)
 		if (!language) {
 			logger.warn(`Language '${tag}' not found, falling back to '${DEFAULT_LANGUAGE}'`)
-			return this.languages.get(DEFAULT_LANGUAGE) || this.getDefaultLanguage()
+			return this.languages.get(DEFAULT_LANGUAGE) ?? en
 		}
 
 		return language
 	}
 
-	public getLanguageChoices(): { name: string; value: string }[] {
-		return Array.from(this.languages.values()).map((lang) => ({ name: lang.name, value: lang.tag }))
+	public has(tag: string): boolean {
+		return this.languages.has(tag)
 	}
 
-	private getDefaultLanguage(): Language {
-		return {
-			tag: DEFAULT_LANGUAGE,
-			name: "English",
-			shared: { not_playing: "No music is currently playing" },
-			commands: {},
-			embeds: {},
-		} as Language
+	public getLanguageChoices(): { name: string; value: string }[] {
+		return Array.from(this.languages.values()).map((lang) => ({ name: lang.name, value: lang.tag }))
 	}
 }
 

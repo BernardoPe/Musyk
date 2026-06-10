@@ -27,7 +27,7 @@ function sendEmbed(
 	return channel.send(info).then((msg) => {
 		if (timeout) {
 			setTimeout(() => {
-				msg.delete()
+				msg.delete().catch(() => {})
 			}, timeout)
 		}
 		return msg

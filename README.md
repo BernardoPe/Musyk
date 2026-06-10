@@ -40,7 +40,9 @@ docker compose up -d
 
 ## Available Scripts
 
-- `npm start` - Start the bot via `tsx src/bot.ts`
+- `npm run dev` - Start the bot via `tsx src/bot.ts`
+- `npm run build` - Bundle to `dist/` via tsup
+- `npm start` - Start the bot via `node dist/bot.js` (requires `npm run build`)
 - `npm run deploy-commands` - Deploy slash commands
 - `npm run db:generate` - Generate Prisma Client (`src/storage/schema.prisma`)
 - `npm run db:push` - Push Prisma schema changes to database

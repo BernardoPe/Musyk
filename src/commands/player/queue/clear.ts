@@ -1,25 +1,20 @@
-import { sendEmbed } from "@/embeds/channels.ts"
-import { errorEmbed, successEmbed } from "@/embeds/status.ts"
-import { updatePlayer } from "@/embeds/player/playing.ts"
+import { replyError, replySuccess } from "@/commands/validation.ts"
+import { refreshPlayer } from "@/handlers/playerUi.ts"
 import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
-import { EMBED_TIMEOUT_MS } from "@/constants.ts"
 
 class ClearCommand implements PlayerCommand {
 	aliases = ["clear"]
 	name = "clear"
-	requiresPlayer = true
-	adminCommand: boolean = false
+	public readonly requiresPlayer = true as const
+	adminCommand = false
 	execute(ctx: PlayerCommandContext) {
 		const { queue: serverQueue, channel, config } = ctx
-		if (serverQueue.tracks.size === 0) {
-			const embed = errorEmbed(null, config.lang.commands.clear.empty_queue)
-			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
-			return
+		if (serverQueue.isEmpty()) {
+			return replyError(channel, config.lang.commands.clear.empty_queue)
 		}
 		serverQueue.tracks.clear()
-		updatePlayer(serverQueue, config.lang)
-		const embed = successEmbed(null, config.lang.commands.clear.cleared)
-		sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
+		refreshPlayer(serverQueue, config.lang)
+		replySuccess(channel, config.lang.commands.clear.cleared)
 	}
 }
 

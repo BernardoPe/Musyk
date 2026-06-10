@@ -1,4 +1,4 @@
-import type { BaseCommand } from "@/types.ts"
+import type { Command, SlashCommand } from "@/types.ts"
 
 import disconnectCommand from "@/commands/disconnect.ts"
 import helpCommand from "@/commands/help.ts"
@@ -20,8 +20,10 @@ import skipCommand from "@/commands/player/queue/skip.ts"
 import skipToCommand from "@/commands/player/queue/skipto.ts"
 import swapCommand from "@/commands/player/queue/swap.ts"
 import volumeCommand from "@/commands/player/volume/volume.ts"
+import prefixCommand from "@/commands/settings/prefix.ts"
+import languageCommand from "@/commands/settings/language.ts"
 
-const commandRegistry: BaseCommand[] = [
+const commandRegistry: Command[] = [
 	disconnectCommand,
 	helpCommand,
 	playCommand,
@@ -44,4 +46,6 @@ const commandRegistry: BaseCommand[] = [
 	volumeCommand,
 ]
 
-export { commandRegistry }
+const slashRegistry: SlashCommand[] = [helpCommand, prefixCommand, languageCommand]
+
+export { commandRegistry, slashRegistry }

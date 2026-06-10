@@ -1,24 +1,20 @@
-import { sendEmbed } from "@/embeds/channels.ts"
 import paginate from "@/embeds/paginator.ts"
 import { createQueueEmbed } from "@/embeds/player/queue.ts"
-import { errorEmbed } from "@/embeds/status.ts"
+import { replyError } from "@/commands/validation.ts"
 import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
-import { EMBED_TIMEOUT_MS } from "@/constants.ts"
 
 class QueueCommand implements PlayerCommand {
 	public aliases = ["queue"]
 	public name = "queue"
 	public adminCommand: boolean = false
-	public requiresPlayer: boolean = true
+	public readonly requiresPlayer = true as const
 	public execute(ctx: PlayerCommandContext) {
-		const { queue: serverQueue, channel, config } = ctx
+		const { queue: serverQueue, channel, config, user } = ctx
 		if (serverQueue.isEmpty()) {
-			const embed = errorEmbed(null, config.lang.commands.shared.empty_queue)
-			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
-			return
+			return replyError(channel, config.lang.commands.shared.empty_queue)
 		}
 		const pages = createQueueEmbed(serverQueue, config.lang)
-		return paginate(channel, pages)
+		return paginate(channel, pages, [], user.id)
 	}
 }
 

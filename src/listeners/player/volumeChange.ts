@@ -1,6 +1,6 @@
 import { GuildQueue, GuildQueueEvent } from "discord-player"
 import { GuildQueueEventHandler, QueueMetadata } from "@/types.ts"
-import { updatePlayer } from "@/embeds/player/playing.ts"
+import { refreshPlayer } from "@/handlers/playerUi.ts"
 import { serverRepository } from "@/storage/repositories/server.ts"
 
 class VolumeChangeHandler implements GuildQueueEventHandler {
@@ -8,7 +8,7 @@ class VolumeChangeHandler implements GuildQueueEventHandler {
 
 	public async execute(queue: GuildQueue<QueueMetadata>) {
 		const server = await serverRepository.getOrPut(queue.guild)
-		updatePlayer(queue, server.lang)
+		refreshPlayer(queue, server.lang)
 	}
 }
 

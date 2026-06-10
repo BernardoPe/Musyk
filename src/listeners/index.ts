@@ -19,7 +19,7 @@ import playerResume from "@/listeners/player/playerResume.ts"
 import playerStart from "@/listeners/player/playerStart.ts"
 import queueDelete from "@/listeners/player/queueDelete.ts"
 import volumeChange from "@/listeners/player/volumeChange.ts"
-import playerErrorLegacy from "@/listeners/player/error.ts"
+import queueError from "@/listeners/player/error.ts"
 
 const clientListeners: ClientEventHandler[] = [
 	clientDisconnect,
@@ -38,7 +38,7 @@ const playerListeners: GuildQueueEventHandler[] = [
 	emptyChannel,
 	emptyQueue,
 	playerError,
-	playerErrorLegacy,
+	queueError,
 	playerPause,
 	playerResume,
 	playerStart,

@@ -26,7 +26,7 @@ const helpCommand = new SlashCommandBuilder().setName("help").setDescription("Le
 
 const rest = new REST().setToken(process.env.TOKEN || "")
 
-;(async () => {
+void (async () => {
 	try {
 		console.log("Started refreshing application (/) commands.")
 		const data = await rest.put(Routes.applicationCommands(process.env.BOT_ID || ""), {

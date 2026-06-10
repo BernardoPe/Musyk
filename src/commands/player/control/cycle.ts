@@ -1,14 +1,12 @@
 import { QueueRepeatMode } from "discord-player"
 
-import { sendEmbed } from "@/embeds/channels.ts"
-import { successEmbed } from "@/embeds/status.ts"
+import { replySuccess } from "@/commands/validation.ts"
 import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
-import { EMBED_TIMEOUT_MS } from "@/constants.ts"
 
 class CycleCommand implements PlayerCommand {
 	public aliases = ["cycle"]
 	public name = "cycle"
-	public requiresPlayer = true
+	public readonly requiresPlayer = true as const
 	public adminCommand = false
 	public execute(ctx: PlayerCommandContext) {
 		const { queue: serverQueue, channel, args, config } = ctx
@@ -43,10 +41,7 @@ class CycleCommand implements PlayerCommand {
 					md = "off"
 				}
 		}
-		const embed = mode
-			? successEmbed(null, mode)
-			: successEmbed(null, config.lang.commands.cycle.current_mode.replace("{mode}", md))
-		sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
+		replySuccess(channel, mode ?? config.lang.commands.cycle.current_mode.replace("{mode}", md))
 	}
 }
 

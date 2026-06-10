@@ -1,29 +1,23 @@
-import { sendEmbed } from "@/embeds/channels.ts"
-import { errorEmbed, successEmbed } from "@/embeds/status.ts"
-import { updatePlayer } from "@/embeds/player/playing.ts"
+import { parseIntInRange, replyError, replySuccess } from "@/commands/validation.ts"
+import { refreshPlayer } from "@/handlers/playerUi.ts"
 import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
-import { EMBED_TIMEOUT_MS } from "@/constants.ts"
 
 class SwapCommand implements PlayerCommand {
 	public aliases = ["swap"]
 	public name = "swap"
-	public requiresPlayer = true
+	public readonly requiresPlayer = true as const
 	public adminCommand = false
 	public execute(ctx: PlayerCommandContext) {
 		const { queue: serverQueue, channel, args, config } = ctx
-		const swapPos1 = Number.parseInt(args[1])
-		const swapPos2 = Number.parseInt(args[2])
+		const swapPos1 = parseIntInRange(args[1], 1, serverQueue.tracks.size)
+		const swapPos2 = parseIntInRange(args[2], 1, serverQueue.tracks.size)
 
-		if (Number.isNaN(swapPos1) || swapPos1 < 1 || swapPos1 > serverQueue.tracks.size) {
-			const embed = errorEmbed(null, config.lang.commands.swap.invalid_position_1)
-			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
-			return
+		if (swapPos1 === null) {
+			return replyError(channel, config.lang.commands.swap.invalid_position_1)
 		}
 
-		if (Number.isNaN(swapPos2) || swapPos2 < 1 || swapPos2 > serverQueue.tracks.size) {
-			const embed = errorEmbed(null, config.lang.commands.swap.invalid_position_2)
-			sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
-			return
+		if (swapPos2 === null) {
+			return replyError(channel, config.lang.commands.swap.invalid_position_2)
 		}
 
 		serverQueue.node.swap(swapPos1 - 1, swapPos2 - 1)
@@ -32,15 +26,14 @@ class SwapCommand implements PlayerCommand {
 		const song1 = tracks[swapPos1 - 1]
 		const song2 = tracks[swapPos2 - 1]
 
-		const embed = successEmbed(
-			null,
+		replySuccess(
+			channel,
 			config.lang.commands.swap.swapped
 				.replace("{song1}", `[${song1.cleanTitle}](${song1.url})`)
 				.replace("{song2}", `[${song2.cleanTitle}](${song2.url})`)
 		)
-		sendEmbed(channel, { embeds: [embed] }, EMBED_TIMEOUT_MS)
 
-		if (swapPos1 === 1 || swapPos2 === 1) updatePlayer(serverQueue, config.lang)
+		if (swapPos1 === 1 || swapPos2 === 1) refreshPlayer(serverQueue, config.lang)
 	}
 }
 

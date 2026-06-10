@@ -2,20 +2,21 @@ import { Player } from "discord-player"
 import { YoutubeiExtractor } from "discord-player-youtubei"
 import { DeezerExtractor } from "discord-player-deezer"
 import { Client, GatewayIntentBits } from "discord.js"
-import "dotenv/config"
+import { env } from "@/config/env.ts"
 import { logger } from "@/utils/logger/logger.ts"
 import { QueryCache } from "@/storage/queryCache.ts"
 import { SpotifyExtractor } from "discord-player-spotify"
 import { clientListeners, playerListeners } from "@/listeners"
-import { commandRegistry } from "@/commands"
+import { commandRegistry, slashRegistry } from "@/commands"
 
 import type { ClientEvents } from "discord.js"
-import type { BaseCommand } from "@/types.ts"
+import type { Command, SlashCommand } from "@/types.ts"
 
 class MusicBot {
 	client: Client
 	player: Player
-	commands: { [key: string]: BaseCommand } = {}
+	commands: { [key: string]: Command } = {}
+	slashCommands: { [key: string]: SlashCommand } = {}
 
 	constructor() {
 		this.client = new Client({
@@ -27,35 +28,38 @@ class MusicBot {
 				GatewayIntentBits.GuildVoiceStates,
 			],
 		})
-		const cache = new QueryCache()
-		this.player = new Player(this.client, { skipFFmpeg: true, queryCache: cache })
-		cache.player = this.player
+		this.player = new Player(this.client, { skipFFmpeg: true, queryCache: new QueryCache() })
 	}
 
 	public async initialize() {
 		await this.registerCommands()
 		await this.registerExtractors()
 		await this.addEventListeners()
-		const token = process.env.TOKEN
-		if (!token) {
-			throw new Error("No TOKEN provided in environment variables")
-		}
-		await this.client.login(token)
+		await this.client.login(env.TOKEN)
 	}
 
 	private async addEventListeners() {
+		const guard =
+			(listener: { name: string; execute: (...args: any[]) => Promise<void> | void }) =>
+			async (...args: any[]) => {
+				try {
+					await listener.execute(...args, this)
+				} catch (error) {
+					logger.error(`[LISTENER:${listener.name}]: ${error instanceof Error ? error.stack : error}`)
+				}
+			}
 		for (const listener of clientListeners) {
-			this.client.on(listener.name as keyof ClientEvents, (...args: any[]) => listener.execute(...args, this))
+			this.client.on(listener.name as keyof ClientEvents, guard(listener))
 			logger.info(`[LISTENER]: ${listener.name} registered`)
 		}
 		for (const listener of playerListeners) {
-			this.player.events.on(listener.name, (...args: any[]) => listener.execute(...args, this))
+			this.player.events.on(listener.name, guard(listener))
 			logger.info(`[LISTENER]: ${listener.name} registered`)
 		}
 	}
 
 	private async registerCommands() {
-		const commands: { [key: string]: BaseCommand } = {}
+		const commands: { [key: string]: Command } = {}
 		for (const command of commandRegistry) {
 			for (const alias of command.aliases) {
 				commands[alias] = command
@@ -63,12 +67,19 @@ class MusicBot {
 			logger.info(`[COMMAND]: ${command.name} registered`)
 		}
 		this.commands = commands
+
+		const slashCommands: { [key: string]: SlashCommand } = {}
+		for (const command of slashRegistry) {
+			slashCommands[command.slashName] = command
+			logger.info(`[SLASH]: ${command.slashName} registered`)
+		}
+		this.slashCommands = slashCommands
 	}
 
 	private async registerExtractors() {
 		await this.player.extractors.register(DeezerExtractor, {
-			decryptionKey: process.env.KEY!,
-			arl: process.env.ARL!,
+			decryptionKey: env.KEY,
+			arl: env.ARL,
 			priority: 100,
 		})
 		await this.player.extractors.register(YoutubeiExtractor, {
@@ -91,6 +102,11 @@ process.on("unhandledRejection", (reason) => {
 
 const bot = new MusicBot()
 
-bot.initialize().then(() => logger.info("Bot initialized"))
+bot.initialize()
+	.then(() => logger.info("Bot initialized"))
+	.catch((error) => {
+		logger.error(`Failed to initialize bot: ${error instanceof Error ? error.stack : error}`)
+		process.exit(1)
+	})
 
 export default bot

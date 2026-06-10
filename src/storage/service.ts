@@ -2,9 +2,15 @@ import { Guild, User } from "discord.js"
 import { userRepository } from "@/storage/repositories/user.ts"
 import { serverRepository } from "@/storage/repositories/server.ts"
 
-async function getCommandInfo(user: User, server: Guild) {
+import type { Config } from "@/types.ts"
+
+async function resolveConfig(user: User, server: Guild): Promise<Config> {
 	const [userInfo, serverInfo] = await Promise.all([userRepository.getOrPut(user), serverRepository.getOrPut(server)])
-	return { userInfo, serverInfo }
+	return {
+		prefix: serverInfo.prefix,
+		lang: serverInfo.lang,
+		playerConfig: userInfo.playerConfig || serverInfo.playerConfig,
+	}
 }
 
-export { getCommandInfo }
+export { resolveConfig }

@@ -6,7 +6,7 @@ import type { BotCommand, CommandContext } from "@/types.ts"
 class AnalyticsCommand implements BotCommand {
 	public aliases = ["analytics", "stats"]
 	public name = "analytics"
-	public requiresPlayer = false
+	public readonly requiresPlayer = false as const
 	public adminCommand = true
 	public async execute(ctx: CommandContext) {
 		const { bot, channel, config } = ctx

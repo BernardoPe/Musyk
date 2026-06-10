@@ -2,7 +2,7 @@ import { GuildQueue, GuildQueueEvent, Track } from "discord-player"
 import { GuildQueueEventHandler, QueueMetadata } from "@/types.ts"
 import { queuePlaylistEmbed } from "@/embeds/player/queue.ts"
 import { sendEmbed } from "@/embeds/channels.ts"
-import { updatePlayer } from "@/embeds/player/playing.ts"
+import { refreshPlayer } from "@/handlers/playerUi.ts"
 import { serverRepository } from "@/storage/repositories/server.ts"
 import { EMBED_TIMEOUT_LONG_MS } from "@/constants.ts"
 
@@ -14,9 +14,9 @@ class AudioTracksAddHandler implements GuildQueueEventHandler {
 
 		const embed = queuePlaylistEmbed(tracks[0].playlist!, server.lang)
 
-		if (queue.isPlaying()) updatePlayer(queue, server.lang)
+		if (queue.isPlaying()) refreshPlayer(queue, server.lang)
 
-		sendEmbed(queue.metadata.textChannel!, { embeds: [embed] }, EMBED_TIMEOUT_LONG_MS)
+		void sendEmbed(queue.metadata.textChannel!, { embeds: [embed] }, EMBED_TIMEOUT_LONG_MS)
 	}
 }
 

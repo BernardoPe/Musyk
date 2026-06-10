@@ -1,41 +1,24 @@
 import { Colors, EmbedBuilder } from "discord.js"
 import { GuildQueue, Track } from "discord-player"
+import { SOURCE_EMOJIS } from "@/constants.ts"
 
 import type { Snowflake } from "discord.js"
 import type { RawTrackData } from "discord-player"
-import type { QueueMetadata } from "@/types.ts"
 import type { Language } from "@/langs"
 
 function getEmoji(source: string, embed?: EmbedBuilder): string {
 	let emoji: Snowflake
 	if (source.includes("youtube")) {
-		emoji = "<:YouTube1:1124140924876902411>"
+		emoji = SOURCE_EMOJIS.youtube
 		embed?.setColor(Colors.Red)
 	} else if (source.includes("spotify")) {
-		emoji = "<:SpotifyLogo:1124141017260634262>"
+		emoji = SOURCE_EMOJIS.spotify
 		embed?.setColor(Colors.Green)
 	} else {
-		emoji = "<:deezer:1479260292587327650>"
+		emoji = SOURCE_EMOJIS.deezer
 		embed?.setColor(Colors.Purple)
 	}
 	return emoji
-}
-
-function updatePlayer(queue: GuildQueue<QueueMetadata>, lang: Language) {
-	if (!queue.metadata.playerEmbed || queue.metadata.updatingPlayer || !queue.metadata.playerEmbed.editable) {
-		return
-	}
-
-	queue.metadata.updatingPlayer = true // Prevents unnecessary concurrent updates
-
-	const data = queue.metadata.playerEmbed
-	const embed = nowPlayingEmbed(queue, lang)
-
-	data.edit({
-		embeds: [embed],
-	}).finally(() => {
-		queue.metadata.updatingPlayer = false
-	})
 }
 
 function nowPlayingEmbed(queue: GuildQueue, lang: Language): EmbedBuilder {
@@ -72,7 +55,7 @@ function nowPlayingEmbed(queue: GuildQueue, lang: Language): EmbedBuilder {
 				inline: true,
 			},
 			{
-				name: lang.embeds.now_playing.fields.duration,
+				name: lang.embeds.now_playing.fields.total_queue_duration,
 				value: `${queue.durationFormatted}`,
 				inline: true,
 			},
@@ -88,4 +71,4 @@ function nowPlayingEmbed(queue: GuildQueue, lang: Language): EmbedBuilder {
 	return embed
 }
 
-export { getEmoji, updatePlayer, nowPlayingEmbed }
+export { getEmoji, nowPlayingEmbed }

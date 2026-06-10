@@ -1,5 +1,6 @@
 import type {
 	ButtonInteraction,
+	ChatInputCommandInteraction,
 	Client,
 	Events,
 	Guild,
@@ -10,7 +11,6 @@ import type {
 	VoiceBasedChannel,
 } from "discord.js"
 import { GuildQueue, GuildQueueEvent, Player } from "discord-player"
-import type { SearchQueryType } from "discord-player"
 import type { Language } from "@/langs"
 
 /**
@@ -23,7 +23,8 @@ import type { Language } from "@/langs"
 interface MusicBot {
 	client: Client
 	player: Player
-	commands: { [key: string]: BaseCommand }
+	commands: { [key: string]: Command }
+	slashCommands: { [key: string]: SlashCommand }
 }
 
 /**
@@ -49,19 +50,10 @@ interface ClientEventHandler {
 	execute(...args: any[]): Promise<void> | void
 }
 
-/**
- * Represents a base command, which is used to define the properties of a command
- *
- * @param name - The name of the command
- * @param aliases - The aliases of the command, allowing the command to be executed using different names
- * @param adminCommand - Whether the command is an admin command, requiring the user to have admin permissions
- * @param requiresPlayer - Whether the command requires a player to exist for the server
- */
-export interface BaseCommand {
+interface CommandBase {
 	name: string
 	aliases: string[]
 	adminCommand: boolean
-	requiresPlayer: boolean
 }
 
 export interface CommandContext {
@@ -80,12 +72,28 @@ export interface PlayerCommandContext extends CommandContext {
 	queue: GuildQueue<QueueMetadata>
 }
 
-export interface PlayerCommand extends BaseCommand {
+export interface PlayerCommand extends CommandBase {
+	requiresPlayer: true
 	execute(ctx: PlayerCommandContext): Promise<void> | void
 }
 
-export interface BotCommand extends BaseCommand {
+export interface BotCommand extends CommandBase {
+	requiresPlayer: false
 	execute(ctx: CommandContext): Promise<void> | void
+}
+
+export type Command = BotCommand | PlayerCommand
+
+export type SlashCommandContext = {
+	bot: MusicBot
+	guild: Guild
+	user: User
+	config: Config
+}
+
+export interface SlashCommand {
+	slashName: string
+	executeSlash(interaction: ChatInputCommandInteraction, ctx: SlashCommandContext): Promise<void>
 }
 
 /**
@@ -118,13 +126,6 @@ type PlayerConfig = {
 	leaveOnEndCooldown: number
 }
 
-type PlayerConfigUpdate = {
-	searchEngine?: SearchQueryType
-	volume?: number
-	leaveOnEnd?: boolean
-	leaveOnEndCooldown?: number
-}
-
 /**
  * Represents the configuration information for a server
  *
@@ -143,13 +144,4 @@ type Config = {
  */
 type GuildMessage = Message<true>
 
-export type {
-	MusicBot,
-	GuildQueueEventHandler,
-	ClientEventHandler,
-	QueueMetadata,
-	GuildMessage,
-	Config,
-	PlayerConfig,
-	PlayerConfigUpdate,
-}
+export type { MusicBot, GuildQueueEventHandler, ClientEventHandler, QueueMetadata, GuildMessage, Config, PlayerConfig }

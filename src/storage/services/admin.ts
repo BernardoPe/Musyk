@@ -1,3 +1,5 @@
+import { env } from "@/config/env.ts"
+
 import type { Snowflake } from "discord.js"
 
 class AdminService {
@@ -8,7 +10,7 @@ class AdminService {
 	}
 
 	private parseAdminsFromEnv(): Snowflake[] {
-		const adminString = process.env.ADMINS || ""
+		const adminString = env.ADMINS
 		return adminString
 			.split(",")
 			.map((id) => id.trim())
