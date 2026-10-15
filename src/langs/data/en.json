@@ -9,7 +9,8 @@
 		"set_lang_error": "An error occurred while setting the language.",
 		"set_prefix": "Prefix set to **{prefix}**",
 		"set_prefix_error": "An error occurred while setting the prefix.",
-		"command_error": "An error occurred while executing the command"
+		"command_error": "An error occurred while executing the command",
+		"missing_manage_guild": "You need the **Manage Server** permission to change this setting."
 	},
 	"embeds": {
 		"analytics": {

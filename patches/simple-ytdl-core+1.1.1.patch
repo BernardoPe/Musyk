@@ -1,0 +1,298 @@
+diff --git a/node_modules/simple-ytdl-core/dist/index.mjs b/node_modules/simple-ytdl-core/dist/index.mjs
+index 33ecd0d..94de7a3 100644
+--- a/node_modules/simple-ytdl-core/dist/index.mjs
++++ b/node_modules/simple-ytdl-core/dist/index.mjs
+@@ -206,65 +206,76 @@ async function createAdaptiveStream(innertube, videoId, client, poToken, deciphe
+ 		client: client ?? "VISIONOS",
+ 		po_token: poToken
+ 	});
+-	const format = info.chooseFormat({
+-		type: "audio",
+-		quality: "best",
+-		format: "any"
+-	});
++	// Prefer Opus in WebM: consumers can demux it without transcoding through ffmpeg.
++	let format;
++	try {
++		format = info.chooseFormat({
++			type: "audio",
++			quality: "best",
++			format: "webm"
++		});
++	} catch {
++		format = info.chooseFormat({
++			type: "audio",
++			quality: "best",
++			format: "any"
++		});
++	}
+ 	const url = decipher ? await format.decipher(innertube.session.player) : format.url;
+ 	if (!format || !url || !format.content_length) throw new Error("Unable to find matching formats.");
+ 	const contentLength = Number(format.content_length);
+ 	ytdlDebugger.debug(`Found format for ${videoId} (${contentLength} total bytes)`);
+-	const mainAbortController = new AbortController();
+-	const initialEnd = Math.min(10485759, contentLength - 1);
+-	const initialUrl = `${url}&cpn=${info.cpn}&range=0-${initialEnd}`;
+-	ytdlDebugger.debug(`Probing stream with initial range: 0-${initialEnd}`);
+-	const initialResponse = await innertube.session.http.fetch_function(initialUrl, {
+-		headers: Constants.STREAM_HEADERS,
+-		signal: mainAbortController.signal
++	// googlevideo silently drops connections that sit unread for ~2 minutes (measured), so a
++	// response body is never held open across reads: every range is downloaded completely
++	// when requested. Ranges are small so memory stays bounded and paused playback holds no
++	// connection at all.
++	const RANGE_SIZE = 524288;
++	// Ranges are handed downstream in network-sized slices: one 512KB chunk would make the
++	// demuxer and decoder process ~30s of audio in a single synchronous burst.
++	const PUSH_SIZE = 16384;
++	let abortController = null;
++	const fetchRange = async (start) => {
++		const end = Math.min(start + RANGE_SIZE, contentLength) - 1;
++		abortController = new AbortController();
++		const response = await innertube.session.http.fetch_function(`${url}&cpn=${info.cpn}&range=${start}-${end}`, {
++			headers: Constants.STREAM_HEADERS,
++			signal: abortController.signal
++		});
++		if (!response.ok || !response.body) throw new Error(`Range ${start}-${end} failed. Status: ${response.status}`);
++		const chunks = [];
++		for await (const chunk of Utils.streamToIterable(response.body)) chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
++		return Buffer.concat(chunks);
++	};
++	ytdlDebugger.debug("Probing stream with the first range");
++	let pending = await fetchRange(0).catch((err) => {
++		throw new Error(`Probe failed. ${err.message}`);
+ 	});
+-	if (!initialResponse.ok || !initialResponse.body) throw new Error(`Probe failed. Status: ${initialResponse.status}`);
+-	ytdlDebugger.debug("Probe successful. Initial 10MB response received. Initializing stream...");
+-	let initialBody = initialResponse.body;
+-	let nextByteStart = initialEnd + 1;
+-	let chunkAbortController = null;
++	let pendingOffset = 0;
++	let nextByteStart = pending.length;
+ 	let isFetching = false;
+-	return new Readable({
+-		highWaterMark: 4194304,
++	const stream = new Readable({
++		highWaterMark: RANGE_SIZE,
+ 		async read() {
+ 			if (isFetching) return;
+-			if (nextByteStart >= contentLength && !initialBody) {
+-				ytdlDebugger.debug("All bytes consumed. Ending stream with push(null).");
+-				this.push(null);
+-				return;
+-			}
+ 			isFetching = true;
+ 			try {
+-				if (initialBody) {
+-					const bodyStream = initialBody;
+-					initialBody = null;
+-					ytdlDebugger.debug("Pushing initial 10MB probe chunks into stream...");
+-					for await (const rawChunk of Utils.streamToIterable(bodyStream)) {
+-						const chunk = Buffer.isBuffer(rawChunk) ? rawChunk : Buffer.from(rawChunk);
+-						this.push(chunk);
++				if (!pending && nextByteStart < contentLength) {
++					ytdlDebugger.debug(`Fetching range from ${nextByteStart} (Progress: ${Math.round(nextByteStart / contentLength * 100)}%)`);
++					pending = await fetchRange(nextByteStart);
++					nextByteStart += pending.length;
++				}
++				if (pending) {
++					while (pendingOffset < pending.length) {
++						const slice = pending.subarray(pendingOffset, pendingOffset + PUSH_SIZE);
++						pendingOffset += slice.length;
++						if (!this.push(slice)) break;
+ 					}
+-					ytdlDebugger.debug(`Finished pushing initial probe. Next byte target: ${nextByteStart} / ${contentLength}`);
+-				} else if (nextByteStart < contentLength) {
+-					const chunkEnd = Math.min(nextByteStart + TEN_MB - 1, contentLength - 1);
+-					const chunkUrl = `${url}&cpn=${info.cpn}&range=${nextByteStart}-${chunkEnd}`;
+-					ytdlDebugger.debug(`Fetching chunk range: ${nextByteStart}-${chunkEnd} (Progress: ${Math.round(nextByteStart / contentLength * 100)}%)`);
+-					chunkAbortController = new AbortController();
+-					const chunkResponse = await innertube.session.http.fetch_function(chunkUrl, {
+-						headers: Constants.STREAM_HEADERS,
+-						signal: chunkAbortController.signal
+-					});
+-					if (!chunkResponse.ok || !chunkResponse.body) throw new Error(`Chunk fetch failed at byte ${nextByteStart}. Status: ${chunkResponse.status}`);
+-					for await (const rawChunk of Utils.streamToIterable(chunkResponse.body)) {
+-						const chunk = Buffer.isBuffer(rawChunk) ? rawChunk : Buffer.from(rawChunk);
+-						this.push(chunk);
++					if (pendingOffset >= pending.length) {
++						pending = null;
++						pendingOffset = 0;
+ 					}
+-					nextByteStart = chunkEnd + 1;
+ 				}
++				if (nextByteStart >= contentLength && !pending) this.push(null);
+ 			} catch (err) {
+ 				if (err.name !== "AbortError") {
+ 					ytdlDebugger.debug(`Stream error: ${err.message}`);
+@@ -272,18 +283,15 @@ async function createAdaptiveStream(innertube, videoId, client, poToken, deciphe
+ 				}
+ 			} finally {
+ 				isFetching = false;
+-				if (nextByteStart < contentLength && this.readableLength < this.readableHighWaterMark) setImmediate(() => this._read(0));
+-				else if (nextByteStart >= contentLength) this.push(null);
+ 			}
+ 		},
+ 		destroy(err, callback) {
+-			mainAbortController.abort();
+-			if (chunkAbortController) try {
+-				chunkAbortController.abort();
+-			} catch {}
++			abortController?.abort();
+ 			callback(err);
+ 		}
+ 	});
++	stream.mimeType = format.mime_type;
++	return stream;
+ }
+ //#endregion
+ //#region src/ServerAbr/index.ts
+diff --git a/node_modules/simple-ytdl-core/dist/index.cjs b/node_modules/simple-ytdl-core/dist/index.cjs
+index 8a46315..79090da 100644
+--- a/node_modules/simple-ytdl-core/dist/index.cjs
++++ b/node_modules/simple-ytdl-core/dist/index.cjs
+@@ -207,65 +207,76 @@ async function createAdaptiveStream(innertube, videoId, client, poToken, deciphe
+ 		client: client ?? "VISIONOS",
+ 		po_token: poToken
+ 	});
+-	const format = info.chooseFormat({
+-		type: "audio",
+-		quality: "best",
+-		format: "any"
+-	});
++	// Prefer Opus in WebM: consumers can demux it without transcoding through ffmpeg.
++	let format;
++	try {
++		format = info.chooseFormat({
++			type: "audio",
++			quality: "best",
++			format: "webm"
++		});
++	} catch {
++		format = info.chooseFormat({
++			type: "audio",
++			quality: "best",
++			format: "any"
++		});
++	}
+ 	const url = decipher ? await format.decipher(innertube.session.player) : format.url;
+ 	if (!format || !url || !format.content_length) throw new Error("Unable to find matching formats.");
+ 	const contentLength = Number(format.content_length);
+ 	ytdlDebugger.debug(`Found format for ${videoId} (${contentLength} total bytes)`);
+-	const mainAbortController = new AbortController();
+-	const initialEnd = Math.min(10485759, contentLength - 1);
+-	const initialUrl = `${url}&cpn=${info.cpn}&range=0-${initialEnd}`;
+-	ytdlDebugger.debug(`Probing stream with initial range: 0-${initialEnd}`);
+-	const initialResponse = await innertube.session.http.fetch_function(initialUrl, {
+-		headers: youtubei_js.Constants.STREAM_HEADERS,
+-		signal: mainAbortController.signal
++	// googlevideo silently drops connections that sit unread for ~2 minutes (measured), so a
++	// response body is never held open across reads: every range is downloaded completely
++	// when requested. Ranges are small so memory stays bounded and paused playback holds no
++	// connection at all.
++	const RANGE_SIZE = 524288;
++	// Ranges are handed downstream in network-sized slices: one 512KB chunk would make the
++	// demuxer and decoder process ~30s of audio in a single synchronous burst.
++	const PUSH_SIZE = 16384;
++	let abortController = null;
++	const fetchRange = async (start) => {
++		const end = Math.min(start + RANGE_SIZE, contentLength) - 1;
++		abortController = new AbortController();
++		const response = await innertube.session.http.fetch_function(`${url}&cpn=${info.cpn}&range=${start}-${end}`, {
++			headers: youtubei_js.Constants.STREAM_HEADERS,
++			signal: abortController.signal
++		});
++		if (!response.ok || !response.body) throw new Error(`Range ${start}-${end} failed. Status: ${response.status}`);
++		const chunks = [];
++		for await (const chunk of youtubei_js.Utils.streamToIterable(response.body)) chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
++		return Buffer.concat(chunks);
++	};
++	ytdlDebugger.debug("Probing stream with the first range");
++	let pending = await fetchRange(0).catch((err) => {
++		throw new Error(`Probe failed. ${err.message}`);
+ 	});
+-	if (!initialResponse.ok || !initialResponse.body) throw new Error(`Probe failed. Status: ${initialResponse.status}`);
+-	ytdlDebugger.debug("Probe successful. Initial 10MB response received. Initializing stream...");
+-	let initialBody = initialResponse.body;
+-	let nextByteStart = initialEnd + 1;
+-	let chunkAbortController = null;
++	let pendingOffset = 0;
++	let nextByteStart = pending.length;
+ 	let isFetching = false;
+-	return new node_stream.Readable({
+-		highWaterMark: 4194304,
++	const stream = new node_stream.Readable({
++		highWaterMark: RANGE_SIZE,
+ 		async read() {
+ 			if (isFetching) return;
+-			if (nextByteStart >= contentLength && !initialBody) {
+-				ytdlDebugger.debug("All bytes consumed. Ending stream with push(null).");
+-				this.push(null);
+-				return;
+-			}
+ 			isFetching = true;
+ 			try {
+-				if (initialBody) {
+-					const bodyStream = initialBody;
+-					initialBody = null;
+-					ytdlDebugger.debug("Pushing initial 10MB probe chunks into stream...");
+-					for await (const rawChunk of youtubei_js.Utils.streamToIterable(bodyStream)) {
+-						const chunk = Buffer.isBuffer(rawChunk) ? rawChunk : Buffer.from(rawChunk);
+-						this.push(chunk);
++				if (!pending && nextByteStart < contentLength) {
++					ytdlDebugger.debug(`Fetching range from ${nextByteStart} (Progress: ${Math.round(nextByteStart / contentLength * 100)}%)`);
++					pending = await fetchRange(nextByteStart);
++					nextByteStart += pending.length;
++				}
++				if (pending) {
++					while (pendingOffset < pending.length) {
++						const slice = pending.subarray(pendingOffset, pendingOffset + PUSH_SIZE);
++						pendingOffset += slice.length;
++						if (!this.push(slice)) break;
+ 					}
+-					ytdlDebugger.debug(`Finished pushing initial probe. Next byte target: ${nextByteStart} / ${contentLength}`);
+-				} else if (nextByteStart < contentLength) {
+-					const chunkEnd = Math.min(nextByteStart + TEN_MB - 1, contentLength - 1);
+-					const chunkUrl = `${url}&cpn=${info.cpn}&range=${nextByteStart}-${chunkEnd}`;
+-					ytdlDebugger.debug(`Fetching chunk range: ${nextByteStart}-${chunkEnd} (Progress: ${Math.round(nextByteStart / contentLength * 100)}%)`);
+-					chunkAbortController = new AbortController();
+-					const chunkResponse = await innertube.session.http.fetch_function(chunkUrl, {
+-						headers: youtubei_js.Constants.STREAM_HEADERS,
+-						signal: chunkAbortController.signal
+-					});
+-					if (!chunkResponse.ok || !chunkResponse.body) throw new Error(`Chunk fetch failed at byte ${nextByteStart}. Status: ${chunkResponse.status}`);
+-					for await (const rawChunk of youtubei_js.Utils.streamToIterable(chunkResponse.body)) {
+-						const chunk = Buffer.isBuffer(rawChunk) ? rawChunk : Buffer.from(rawChunk);
+-						this.push(chunk);
++					if (pendingOffset >= pending.length) {
++						pending = null;
++						pendingOffset = 0;
+ 					}
+-					nextByteStart = chunkEnd + 1;
+ 				}
++				if (nextByteStart >= contentLength && !pending) this.push(null);
+ 			} catch (err) {
+ 				if (err.name !== "AbortError") {
+ 					ytdlDebugger.debug(`Stream error: ${err.message}`);
+@@ -273,18 +284,15 @@ async function createAdaptiveStream(innertube, videoId, client, poToken, deciphe
+ 				}
+ 			} finally {
+ 				isFetching = false;
+-				if (nextByteStart < contentLength && this.readableLength < this.readableHighWaterMark) setImmediate(() => this._read(0));
+-				else if (nextByteStart >= contentLength) this.push(null);
+ 			}
+ 		},
+ 		destroy(err, callback) {
+-			mainAbortController.abort();
+-			if (chunkAbortController) try {
+-				chunkAbortController.abort();
+-			} catch {}
++			abortController?.abort();
+ 			callback(err);
+ 		}
+ 	});
++	stream.mimeType = format.mime_type;
++	return stream;
+ }
+ //#endregion
+ //#region src/ServerAbr/index.ts

@@ -1,5 +1,6 @@
 import { parseIntInRange, replyError, replySuccess } from "@/commands/validation.ts"
 import { refreshPlayer } from "@/handlers/playerUi.ts"
+import { prefetchNext } from "@/handlers/prefetch.ts"
 import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
 
 class SwapCommand implements PlayerCommand {
@@ -21,6 +22,7 @@ class SwapCommand implements PlayerCommand {
 		}
 
 		serverQueue.node.swap(swapPos1 - 1, swapPos2 - 1)
+		prefetchNext(serverQueue)
 
 		const tracks = serverQueue.tracks.toArray()
 		const song1 = tracks[swapPos1 - 1]

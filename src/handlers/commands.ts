@@ -6,6 +6,7 @@ import { logger } from "@/utils/logger/logger.ts"
 import { errorEmbed } from "@/embeds/status.ts"
 import { resolveConfig } from "@/storage/service.ts"
 import { adminService } from "@/storage/services/admin.ts"
+import { serverRepository } from "@/storage/repositories/server.ts"
 
 import type { ChatInputCommandInteraction, GuildMember, GuildTextBasedChannel } from "discord.js"
 import type { GuildQueue } from "discord-player"
@@ -17,8 +18,7 @@ async function dispatch(
 	commandName: string,
 	args: string[],
 	source: GuildMessage | ButtonInteraction,
-	raw: string,
-	preResolved?: Config
+	raw: string
 ) {
 	const command = bot.commands[commandName]
 	if (!command) return
@@ -34,7 +34,7 @@ async function dispatch(
 
 	let config: Config | null = null
 	try {
-		config = preResolved ?? (await resolveConfig(user, guild))
+		config = await resolveConfig(user, guild)
 
 		logger.info(`[COMMAND]: ${command.name} | ${raw} | User: ${user.username} | Guild: ${guild.name}`)
 
@@ -64,10 +64,12 @@ async function dispatch(
 
 async function handleMessageCommand(bot: MusicBot, msg: GuildMessage, args: string[]) {
 	if (msg.author.bot || !args[0]) return
-	const config = await resolveConfig(msg.author, msg.guild)
-	if (!args[0].startsWith(config.prefix)) return
-	const commandName = args[0].slice(config.prefix.length).toLowerCase()
-	return dispatch(bot, commandName, args, msg, msg.content, config)
+	// Only the server settings are needed to recognise a command; resolving the full config
+	// here would create and cache a user row for every message author.
+	const { prefix } = await serverRepository.getOrPut(msg.guild)
+	if (!args[0].startsWith(prefix)) return
+	const commandName = args[0].slice(prefix.length).toLowerCase()
+	return dispatch(bot, commandName, args, msg, msg.content)
 }
 
 async function dispatchSlash(bot: MusicBot, interaction: ChatInputCommandInteraction) {

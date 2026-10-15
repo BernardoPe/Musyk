@@ -15,14 +15,15 @@ class SeekCommand implements PlayerCommand {
 			return replyError(channel, config.lang.shared.not_playing)
 		}
 
-		const time = validateTimestamp(args[1], serverQueue.node.totalDuration)
+		const input = args[1] ?? ""
+		const time = validateTimestamp(input, serverQueue.node.totalDuration)
 
 		if (time === false) {
-			return replyError(channel, config.lang.commands.seek.invalid_time_format.replace("{time}", args[1]))
+			return replyError(channel, config.lang.commands.seek.invalid_time_format.replace("{time}", input))
 		}
 
 		if (time === -1) {
-			return replyError(channel, config.lang.commands.seek.invalid_time.replace("{time}", args[1]))
+			return replyError(channel, config.lang.commands.seek.invalid_time.replace("{time}", input))
 		}
 
 		const dur = `${currentTrack.duration.padStart(5, "0")}`

@@ -1,5 +1,6 @@
 import { replyError, replySuccess } from "@/commands/validation.ts"
 import { refreshPlayer } from "@/handlers/playerUi.ts"
+import { prefetchNext } from "@/handlers/prefetch.ts"
 import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
 
 class RemoveCommand implements PlayerCommand {
@@ -28,6 +29,7 @@ class RemoveCommand implements PlayerCommand {
 			)
 		}
 		replySuccess(channel, config.lang.commands.remove.removed.replace("{song}", `[${song.title}](${song.url})`))
+		prefetchNext(serverQueue)
 		refreshPlayer(serverQueue, config.lang)
 	}
 }

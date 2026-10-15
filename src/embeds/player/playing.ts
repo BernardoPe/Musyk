@@ -32,7 +32,7 @@ function nowPlayingEmbed(queue: GuildQueue, lang: Language): EmbedBuilder {
 		.addFields(
 			{
 				name: lang.embeds.now_playing.fields.duration,
-				value: `${song.metadata?.live ? "Live" : song.duration.padStart(5, "0")}`,
+				value: `${song.live ? "Live" : song.duration.padStart(5, "0")}`,
 				inline: true,
 			},
 			{

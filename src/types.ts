@@ -103,12 +103,14 @@ export interface SlashCommand {
  * @param textChannel - The text channel that the player is connected to
  * @param playerEmbed - The message embed that displays the player
  * @param updatingPlayer - Whether the player is currently being updated
+ * @param playRequestedAt - `performance.now()` when a play command started an idle queue, for latency logging
  */
 type QueueMetadata = {
 	voiceChannel: VoiceBasedChannel | null
 	textChannel: GuildTextBasedChannel | null
 	playerEmbed: Message | null
 	updatingPlayer: boolean | null
+	playRequestedAt: number | null
 }
 
 /**

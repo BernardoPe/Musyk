@@ -18,4 +18,5 @@ interface SharedLangConfig {
 	set_prefix: string
 	set_prefix_error: string
 	command_error: string
+	missing_manage_guild: string
 }

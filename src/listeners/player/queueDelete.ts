@@ -5,11 +5,13 @@ import { GuildQueue, GuildQueueEvent } from "discord-player"
 import { serverRepository } from "@/storage/repositories/server.ts"
 import { EMBED_TIMEOUT_MS } from "@/constants.ts"
 import { destroyPlayer } from "@/handlers/playerUi.ts"
+import { discardPrefetch } from "@/handlers/prefetch.ts"
 
 class QueueDeleteHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.QueueDelete
 
 	public async execute(queue: GuildQueue<QueueMetadata>) {
+		discardPrefetch(queue)
 		const channel = queue.metadata.textChannel
 		const server = await serverRepository.getOrPut(queue.guild)
 

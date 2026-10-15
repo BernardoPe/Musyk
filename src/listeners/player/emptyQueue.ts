@@ -5,11 +5,13 @@ import { leavingEmbed } from "@/embeds/player/queue.ts"
 import { serverRepository } from "@/storage/repositories/server.ts"
 import { EMBED_TIMEOUT_LONG_MS } from "@/constants.ts"
 import { destroyPlayer } from "@/handlers/playerUi.ts"
+import { discardPrefetch } from "@/handlers/prefetch.ts"
 
 class EmptyQueueHandler implements GuildQueueEventHandler {
 	public name = GuildQueueEvent.EmptyQueue
 
 	public async execute(queue: GuildQueue<QueueMetadata>) {
+		discardPrefetch(queue)
 		const channel = queue.metadata.textChannel!
 		const server = await serverRepository.getOrPut(queue.guild)
 

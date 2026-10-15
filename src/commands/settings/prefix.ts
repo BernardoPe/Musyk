@@ -1,3 +1,4 @@
+import { PermissionFlagsBits } from "discord.js"
 import { errorEmbed, successEmbed } from "@/embeds/status.ts"
 import { serverRepository } from "@/storage/repositories/server.ts"
 import { logger } from "@/utils/logger/logger.ts"
@@ -14,6 +15,12 @@ class PrefixCommand implements SlashCommand {
 
 		if (newPrefix === "current" || newPrefix === "curr") {
 			const embed = successEmbed(null, config.lang.shared.current_prefix.replace("{prefix}", config.prefix))
+			await interaction.reply({ embeds: [embed], flags: "Ephemeral" })
+			return
+		}
+
+		if (!interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild)) {
+			const embed = errorEmbed(null, config.lang.shared.missing_manage_guild)
 			await interaction.reply({ embeds: [embed], flags: "Ephemeral" })
 			return
 		}

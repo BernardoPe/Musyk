@@ -1,0 +1,52 @@
+diff --git a/node_modules/discord-player-youtubei/dist/index.mjs b/node_modules/discord-player-youtubei/dist/index.mjs
+index 7982bb4..08ba575 100644
+--- a/node_modules/discord-player-youtubei/dist/index.mjs
++++ b/node_modules/discord-player-youtubei/dist/index.mjs
+@@ -166,7 +166,8 @@ function buildTrackFromLockupView(vid, ext) {
+ 	throw new Error(`Unable to build track from unsupported LockupView type: ${vid.content_type}`);
+ }
+ async function search(term, ext) {
+-	return buildTracks((await (await getInnertube()).search(term)).videos, ext);
++	// Only videos are used; the video-only filter answers ~200ms faster than a mixed search.
++	return buildTracks((await (await getInnertube()).search(term, { type: "video" })).videos, ext);
+ }
+ async function getMixedPlaylist(playlistId, videoId, ext) {
+ 	const tube = await getInnertube();
+@@ -363,7 +364,10 @@ const VIDEO_STREAMER_MAP = {
+ 		}
+ 	},
+ 	adaptive: async (info, ext) => {
+-		return await createAdaptiveStreamMultiStep(ext.innertube, getVideoId$1(info.url), ext.options.downloads?.adaptiveStream?.customClientOrder);
++		const stream = await createAdaptiveStreamMultiStep(ext.innertube, getVideoId$1(info.url), ext.options.downloads?.adaptiveStream?.customClientOrder);
++		// Opus in WebM is demuxed in-process by discord-player, which then skips spawning ffmpeg.
++		const mime = stream.mimeType ?? "";
++		return mime.startsWith("audio/webm") && mime.includes("opus") ? { stream, $fmt: "webm/opus" } : stream;
+ 	},
+ 	sabr: async (info, ext) => {
+ 		return await createSabrStream(ext.innertube, getVideoId$1(info.url));
+diff --git a/node_modules/discord-player-youtubei/dist/index.cjs b/node_modules/discord-player-youtubei/dist/index.cjs
+index 5636310..921de1c 100644
+--- a/node_modules/discord-player-youtubei/dist/index.cjs
++++ b/node_modules/discord-player-youtubei/dist/index.cjs
+@@ -190,7 +190,8 @@ function buildTrackFromLockupView(vid, ext) {
+ 	throw new Error(`Unable to build track from unsupported LockupView type: ${vid.content_type}`);
+ }
+ async function search(term, ext) {
+-	return buildTracks((await (await getInnertube()).search(term)).videos, ext);
++	// Only videos are used; the video-only filter answers ~200ms faster than a mixed search.
++	return buildTracks((await (await getInnertube()).search(term, { type: "video" })).videos, ext);
+ }
+ async function getMixedPlaylist(playlistId, videoId, ext) {
+ 	const tube = await getInnertube();
+@@ -387,7 +388,10 @@ const VIDEO_STREAMER_MAP = {
+ 		}
+ 	},
+ 	adaptive: async (info, ext) => {
+-		return await (0, simple_ytdl_core.createAdaptiveStreamMultiStep)(ext.innertube, getVideoId$1(info.url), ext.options.downloads?.adaptiveStream?.customClientOrder);
++		const stream = await (0, simple_ytdl_core.createAdaptiveStreamMultiStep)(ext.innertube, getVideoId$1(info.url), ext.options.downloads?.adaptiveStream?.customClientOrder);
++		// Opus in WebM is demuxed in-process by discord-player, which then skips spawning ffmpeg.
++		const mime = stream.mimeType ?? "";
++		return mime.startsWith("audio/webm") && mime.includes("opus") ? { stream, $fmt: "webm/opus" } : stream;
+ 	},
+ 	sabr: async (info, ext) => {
+ 		return await (0, simple_ytdl_core.createSabrStream)(ext.innertube, getVideoId$1(info.url));

@@ -10,34 +10,27 @@ export interface UserInfo {
 }
 
 class UserRepository {
-	async getOrPut(user: User): Promise<UserInfo> {
+	/**
+	 * Users only have a row once they save their own settings, so a missing row is not
+	 * created here: that would add a database write to every new user's first command.
+	 */
+	async get(user: User): Promise<UserInfo> {
 		return await doCachedQuery(user.id, CacheType.User, -1, async () => {
 			const existingUser = await prisma.user.findUnique({
 				where: { userId: user.id },
 				select: { userId: true, playerConfig: true },
 			})
-
-			if (existingUser) {
-				return {
-					userId: existingUser.userId,
-					playerConfig: existingUser.playerConfig
-						? {
-								searchEngine: existingUser.playerConfig.searchEngine,
-								volume: existingUser.playerConfig.volume,
-								leaveOnEnd: existingUser.playerConfig.leaveOnEnd,
-								leaveOnEndCooldown: existingUser.playerConfig.leaveOnEndCooldown,
-							}
-						: null,
-				}
-			}
-
-			const newUser = await prisma.user.create({
-				data: { userId: user.id },
-			})
-
+			const playerConfig = existingUser?.playerConfig
 			return {
-				userId: newUser.userId,
-				playerConfig: null,
+				userId: user.id,
+				playerConfig: playerConfig
+					? {
+							searchEngine: playerConfig.searchEngine,
+							volume: playerConfig.volume,
+							leaveOnEnd: playerConfig.leaveOnEnd,
+							leaveOnEndCooldown: playerConfig.leaveOnEndCooldown,
+						}
+					: null,
 			}
 		})
 	}

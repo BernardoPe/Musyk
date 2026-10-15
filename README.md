@@ -8,7 +8,7 @@ Playback and queue behavior are managed through Discord Player, while embeds and
 
 ## Features
 
-- Playback and search across multiple providers through Discord Player
+- Playback and search across multiple providers through Discord Player (YouTube by default, Deezer as fallback, Spotify links bridged for playback)
 - Queue controls: skip, pause, resume, stop, clear, shuffle, swap, jump, and more
 - Playback controls and status embeds
 - Slash command support and command deployment workflow

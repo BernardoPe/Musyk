@@ -20,13 +20,20 @@ async function handleButton(bot: MusicBot, interaction: ButtonInteraction) {
 	const queue = useQueue(interaction.guild!.id) as GuildQueue<QueueMetadata> | null
 	if (!queue) return
 
+	// Acknowledge in parallel instead of first: the round trip to Discord would otherwise
+	// delay every button action. No command replies through the interaction itself.
+	const acknowledged = interaction
+		.deferUpdate()
+		.catch((error) => logger.error(`[BUTTON]: deferUpdate failed for ${customId} | ${error}`))
 	try {
-		await interaction.deferUpdate()
-	} catch (error) {
-		logger.error(`[BUTTON]: deferUpdate failed for ${customId} | ${error}`)
-		return
+		await runButton(bot, interaction, queue)
+	} finally {
+		await acknowledged
 	}
+}
 
+async function runButton(bot: MusicBot, interaction: ButtonInteraction, queue: GuildQueue<QueueMetadata>) {
+	const { customId } = interaction
 	switch (customId) {
 		case "increaseVolume":
 			stepVolume(queue, 1)

@@ -77,7 +77,7 @@ class ServerRepository {
 		}
 		await prisma.server.update({
 			where: { serverId: server.id },
-			data: { prefix },
+			data: { prefix: trimmed },
 		})
 		this.invalidateServerCache(server.id)
 	}

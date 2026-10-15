@@ -1,4 +1,9 @@
+/**
+ * Parses `ss`, `mm:ss` or `hh:mm:ss` into milliseconds.
+ * Returns `false` for a malformed timestamp and `-1` for one that is out of range.
+ */
 function validateTimestamp(timestamp: string, maxDuration: number): number | false {
+	if (timestamp.trim() === "") return false
 	const timestampComponents = timestamp.split(":").map(Number)
 	const numComponents = timestampComponents.length
 

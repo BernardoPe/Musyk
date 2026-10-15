@@ -1,5 +1,6 @@
 import { replyError, replySuccess } from "@/commands/validation.ts"
 import { refreshPlayer } from "@/handlers/playerUi.ts"
+import { prefetchNext } from "@/handlers/prefetch.ts"
 import type { PlayerCommand, PlayerCommandContext } from "@/types.ts"
 
 class ShuffleCommand implements PlayerCommand {
@@ -15,6 +16,7 @@ class ShuffleCommand implements PlayerCommand {
 
 		serverQueue.tracks.shuffle()
 
+		prefetchNext(serverQueue)
 		refreshPlayer(serverQueue, config.lang)
 
 		replySuccess(channel, config.lang.commands.shuffle.shuffled)

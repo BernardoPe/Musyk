@@ -9,7 +9,8 @@
 		"set_lang_error": "Ocorreu um erro ao definir a língua.",
 		"set_prefix": "Prefixo definido para **{prefix}**",
 		"set_prefix_error": "Ocorreu um erro ao definir o prefixo.",
-		"command_error": "Ocorreu um erro ao executar o comando"
+		"command_error": "Ocorreu um erro ao executar o comando",
+		"missing_manage_guild": "Precisas da permissão **Gerir Servidor** para alterar esta definição."
 	},
 	"embeds": {
 		"analytics": {

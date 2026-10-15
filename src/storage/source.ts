@@ -25,10 +25,13 @@ process.on("beforeExit", async () => {
 	await pool.end()
 })
 
-process.on("SIGINT", async () => {
-	await prisma.$disconnect()
-	await pool.end()
-	process.exit()
-})
+// Docker stops containers with SIGTERM; Ctrl+C sends SIGINT.
+for (const signal of ["SIGINT", "SIGTERM"] as const) {
+	process.on(signal, async () => {
+		await prisma.$disconnect()
+		await pool.end()
+		process.exit()
+	})
+}
 
 export default prisma

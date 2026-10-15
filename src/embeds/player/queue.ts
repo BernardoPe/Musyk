@@ -65,11 +65,13 @@ function createQueueEmbed(serverQueue: GuildQueue, lang: Language): EmbedBuilder
 }
 
 function queuePlaylistEmbed(playlist: Playlist, lang: Language): EmbedBuilder {
-	const type = playlist.tracks[0].source
+	const type = playlist.tracks[0]?.source ?? playlist.source
 	const embed = new EmbedBuilder()
 	const emoji = getEmoji(type, embed)
 
-	const thumbnail = playlist.thumbnail.includes("null") ? playlist.tracks[0].thumbnail : playlist.thumbnail
+	// Some extractors leave the playlist thumbnail empty or as a "null" URL.
+	const thumbnail =
+		playlist.thumbnail && !playlist.thumbnail.includes("null") ? playlist.thumbnail : playlist.tracks[0]?.thumbnail
 
 	embed
 		.setTitle(lang.embeds.playlist_queued.title)
@@ -102,7 +104,7 @@ function songQueuedEmbed(song: Track<RawTrackData>, queue: GuildQueue<QueueMetad
 		.addFields(
 			{
 				name: lang.embeds.song_queued.duration,
-				value: `${song.metadata?.live ? "Live" : song.duration.padStart(5, "0")}`,
+				value: `${song.live ? "Live" : song.duration.padStart(5, "0")}`,
 				inline: true,
 			},
 			{

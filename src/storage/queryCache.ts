@@ -1,7 +1,8 @@
-import { DiscordPlayerQueryResultCache, SearchResult, useMainPlayer } from "discord-player"
+import { DiscordPlayerQueryResultCache, Playlist, SearchResult, Track, useMainPlayer } from "discord-player"
 import { logger } from "@/utils/logger/logger.ts"
 
-import type { Playlist, QueryCacheProvider, QueryCacheResolverContext, Track } from "discord-player"
+import type { QueryCacheProvider, QueryCacheResolverContext } from "discord-player"
+import type { User } from "discord.js"
 
 const EXPIRE_AFTER = 604_800_000
 const MAX_ENTRIES = 1_000
@@ -66,16 +67,25 @@ export class QueryCache implements QueryCacheProvider<CachedTrack> {
 	public async resolve(context: QueryCacheResolverContext): Promise<SearchResult> {
 		const queryKey = QueryCache.cacheKey(context.queryType, context.query)
 		const res = QueryCache.resultCache.get(queryKey)
-		const tracks = res ? [res.data.track] : this.findTracksByAlias(context.query.toLowerCase())
+		const requestedBy = context.requestedBy ?? null
+
+		// Cached entries are templates: hand out fresh copies so every request gets its own
+		// track ids and requester instead of sharing (and mutating) one Track across queues.
+		const playlist = res?.data.playlist ? clonePlaylist(res.data.playlist, requestedBy) : undefined
+		const tracks =
+			playlist?.tracks ??
+			(res ? [res.data.track] : this.findTracksByAlias(context.query.toLowerCase())).map((track) =>
+				cloneTrack(track, requestedBy)
+			)
 
 		logger.info(`[CACHE]: Cache ${tracks.length > 0 ? "hit" : "miss"} for query ${context.query}`)
 
 		return new SearchResult(useMainPlayer(), {
 			query: context.query,
-			requestedBy: context.requestedBy,
+			requestedBy,
 			queryType: context.queryType,
 			tracks,
-			playlist: res?.data.playlist,
+			playlist,
 		})
 	}
 
@@ -107,7 +117,9 @@ export class QueryCache implements QueryCacheProvider<CachedTrack> {
 		}
 
 		const isURL = URL.canParse(data.query)
-		data.tracks.forEach((trackData) => {
+		// Text searches only ever play the top result; caching the rest just evicts useful entries.
+		const tracks = isURL ? data.tracks : data.tracks.slice(0, 1)
+		tracks.forEach((trackData) => {
 			const key = QueryCache.cacheKey(trackData.queryType, trackData.url)
 			const existingCache = QueryCache.resultCache.get(key)
 			if (isURL && !existingCache) {
@@ -137,4 +149,46 @@ type CachedTrack = {
 	track: Track
 	playlist: Playlist | null | undefined
 	queryAliases: Set<string>
+}
+
+function cloneTrack(track: Track, requestedBy: User | null, playlist = track.playlist): Track {
+	const copy = new Track(track.player, {
+		title: track.title,
+		description: track.description,
+		author: track.author,
+		url: track.url,
+		thumbnail: track.thumbnail,
+		duration: track.duration,
+		views: track.views,
+		requestedBy,
+		playlist,
+		live: track.live,
+		raw: track.raw,
+		queryType: track.queryType ?? undefined,
+		cleanTitle: track.cleanTitle,
+		metadata: track.metadata,
+		requestMetadata: () => track.requestMetadata(),
+	})
+	// The constructor escapes markdown in the title; the source title is already escaped.
+	copy.title = track.title
+	copy.description = track.description
+	copy.extractor = track.extractor
+	return copy
+}
+
+function clonePlaylist(playlist: Playlist, requestedBy: User | null): Playlist {
+	const copy = new Playlist(playlist.player, {
+		tracks: [],
+		title: playlist.title,
+		description: playlist.description,
+		thumbnail: playlist.thumbnail,
+		type: playlist.type,
+		source: playlist.source,
+		author: playlist.author,
+		id: playlist.id,
+		url: playlist.url,
+		rawPlaylist: playlist.rawPlaylist,
+	})
+	copy.tracks = playlist.tracks.map((track) => cloneTrack(track, requestedBy, copy))
+	return copy
 }
